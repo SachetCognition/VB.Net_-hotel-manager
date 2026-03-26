@@ -55,9 +55,9 @@ public class PayrollServiceTests : IDisposable
     }
 
     [Fact]
-    public void CalculateSalary_NonEvenDivision_Truncates()
+    public void CalculateSalary_NonEvenDivision_UsesBankerRounding()
     {
-        // 25000 * 7 / 30 = 5833.33 -> truncated to 5833
+        // 25000 * 7 / 30 = 5833.33 -> banker's rounding (CInt) to 5833
         _service.CalculateSalary(25000m, 7).Should().Be(5833);
     }
 
@@ -78,9 +78,9 @@ public class PayrollServiceTests : IDisposable
     }
 
     [Fact]
-    public void CalculateOvertimeAmount_PartialHour_Truncates()
+    public void CalculateOvertimeAmount_PartialHour_UsesBankerRounding()
     {
-        // 45 min * 100 / 60 = 75
+        // 45 min * 100 / 60 = 75.0 (exact)
         _service.CalculateOvertimeAmount(45, 100m).Should().Be(75);
     }
 

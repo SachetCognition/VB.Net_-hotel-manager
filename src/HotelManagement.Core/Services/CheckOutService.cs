@@ -164,6 +164,15 @@ public class CheckOutService : ICheckOutService
         var checkout = await _context.Set<CheckoutRoom>().FindAsync(id)
             ?? throw new KeyNotFoundException($"Check-out record {id} not found");
 
+        // Restore associated CheckInRoom status back to "Checked In"
+        var checkIn = await _context.Set<CheckInRoom>()
+            .FirstOrDefaultAsync(c => c.GuestID == checkout.GuestID
+                && c.RoomNo == checkout.RoomNo
+                && c.DateIN == checkout.DateIN
+                && c.DateOUT == checkout.DateOUT);
+        if (checkIn != null)
+            checkIn.Status = "Checked In";
+
         // Delete associated Tax_Room record
         var taxRoom = await _context.Set<TaxRoom>().FirstOrDefaultAsync(t => t.BillNo == checkout.BillNo);
         if (taxRoom != null)

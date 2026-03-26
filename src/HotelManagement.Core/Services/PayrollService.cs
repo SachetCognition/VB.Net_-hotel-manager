@@ -144,12 +144,12 @@ public class PayrollService : IPayrollService
 
     /// <summary>
     /// Salary = (BasicSalary * PresentDays) / 30
-    /// From frmEmployeePayment.vb: txtSalary.Text = Val(txtBasicSalary.Text) * Val(txtPresentDays.Text) / 30
-    /// Returns integer for interface compliance (truncated)
+    /// From frmEmployeePayment.vb: txtSalary.Text = CInt(Val(txtBasicSalary.Text) * Val(txtPresentDays.Text) / 30)
+    /// CInt uses banker's rounding (MidpointRounding.ToEven)
     /// </summary>
     public int CalculateSalary(decimal basicSalary, int presentDays)
     {
-        return (int)(basicSalary * presentDays / 30m);
+        return (int)Math.Round(basicSalary * presentDays / 30m, MidpointRounding.ToEven);
     }
 
     private static decimal CalculateSalaryDecimal(decimal basicSalary, int presentDays)
@@ -159,12 +159,12 @@ public class PayrollService : IPayrollService
 
     /// <summary>
     /// OvertimeAmount = (TotalOvertimeMinutes * Rate) / 60
-    /// From frmEmployeePayment.vb: OvertimeAmount = Val(TotalOvertimeMinutes) * Val(Rate) / 60
-    /// Returns integer for interface compliance (truncated)
+    /// From frmEmployeePayment.vb: CInt((ts.TotalMinutes * rate) / 60)
+    /// CInt uses banker's rounding (MidpointRounding.ToEven)
     /// </summary>
     public int CalculateOvertimeAmount(double totalOvertimeMinutes, decimal rate)
     {
-        return (int)((decimal)totalOvertimeMinutes * rate / 60m);
+        return (int)Math.Round((decimal)totalOvertimeMinutes * rate / 60m, MidpointRounding.ToEven);
     }
 
     private static decimal CalculateOvertimeAmountDecimal(double totalOvertimeMinutes, decimal rate)
