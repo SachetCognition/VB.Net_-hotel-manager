@@ -20,9 +20,20 @@ public class BackupController : ControllerBase
     }
 
     [HttpPost("backup")]
-    public async Task<IActionResult> Backup([FromQuery] string? path = null)
+    public async Task<IActionResult> Backup([FromQuery] string? filename = null)
     {
-        var backupPath = path ?? Path.Combine(Path.GetTempPath(), $"HotelManagement_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.bak");
+        var allowedDir = _configuration.GetValue<string>("Backup:AllowedDirectory")
+            ?? Path.Combine(Path.GetTempPath(), "HotelManagement_Backups");
+        Directory.CreateDirectory(allowedDir);
+
+        var safeFilename = filename ?? $"HotelManagement_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+        if (safeFilename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || safeFilename.Contains(".."))
+            return BadRequest(new { Message = "Invalid filename" });
+
+        var backupPath = Path.GetFullPath(Path.Combine(allowedDir, safeFilename));
+        if (!backupPath.StartsWith(Path.GetFullPath(allowedDir)))
+            return BadRequest(new { Message = "Invalid backup path" });
+
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
         var builder = new SqlConnectionStringBuilder(connectionString);
         var databaseName = builder.InitialCatalog;
@@ -39,8 +50,18 @@ public class BackupController : ControllerBase
     }
 
     [HttpPost("restore")]
-    public async Task<IActionResult> Restore([FromQuery] string path)
+    public async Task<IActionResult> Restore([FromQuery] string filename)
     {
+        var allowedDir = _configuration.GetValue<string>("Backup:AllowedDirectory")
+            ?? Path.Combine(Path.GetTempPath(), "HotelManagement_Backups");
+
+        if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || filename.Contains(".."))
+            return BadRequest(new { Message = "Invalid filename" });
+
+        var path = Path.GetFullPath(Path.Combine(allowedDir, filename));
+        if (!path.StartsWith(Path.GetFullPath(allowedDir)))
+            return BadRequest(new { Message = "Invalid restore path" });
+
         if (!System.IO.File.Exists(path))
             return BadRequest(new { Message = "Backup file not found" });
 
@@ -61,21 +82,26 @@ public class BackupController : ControllerBase
             try { await cmd.ExecuteNonQueryAsync(); } catch { /* DB might not exist */ }
         }
 
-        // Restore
-        var sql = $"RESTORE DATABASE [{databaseName}] FROM DISK = @path WITH REPLACE";
-        using (var cmd = new SqlCommand(sql, connection))
+        try
         {
-            cmd.Parameters.AddWithValue("@path", path);
-            cmd.CommandTimeout = 300;
-            await cmd.ExecuteNonQueryAsync();
+            // Restore
+            var sql = $"RESTORE DATABASE [{databaseName}] FROM DISK = @path WITH REPLACE";
+            using (var cmd = new SqlCommand(sql, connection))
+            {
+                cmd.Parameters.AddWithValue("@path", path);
+                cmd.CommandTimeout = 300;
+                await cmd.ExecuteNonQueryAsync();
+            }
         }
-
-        // Set multi user mode
-        var setMulti = $"ALTER DATABASE [{databaseName}] SET MULTI_USER";
-        using (var cmd = new SqlCommand(setMulti, connection))
+        finally
         {
-            cmd.CommandTimeout = 60;
-            await cmd.ExecuteNonQueryAsync();
+            // Always restore multi-user mode, even if RESTORE fails
+            var setMulti = $"ALTER DATABASE [{databaseName}] SET MULTI_USER";
+            using (var cmd = new SqlCommand(setMulti, connection))
+            {
+                cmd.CommandTimeout = 60;
+                try { await cmd.ExecuteNonQueryAsync(); } catch { /* best effort */ }
+            }
         }
 
         return Ok(new { Message = "Restore completed successfully" });

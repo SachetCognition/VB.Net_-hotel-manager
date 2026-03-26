@@ -20,8 +20,8 @@ public class ReservationService : IReservationService
             throw new ArgumentException("Please select room");
         if (string.IsNullOrWhiteSpace(request.GuestID))
             throw new ArgumentException("Please select guest");
-        if (request.DateOUT <= request.DateIN)
-            throw new ArgumentException("Check-out date must be after check-in date");
+        if (request.DateOUT < request.DateIN)
+            throw new ArgumentException("Check-out date cannot be before check-in date");
 
         // Check for date overlap in Temp_Reservation
         if (await CheckDateOverlapAsync(request.RoomNo, request.DateIN, request.DateOUT))

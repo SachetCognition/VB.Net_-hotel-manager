@@ -2,6 +2,7 @@ using HotelManagement.Core.DTOs;
 using HotelManagement.Core.Entities;
 using HotelManagement.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HotelManagement.Core.Services;
 
@@ -83,29 +84,52 @@ public class CheckOutService : ICheckOutService
 
         // Update check-in status
         checkIn.Status = "Checked Out";
-        await _context.SaveChangesAsync();
 
-        // Now we have the database-generated ID — derive BillNo from it (concurrency-safe)
-        var billNo = $"B{checkout.ID}";
-        checkout.BillNo = billNo;
+        // Use an explicit transaction to ensure atomicity across both saves.
+        // InMemoryDatabase does not support transactions, so we check first.
+        IDbContextTransaction? transaction = null;
+        if (_context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            transaction = await _context.Database.BeginTransactionAsync();
 
-        // Create Tax_Room record with the real BillNo
-        var taxRoom = new TaxRoom
+        try
         {
-            BillNo = billNo,
-            RoomNo = checkIn.RoomNo,
-            ServiceTaxPer = checkIn.ServiceTaxPer,
-            ServiceTaxAmount = taxResult.ServiceTaxAmount,
-            LuxuryTaxPer = checkIn.LuxuryTaxPer,
-            LuxuryTaxAmount = taxResult.LuxuryTaxAmount,
-            EducessTax = cessResult.EducessTax,
-            EducessTaxAmount = cessResult.EducessTaxAmount,
-            HEducessTax = cessResult.HEducessTax,
-            HEducessTaxAmount = cessResult.HEducessTaxAmount
-        };
+            await _context.SaveChangesAsync();
 
-        _context.Set<TaxRoom>().Add(taxRoom);
-        await _context.SaveChangesAsync();
+            // Now we have the database-generated ID — derive BillNo from it (concurrency-safe)
+            var billNo = $"B{checkout.ID}";
+            checkout.BillNo = billNo;
+
+            // Create Tax_Room record with the real BillNo
+            var taxRoom = new TaxRoom
+            {
+                BillNo = billNo,
+                RoomNo = checkIn.RoomNo,
+                ServiceTaxPer = checkIn.ServiceTaxPer,
+                ServiceTaxAmount = taxResult.ServiceTaxAmount,
+                LuxuryTaxPer = checkIn.LuxuryTaxPer,
+                LuxuryTaxAmount = taxResult.LuxuryTaxAmount,
+                EducessTax = cessResult.EducessTax,
+                EducessTaxAmount = cessResult.EducessTaxAmount,
+                HEducessTax = cessResult.HEducessTax,
+                HEducessTaxAmount = cessResult.HEducessTaxAmount
+            };
+
+            _context.Set<TaxRoom>().Add(taxRoom);
+            await _context.SaveChangesAsync();
+
+            if (transaction != null)
+                await transaction.CommitAsync();
+        }
+        catch
+        {
+            if (transaction != null)
+                await transaction.RollbackAsync();
+            throw;
+        }
+        finally
+        {
+            transaction?.Dispose();
+        }
 
         return MapToResponse(checkout);
     }
