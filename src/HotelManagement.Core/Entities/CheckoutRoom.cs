@@ -104,5 +104,5 @@ public class CheckoutRoom
     [MaxLength(1000)]
     public string Notes { get; set; } = string.Empty;
 
-    public DateTime CheckOutDate { get; set; } = DateTime.Now;
+    public DateTime CheckOutDate { get; set; } = DateTime.UtcNow;
 }

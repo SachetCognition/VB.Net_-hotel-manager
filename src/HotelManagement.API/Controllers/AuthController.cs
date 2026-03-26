@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using HotelManagement.Core.DTOs;
 using HotelManagement.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -35,6 +36,11 @@ public class AuthController : ControllerBase
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
+        // Verify authenticated user matches the request — prevent changing other users' passwords
+        var authenticatedUser = User.FindFirst(ClaimTypes.Name)?.Value;
+        if (!string.Equals(authenticatedUser, request.Username, StringComparison.OrdinalIgnoreCase))
+            return Forbid();
+
         await _authService.ChangePasswordAsync(request);
         return Ok(new { message = "Password changed successfully" });
     }
