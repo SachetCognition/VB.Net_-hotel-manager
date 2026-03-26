@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCS-HMS-001 — Test Case Specification</title>
+<style>
+:root {
+  --primary: #1a3a5c;
+  --primary-light: #2c5f8a;
+  --accent: #3a7bd5;
+  --bg: #f8f9fa;
+  --white: #ffffff;
+  --border: #d1d9e0;
+  --text: #2c3e50;
+  --text-light: #5a6c7d;
+  --row-alt: #eef3f8;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; display: flex; }
+nav.sidebar {
+  width: 280px; min-height: 100vh; background: var(--primary); color: #fff;
+  position: fixed; top: 0; left: 0; overflow-y: auto; padding: 20px 0; z-index: 100;
+}
+nav.sidebar h3 { padding: 10px 20px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #8ab4d6; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; }
+nav.sidebar a { display: block; padding: 6px 20px; color: #c5d8e8; text-decoration: none; font-size: 13px; transition: all 0.2s; }
+nav.sidebar a:hover { background: var(--primary-light); color: #fff; padding-left: 25px; }
+main { margin-left: 280px; padding: 40px 50px; max-width: 1200px; width: calc(100% - 280px); }
+h1 { color: var(--primary); font-size: 28px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 5px; }
+h2 { color: var(--primary); font-size: 22px; margin-top: 40px; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+h3 { color: var(--primary-light); font-size: 18px; margin-top: 25px; margin-bottom: 10px; }
+h4 { color: var(--text); font-size: 15px; margin-top: 15px; margin-bottom: 8px; }
+p { margin-bottom: 12px; }
+.doc-meta { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 20px 25px; margin: 20px 0 30px; }
+.doc-meta table { width: 100%; border-collapse: collapse; }
+.doc-meta td { padding: 6px 12px; font-size: 14px; }
+.doc-meta td:first-child { font-weight: 600; width: 200px; color: var(--primary); }
+table.tc-table { width: 100%; border-collapse: collapse; margin: 15px 0 25px; font-size: 12px; }
+table.tc-table th { background: var(--primary); color: #fff; padding: 8px 10px; text-align: left; font-weight: 600; font-size: 11px; }
+table.tc-table td { padding: 7px 10px; border: 1px solid var(--border); vertical-align: top; }
+table.tc-table tr:nth-child(even) td { background: var(--row-alt); }
+table.tc-table tr:hover td { background: #dbe8f4; }
+.tc-id { font-weight: 700; color: var(--accent); white-space: nowrap; font-size: 11px; }
+.priority-high { color: var(--danger); font-weight: 700; }
+.priority-medium { color: var(--warning); font-weight: 700; }
+.priority-low { color: var(--info); font-weight: 700; }
+table.coverage-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+table.coverage-table th { background: var(--primary); color: #fff; padding: 8px 12px; text-align: center; }
+table.coverage-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: center; }
+table.coverage-table tr:nth-child(even) td { background: var(--row-alt); }
+table.coverage-table td:first-child { text-align: left; font-weight: 600; }
+table.coverage-table tr:last-child td { font-weight: 700; background: #d4edda; }
+.strategy-box { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin: 15px 0; }
+.pyramid { display: flex; flex-direction: column; align-items: center; margin: 20px 0; }
+.pyramid-level { padding: 8px 20px; text-align: center; color: #fff; font-weight: 600; font-size: 13px; margin: 2px 0; }
+.pyramid-l1 { background: var(--primary); width: 200px; border-radius: 4px; }
+.pyramid-l2 { background: var(--primary-light); width: 320px; border-radius: 4px; }
+.pyramid-l3 { background: var(--accent); width: 440px; border-radius: 4px; }
+code { background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: 'Consolas', monospace; }
+ul { margin: 10px 0 10px 25px; }
+li { margin-bottom: 4px; font-size: 13px; }
+@media print {
+  nav.sidebar { display: none; }
+  main { margin-left: 0; padding: 20px; max-width: 100%; width: 100%; }
+  table.tc-table { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <h3>Table of Contents</h3>
+  <div>
+    <a href="#header">Document Info</a>
+    <a href="#strategy">1. Test Strategy Overview</a>
+    <a href="#coverage">2. Coverage Targets</a>
+    <a href="#unit">3. Unit Tests (UT-)</a>
+    <a href="#unit-checkin">3.1 Check-In Service</a>
+    <a href="#unit-checkout">3.2 Check-Out Service</a>
+    <a href="#unit-payroll">3.3 Payroll Service</a>
+    <a href="#unit-guest">3.4 Guest Service</a>
+    <a href="#unit-room">3.5 Room Service</a>
+    <a href="#unit-reservation">3.6 Reservation Service</a>
+    <a href="#unit-employee">3.7 Employee Service</a>
+    <a href="#unit-inventory">3.8 Inventory Service</a>
+    <a href="#unit-auth">3.9 Auth Service</a>
+    <a href="#unit-excel">3.10 Excel Export</a>
+    <a href="#integration">4. Integration Tests (IT-)</a>
+    <a href="#regression">5. Regression Tests (RT-)</a>
+    <a href="#functional">6. Functional Tests (FT-)</a>
+    <a href="#nonfunctional">7. Non-Functional Tests (NFT-)</a>
+    <a href="#performance">8. Performance Tests (PT-)</a>
+    <a href="#e2e">9. End-to-End Tests (E2E-)</a>
+    <a href="#matrix">10. Coverage Matrix</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section id="header">
+<h1>Test Case Specification<br>Hotel Management System (Modern .NET)</h1>
+
+<div class="doc-meta">
+<table>
+  <tr><td>Document ID:</td><td>TCS-HMS-001</td></tr>
+  <tr><td>Version:</td><td>1.0</td></tr>
+  <tr><td>Date:</td><td>2026-03-26</td></tr>
+  <tr><td>Related URS:</td><td>URS-HMS-001 v1.0</td></tr>
+  <tr><td>Coverage Target:</td><td>90%+ code coverage across all modules</td></tr>
+  <tr><td>Test Framework:</td><td>xUnit + FluentAssertions + Moq</td></tr>
+  <tr><td>Author:</td><td>Migration Engineering Team</td></tr>
+</table>
+</div>
+</section>
+
+<!-- ============ TEST STRATEGY ============ -->
+<section id="strategy">
+<h2>1. Test Strategy Overview</h2>
+<div class="strategy-box">
+<h3>Testing Pyramid</h3>
+<div class="pyramid">
+  <div class="pyramid-level pyramid-l1">E2E Tests (5)</div>
+  <div class="pyramid-level pyramid-l2">Integration Tests (10) &amp; Regression Tests (5)</div>
+  <div class="pyramid-level pyramid-l3">Unit Tests (90+) — Foundation Layer</div>
+</div>
+<p>The testing strategy follows the standard testing pyramid with the majority of tests at the unit level for fast feedback cycles. Integration tests verify cross-component behavior with a real database. E2E tests validate complete business workflows.</p>
+
+<h4>Test Environment</h4>
+<ul>
+  <li><strong>Unit Tests:</strong> In-memory, mocked dependencies using Moq. No database required.</li>
+  <li><strong>Integration Tests:</strong> SQL Server (LocalDB or TestContainers) with EF Core migrations applied.</li>
+  <li><strong>E2E Tests:</strong> Full API running with WebApplicationFactory, real SQL Server database.</li>
+  <li><strong>Performance Tests:</strong> Dedicated test database with synthetic data (10,000+ records).</li>
+</ul>
+
+<h4>Test Naming Convention</h4>
+<p><code>{Category}-{Module}-{Number}</code> — e.g., <code>UT-CI-001</code> = Unit Test, Check-In module, test #001</p>
+</div>
+</section>
+
+<!-- ============ COVERAGE TARGETS ============ -->
+<section id="coverage">
+<h2>2. Coverage Targets</h2>
+<ul>
+  <li><strong>Overall code coverage:</strong> &ge; 90%</li>
+  <li><strong>Critical business logic (tax calculations, payroll):</strong> 100%</li>
+  <li><strong>CRUD operations:</strong> &ge; 90% per entity</li>
+  <li><strong>Validation logic:</strong> &ge; 95%</li>
+  <li><strong>Edge cases:</strong> All identified boundary conditions covered</li>
+</ul>
+</section>
+
+<!-- ============ UNIT TESTS ============ -->
+<section id="unit">
+<h2>3. Unit Tests (UT-)</h2>
+
+<!-- 3.1 CHECK-IN SERVICE -->
+<section id="unit-checkin">
+<h3>3.1 Check-In Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-CI-001</td><td>Unit</td><td>Calculate total room charges correctly</td><td>Room charges = 1000, No of days = 5</td><td>Call ComputeRoomCharges(1000, 5)</td><td>TotalRoomCharges = 5000</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-002</td><td>Unit</td><td>Same day check-in counts as 1 day</td><td>DateIN = DateOUT = 2026-03-26</td><td>Call CalculateNoOfDays(dateIn, dateOut)</td><td>NoOfDays = 1</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-003</td><td>Unit</td><td>Calculate discount correctly</td><td>TotalRoomCharges=5000, OtherCharges=500, DiscountPer=10</td><td>Call CalculateDiscount(5000, 500, 10)</td><td>Discount = 550</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-004</td><td>Unit</td><td>Calculate subtotal correctly</td><td>TotalRoomCharges=5000, OtherCharges=500, Discount=550</td><td>Call CalculateSubTotal(5000, 500, 550)</td><td>SubTotal = 4950</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-005</td><td>Unit</td><td>Calculate service tax with rounding</td><td>SubTotal=4950, ServiceTaxPer=12.36</td><td>Call CalculateServiceTax(4950, 12.36)</td><td>ServiceTaxAmount = 611.82 (rounded to 2 dp)</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-006</td><td>Unit</td><td>Calculate luxury tax on SubTotal+ServiceTax</td><td>SubTotal=4950, ServiceTaxAmount=611.82, LuxuryTaxPer=5</td><td>Call CalculateLuxuryTax(4950, 611.82, 5)</td><td>LuxuryTaxAmount = 278.09 (rounded to 2 dp)</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-007</td><td>Unit</td><td>Calculate grand total correctly</td><td>SubTotal=4950, ServiceTax=611.82, LuxuryTax=278.09</td><td>Call CalculateGrandTotal(4950, 611.82, 278.09)</td><td>GrandTotal = 5839 (integer)</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-008</td><td>Unit</td><td>Calculate balance correctly</td><td>GrandTotal=5839, TotalPaid=3000</td><td>Call CalculateBalance(5839, 3000)</td><td>Balance = 2839</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-009</td><td>Unit</td><td>Zero discount produces correct subtotal</td><td>TotalRoomCharges=5000, OtherCharges=500, DiscountPer=0</td><td>Compute full calculation chain</td><td>Discount=0, SubTotal=5500</td><td class="priority-medium">Medium</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-010</td><td>Unit</td><td>Zero other charges works correctly</td><td>TotalRoomCharges=5000, OtherCharges=0, DiscountPer=10</td><td>Compute full calculation chain</td><td>Discount=500, SubTotal=4500</td><td class="priority-medium">Medium</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-011</td><td>Unit</td><td>Zero service tax percentage</td><td>SubTotal=5000, ServiceTaxPer=0</td><td>Call CalculateServiceTax(5000, 0)</td><td>ServiceTaxAmount = 0</td><td class="priority-medium">Medium</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-012</td><td>Unit</td><td>Zero luxury tax percentage</td><td>SubTotal=5000, ServiceTax=600, LuxuryTaxPer=0</td><td>Call CalculateLuxuryTax(5000, 600, 0)</td><td>LuxuryTaxAmount = 0</td><td class="priority-medium">Medium</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CI-013</td><td>Unit</td><td>Date overlap detection — overlapping range</td><td>Existing reservation: Mar 20-25; New check-in: Mar 23-28</td><td>Call CheckDateOverlap(room, Mar23, Mar28)</td><td>Returns true (overlap detected)</td><td class="priority-high">High</td><td>URS-CI-002</td></tr>
+
+<tr><td class="tc-id">UT-CI-014</td><td>Unit</td><td>Date overlap detection — non-overlapping</td><td>Existing reservation: Mar 20-25; New check-in: Mar 26-30</td><td>Call CheckDateOverlap(room, Mar26, Mar30)</td><td>Returns false (no overlap)</td><td class="priority-high">High</td><td>URS-CI-002</td></tr>
+
+<tr><td class="tc-id">UT-CI-015</td><td>Unit</td><td>Date overlap detection — boundary date</td><td>Existing reservation: Mar 20-25; New check-in: Mar 25-30</td><td>Call CheckDateOverlap(room, Mar25, Mar30)</td><td>Returns true (boundary overlap)</td><td class="priority-high">High</td><td>URS-CI-002</td></tr>
+
+<tr><td class="tc-id">UT-CI-016</td><td>Unit</td><td>Room availability checks both tables</td><td>Room in CheckIn_Room (active); Room in Temp_Reservation</td><td>Call ValidateRoomAvailability(room, dates)</td><td>Room unavailable; both tables checked</td><td class="priority-high">High</td><td>URS-CI-002</td></tr>
+
+<tr><td class="tc-id">UT-CI-017</td><td>Unit</td><td>Reject dateOut before dateIn</td><td>DateIN = Mar 26, DateOUT = Mar 24</td><td>Call ValidateDates(Mar26, Mar24)</td><td>Validation error returned</td><td class="priority-high">High</td><td>URS-CI-001</td></tr>
+
+<tr><td class="tc-id">UT-CI-018</td><td>Unit</td><td>TotalPaid cannot exceed GrandTotal</td><td>GrandTotal=5000, TotalPaid=6000</td><td>Call ValidateTotalPaid(5000, 6000)</td><td>Validation error: "Total paid can not be more than grand total"</td><td class="priority-high">High</td><td>URS-CI-001</td></tr>
+
+<tr><td class="tc-id">UT-CI-019</td><td>Unit</td><td>Room number required validation</td><td>RoomNo = empty</td><td>Call ValidateCheckIn with empty RoomNo</td><td>Validation error: "Please select room no."</td><td class="priority-medium">Medium</td><td>URS-CI-001</td></tr>
+
+<tr><td class="tc-id">UT-CI-020</td><td>Unit</td><td>Full compute chain — end-to-end calculation</td><td>RoomCharges=2000, Days=3, OtherCharges=200, DiscountPer=5, ServiceTaxPer=10, LuxuryTaxPer=8, TotalPaid=4000</td><td>Run full Compute chain</td><td>All intermediate and final values match expected formula output</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+</table>
+</section>
+
+<!-- 3.2 CHECK-OUT SERVICE -->
+<section id="unit-checkout">
+<h3>3.2 Check-Out Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-CO-001</td><td>Unit</td><td>Education cess calculation</td><td>ServiceTaxPer=12.36</td><td>Call CalculateEducessTax(12.36)</td><td>EducessTax = 0.25 (Round(12.36*2/100, 2))</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CO-002</td><td>Unit</td><td>Education cess amount calculation</td><td>ServiceTaxAmount=611.82, EducessTax=0.25</td><td>Call CalculateEducessTaxAmount(611.82, 0.25)</td><td>EducessTaxAmount = 1.53 (Round(611.82*0.25/100, 2))</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CO-003</td><td>Unit</td><td>Higher education cess calculation</td><td>ServiceTaxPer=12.36</td><td>Call CalculateHEducessTax(12.36)</td><td>HEducessTax = 0.12 (Round(12.36*1/100, 2))</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CO-004</td><td>Unit</td><td>Higher education cess amount calculation</td><td>ServiceTaxAmount=611.82, HEducessTax=0.12</td><td>Call CalculateHEducessTaxAmount(611.82, 0.12)</td><td>HEducessTaxAmount = 0.73 (Round(611.82*0.12/100, 2))</td><td class="priority-high">High</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CO-005</td><td>Unit</td><td>Full checkout Calculate chain</td><td>Complete check-in data with known values</td><td>Run full Calculate chain including cess</td><td>All values match legacy formula output</td><td class="priority-high">High</td><td>URS-CI-003</td></tr>
+
+<tr><td class="tc-id">UT-CO-006</td><td>Unit</td><td>BillNo auto-generation</td><td>Max ID in Checkout_Room = 5</td><td>Call auto-generate bill number</td><td>BillID=6, BillNo="B6"</td><td class="priority-medium">Medium</td><td>URS-CI-003</td></tr>
+
+<tr><td class="tc-id">UT-CO-007</td><td>Unit</td><td>BillNo for first checkout</td><td>Empty Checkout_Room table</td><td>Call auto-generate bill number</td><td>BillID=1, BillNo="B1"</td><td class="priority-medium">Medium</td><td>URS-CI-003</td></tr>
+
+<tr><td class="tc-id">UT-CO-008</td><td>Unit</td><td>Currency required validation</td><td>Currency = empty</td><td>Call ValidateCheckout with empty currency</td><td>Validation error: "Please select currency"</td><td class="priority-medium">Medium</td><td>URS-CI-003</td></tr>
+
+<tr><td class="tc-id">UT-CO-009</td><td>Unit</td><td>Zero service tax produces zero cess</td><td>ServiceTaxPer=0</td><td>Calculate all cess values</td><td>EducessTax=0, EducessTaxAmount=0, HEducessTax=0, HEducessTaxAmount=0</td><td class="priority-medium">Medium</td><td>URS-CI-004</td></tr>
+
+<tr><td class="tc-id">UT-CO-010</td><td>Unit</td><td>Checkout deletes Tax_Room and Checkout_Room records</td><td>Existing checkout record with ID=5</td><td>Call DeleteCheckout(5)</td><td>Both Tax_Room and Checkout_Room records deleted</td><td class="priority-medium">Medium</td><td>URS-CI-003</td></tr>
+</table>
+</section>
+
+<!-- 3.3 PAYROLL SERVICE -->
+<section id="unit-payroll">
+<h3>3.3 Payroll Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-HR-001</td><td>Unit</td><td>Salary calculation: full month</td><td>BasicSalary=30000, PresentDays=30</td><td>Call CalculateSalary(30000, 30)</td><td>Salary = 30000</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-002</td><td>Unit</td><td>Salary calculation: partial month</td><td>BasicSalary=30000, PresentDays=20</td><td>Call CalculateSalary(30000, 20)</td><td>Salary = 20000 (CInt(30000*20/30))</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-003</td><td>Unit</td><td>Salary calculation: zero present days</td><td>BasicSalary=30000, PresentDays=0</td><td>Call CalculateSalary(30000, 0)</td><td>Salary = 0</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-004</td><td>Unit</td><td>Overtime amount calculation</td><td>TotalOvertimeMinutes=120, Rate=100</td><td>Call CalculateOvertimeAmount(120, 100)</td><td>OvertimeAmount = 200 (CInt(120*100/60))</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-005</td><td>Unit</td><td>Overtime with odd minutes</td><td>TotalOvertimeMinutes=90, Rate=100</td><td>Call CalculateOvertimeAmount(90, 100)</td><td>OvertimeAmount = 150</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-006</td><td>Unit</td><td>Net pay calculation</td><td>Salary=20000, OvertimeAmount=200, Deduction=5000</td><td>Call CalculateNetPay(20000, 200, 5000)</td><td>NetPay = 15200</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-007</td><td>Unit</td><td>Deduction cannot exceed advance</td><td>Advance=3000, Deduction=5000</td><td>Call ValidateDeduction(3000, 5000)</td><td>Error: "You can not deduct amount more than advance amount"</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-008</td><td>Unit</td><td>NetPay must be positive</td><td>Salary=1000, OvertimeAmount=0, Deduction=2000</td><td>Call ValidateNetPay(-1000)</td><td>Error: "net pay should be more than 0"</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-009</td><td>Unit</td><td>Duplicate payment prevention</td><td>Employee E-123456 already paid on 2026-03-26</td><td>Call ProcessPayment(E-123456, 2026-03-26)</td><td>Error: "Employee is already paid today"</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-010</td><td>Unit</td><td>PaymentID auto-generation format</td><td>None</td><td>Call GeneratePaymentId()</td><td>PaymentID matches format "SP-" + 9 digits</td><td class="priority-medium">Medium</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-011</td><td>Unit</td><td>Auto-create advance entry on payment</td><td>Payment with Deduction=5000</td><td>Process payment successfully</td><td>AdvanceEntry created with Amount=0, Deduction=5000</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-012</td><td>Unit</td><td>Overtime total from TimeSpan parsing</td><td>Attendance records: ["01:30:00", "02:15:00"]</td><td>Sum overtime from attendance records</td><td>TotalOvertime = "03:45:00"</td><td class="priority-medium">Medium</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-013</td><td>Unit</td><td>Present days count from attendance</td><td>5 attendance records with status='P' in date range</td><td>Count present days for employee in range</td><td>PresentDays = 5</td><td class="priority-medium">Medium</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-014</td><td>Unit</td><td>Zero overtime produces zero overtime amount</td><td>TotalOvertimeMinutes=0, Rate=100</td><td>Call CalculateOvertimeAmount(0, 100)</td><td>OvertimeAmount = 0</td><td class="priority-medium">Medium</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">UT-HR-015</td><td>Unit</td><td>Zero deduction — net pay equals salary + overtime</td><td>Salary=20000, OvertimeAmount=200, Deduction=0</td><td>Call CalculateNetPay(20000, 200, 0)</td><td>NetPay = 20200</td><td class="priority-medium">Medium</td><td>URS-HR-009</td></tr>
+</table>
+</section>
+
+<!-- 3.4 GUEST SERVICE -->
+<section id="unit-guest">
+<h3>3.4 Guest Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-GI-001</td><td>Unit</td><td>GuestID auto-generation format</td><td>None</td><td>Call GenerateGuestId()</td><td>GuestID matches "G-" + 6 digits (1-9 only)</td><td class="priority-high">High</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">UT-GI-002</td><td>Unit</td><td>Guest name required validation</td><td>GuestName = empty</td><td>Call ValidateGuest(emptyName)</td><td>Error: "Please enter guest name"</td><td class="priority-high">High</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">UT-GI-003</td><td>Unit</td><td>Guest address required validation</td><td>Address = empty</td><td>Call ValidateGuest(emptyAddress)</td><td>Error: "Please enter guest address"</td><td class="priority-high">High</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">UT-GI-004</td><td>Unit</td><td>ContactNo numeric-only validation</td><td>ContactNo = "abc123"</td><td>Call ValidateGuest(alphaContact)</td><td>Validation error for non-numeric contact</td><td class="priority-high">High</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">UT-GI-005</td><td>Unit</td><td>All required fields missing</td><td>All fields empty</td><td>Call ValidateGuest(allEmpty)</td><td>Multiple validation errors returned</td><td class="priority-medium">Medium</td><td>URS-GI-001</td></tr>
+</table>
+</section>
+
+<!-- 3.5 ROOM SERVICE -->
+<section id="unit-room">
+<h3>3.5 Room Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-HI-001</td><td>Unit</td><td>Duplicate room number detection</td><td>Room "101" already exists</td><td>Call CreateRoom("101", "AC", 2000)</td><td>Error: duplicate room number rejected</td><td class="priority-high">High</td><td>URS-HI-002</td></tr>
+
+<tr><td class="tc-id">UT-HI-002</td><td>Unit</td><td>Valid room type validation</td><td>RoomType = "InvalidType"</td><td>Call ValidateRoom("102", "InvalidType", 2000)</td><td>Validation error for invalid room type</td><td class="priority-medium">Medium</td><td>URS-HI-002</td></tr>
+
+<tr><td class="tc-id">UT-HI-003</td><td>Unit</td><td>Room charges must be positive</td><td>RoomCharges = -100</td><td>Call ValidateRoom("102", "AC", -100)</td><td>Validation error: charges must be positive</td><td class="priority-medium">Medium</td><td>URS-HI-002</td></tr>
+
+<tr><td class="tc-id">UT-HI-004</td><td>Unit</td><td>Successful room creation</td><td>Room "201" does not exist</td><td>Call CreateRoom("201", "Deluxe", 5000)</td><td>Room created successfully; retrievable by RoomNo</td><td class="priority-high">High</td><td>URS-HI-002</td></tr>
+
+<tr><td class="tc-id">UT-HI-005</td><td>Unit</td><td>Room search by autocomplete prefix</td><td>Rooms: "101", "102", "201"</td><td>Call SearchRooms("10")</td><td>Returns rooms "101" and "102"</td><td class="priority-medium">Medium</td><td>URS-HI-002</td></tr>
+</table>
+</section>
+
+<!-- 3.6 RESERVATION SERVICE -->
+<section id="unit-reservation">
+<h3>3.6 Reservation Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-RS-001</td><td>Unit</td><td>Reservation date overlap detection — overlap</td><td>Room 101 reserved Mar 20-25</td><td>Call CheckReservationOverlap("101", Mar 22, Mar 28)</td><td>Overlap detected; reservation rejected</td><td class="priority-high">High</td><td>URS-RS-005</td></tr>
+
+<tr><td class="tc-id">UT-RS-002</td><td>Unit</td><td>Reservation date overlap detection — no overlap</td><td>Room 101 reserved Mar 20-25</td><td>Call CheckReservationOverlap("101", Mar 26, Mar 30)</td><td>No overlap; reservation allowed</td><td class="priority-high">High</td><td>URS-RS-005</td></tr>
+
+<tr><td class="tc-id">UT-RS-003</td><td>Unit</td><td>Reservation status set to Reserved</td><td>Valid reservation data</td><td>Call CreateReservation(data)</td><td>Reservation created with Status = "Reserved"</td><td class="priority-high">High</td><td>URS-RS-001</td></tr>
+
+<tr><td class="tc-id">UT-RS-004</td><td>Unit</td><td>Hall+Garden reservation calculation (Compute1)</td><td>DaysHall=3, RateHall=5000, DaysGarden=2, RateGarden=3000, OtherCharges=500, DiscountPer=10, ServiceTaxPer=12.36, LuxuryTaxPer=5</td><td>Run full Compute1 chain</td><td>TotalHall=15000, TotalGarden=6000, Discount=2150, SubTotal=19350; all taxes calculated per formula</td><td class="priority-high">High</td><td>URS-RS-003</td></tr>
+
+<tr><td class="tc-id">UT-RS-005</td><td>Unit</td><td>Hall/Garden reservation with cess (Compute2)</td><td>Known input values for hall-or-garden booking</td><td>Run full Compute2 chain with cess calculations</td><td>EducessTax, EducessTaxAmount, HEducessTax, HEducessTaxAmount all correctly calculated</td><td class="priority-high">High</td><td>URS-RS-003</td></tr>
+</table>
+</section>
+
+<!-- 3.7 EMPLOYEE SERVICE -->
+<section id="unit-employee">
+<h3>3.7 Employee Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-EM-001</td><td>Unit</td><td>EmployeeID auto-generation format</td><td>None</td><td>Call GenerateEmployeeId()</td><td>EmployeeID matches "E-" + 6 digits (1-9 only)</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-002</td><td>Unit</td><td>Email regex validation — valid email</td><td>Email = "test@example.com"</td><td>Call ValidateEmail("test@example.com")</td><td>Validation passes</td><td class="priority-medium">Medium</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-003</td><td>Unit</td><td>Email regex validation — invalid email</td><td>Email = "invalid-email"</td><td>Call ValidateEmail("invalid-email")</td><td>Validation error: "invalid email address"</td><td class="priority-medium">Medium</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-004</td><td>Unit</td><td>Delete blocked — attendance records exist</td><td>Employee E-123456 has attendance records</td><td>Call DeleteEmployee("E-123456")</td><td>Error: "Unable to delete..Already in use"</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-005</td><td>Unit</td><td>Delete blocked — payment records exist</td><td>Employee E-123456 has payment records</td><td>Call DeleteEmployee("E-123456")</td><td>Error: "Unable to delete..Already in use"</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-006</td><td>Unit</td><td>Delete blocked — advance entry records exist</td><td>Employee E-123456 has advance entries</td><td>Call DeleteEmployee("E-123456")</td><td>Error: "Unable to delete..Already in use"</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-007</td><td>Unit</td><td>Delete succeeds — no related records</td><td>Employee E-654321 has no related records</td><td>Call DeleteEmployee("E-654321")</td><td>Employee deleted successfully</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">UT-EM-008</td><td>Unit</td><td>Required fields validation</td><td>EmployeeName = empty</td><td>Call ValidateEmployee(emptyName)</td><td>Error: "Please enter employee full name"</td><td class="priority-medium">Medium</td><td>URS-HR-001</td></tr>
+</table>
+</section>
+
+<!-- 3.8 INVENTORY SERVICE -->
+<section id="unit-inventory">
+<h3>3.8 Inventory Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-IS-001</td><td>Unit</td><td>Duplicate dish name detection</td><td>Dish "Chicken Biryani" exists</td><td>Call CreateDish("Chicken Biryani", "Main", 350)</td><td>Error: duplicate dish name rejected</td><td class="priority-high">High</td><td>URS-IS-001</td></tr>
+
+<tr><td class="tc-id">UT-IS-002</td><td>Unit</td><td>Dish creation with valid data</td><td>Dish "New Dish" does not exist</td><td>Call CreateDish("New Dish", "Starter", 200)</td><td>Dish created successfully</td><td class="priority-high">High</td><td>URS-IS-001</td></tr>
+
+<tr><td class="tc-id">UT-IS-003</td><td>Unit</td><td>Dish autocomplete search</td><td>Dishes: "Chicken Biryani", "Chicken Tikka", "Paneer"</td><td>Call SearchDishes("Chick")</td><td>Returns "Chicken Biryani" and "Chicken Tikka"</td><td class="priority-medium">Medium</td><td>URS-IS-001</td></tr>
+
+<tr><td class="tc-id">UT-IS-004</td><td>Unit</td><td>Stock update on purchase</td><td>Stock of item X = 50</td><td>Purchase 20 units of item X</td><td>Stock of item X = 70</td><td class="priority-high">High</td><td>URS-IS-005</td></tr>
+
+<tr><td class="tc-id">UT-IS-005</td><td>Unit</td><td>Stock deduction on order</td><td>Stock of item X = 50</td><td>Order 10 units of item X</td><td>Stock of item X = 40</td><td class="priority-high">High</td><td>URS-IS-007</td></tr>
+
+<tr><td class="tc-id">UT-IS-006</td><td>Unit</td><td>Beer item CRUD operations</td><td>No existing beer items</td><td>Create, read, update, delete beer item</td><td>All CRUD operations succeed</td><td class="priority-medium">Medium</td><td>URS-IS-003</td></tr>
+
+<tr><td class="tc-id">UT-IS-007</td><td>Unit</td><td>Liquor item CRUD operations</td><td>No existing liquor items</td><td>Create, read, update, delete liquor item</td><td>All CRUD operations succeed</td><td class="priority-medium">Medium</td><td>URS-IS-004</td></tr>
+
+<tr><td class="tc-id">UT-IS-008</td><td>Unit</td><td>Purchase inventory entry validation</td><td>Required fields empty</td><td>Call ValidatePurchase(emptyFields)</td><td>Validation errors returned for all required fields</td><td class="priority-medium">Medium</td><td>URS-IS-005</td></tr>
+
+<tr><td class="tc-id">UT-IS-009</td><td>Unit</td><td>Stock save disabled for User role</td><td>UserType = "User"</td><td>Call SaveStock with User role</td><td>Operation rejected / access denied</td><td class="priority-high">High</td><td>URS-IS-007</td></tr>
+
+<tr><td class="tc-id">UT-IS-010</td><td>Unit</td><td>Stock save allowed for Admin role</td><td>UserType = "Admin"</td><td>Call SaveStock with Admin role</td><td>Operation succeeds</td><td class="priority-high">High</td><td>URS-IS-007</td></tr>
+</table>
+</section>
+
+<!-- 3.9 AUTH SERVICE -->
+<section id="unit-auth">
+<h3>3.9 Auth Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-UM-001</td><td>Unit</td><td>Password hashing uses bcrypt</td><td>Password = "TestPass123"</td><td>Call HashPassword("TestPass123")</td><td>Returns bcrypt hash (starts with "$2")</td><td class="priority-high">High</td><td>URS-UM-005</td></tr>
+
+<tr><td class="tc-id">UT-UM-002</td><td>Unit</td><td>Password verification — correct password</td><td>Stored hash for "TestPass123"</td><td>Call VerifyPassword("TestPass123", storedHash)</td><td>Returns true</td><td class="priority-high">High</td><td>URS-UM-005</td></tr>
+
+<tr><td class="tc-id">UT-UM-003</td><td>Unit</td><td>Password verification — wrong password</td><td>Stored hash for "TestPass123"</td><td>Call VerifyPassword("WrongPass", storedHash)</td><td>Returns false</td><td class="priority-high">High</td><td>URS-UM-005</td></tr>
+
+<tr><td class="tc-id">UT-UM-004</td><td>Unit</td><td>Role validation — valid roles</td><td>UserType = "Admin" or "User"</td><td>Call ValidateRole(userType)</td><td>Validation passes for both</td><td class="priority-medium">Medium</td><td>URS-UM-006</td></tr>
+
+<tr><td class="tc-id">UT-UM-005</td><td>Unit</td><td>Login with invalid credentials rejected</td><td>User "admin" exists with known password</td><td>Call Login("admin", "wrongpassword", "Admin")</td><td>Login failed; authentication rejected</td><td class="priority-high">High</td><td>URS-UM-002</td></tr>
+</table>
+</section>
+
+<!-- 3.10 EXCEL EXPORT -->
+<section id="unit-excel">
+<h3>3.10 Excel Export Service Tests</h3>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">UT-EX-001</td><td>Unit</td><td>Export data to valid xlsx file</td><td>DataTable with 10 rows and 5 columns</td><td>Call ExportToExcel(data)</td><td>Valid .xlsx byte array returned; parseable by ClosedXML</td><td class="priority-high">High</td><td>URS-DE-001</td></tr>
+
+<tr><td class="tc-id">UT-EX-002</td><td>Unit</td><td>Excel headers are bold</td><td>DataTable with headers</td><td>Export and inspect header row styling</td><td>Header row has bold font</td><td class="priority-medium">Medium</td><td>URS-DE-001</td></tr>
+
+<tr><td class="tc-id">UT-EX-003</td><td>Unit</td><td>Empty data table returns valid file</td><td>Empty DataTable with only headers</td><td>Call ExportToExcel(emptyData)</td><td>Valid .xlsx with headers only</td><td class="priority-medium">Medium</td><td>URS-DE-001</td></tr>
+</table>
+</section>
+</section>
+
+<!-- ============ INTEGRATION TESTS ============ -->
+<section id="integration">
+<h2>4. Integration Tests (IT-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">IT-CI-001</td><td>Integration</td><td>Check-in creates record and updates availability</td><td>Room "101" exists and is available</td><td>1. Create guest 2. Check-in to room "101" 3. Query room availability</td><td>CheckIn_Room record created; room no longer available for overlapping dates</td><td class="priority-high">High</td><td>URS-CI-001, URS-HI-003</td></tr>
+
+<tr><td class="tc-id">IT-CO-001</td><td>Integration</td><td>Check-out creates record and updates check-in status</td><td>Guest checked-in to room "101"</td><td>1. Check-out guest 2. Query Checkout_Room 3. Query CheckIn_Room status</td><td>Checkout_Room record created; room available again</td><td class="priority-high">High</td><td>URS-CI-003</td></tr>
+
+<tr><td class="tc-id">IT-RS-001</td><td>Integration</td><td>Reservation blocks room for date range</td><td>Room "101" available</td><td>1. Create reservation for Mar 20-25 2. Attempt another reservation for Mar 22-28</td><td>First reservation succeeds; second rejected due to overlap</td><td class="priority-high">High</td><td>URS-RS-001, URS-RS-005</td></tr>
+
+<tr><td class="tc-id">IT-HR-001</td><td>Integration</td><td>Payment creates payment record AND advance entry</td><td>Employee exists with attendance records</td><td>1. Process payment with Deduction=5000 2. Check AdvanceEntry table</td><td>EmployeePayment record created; AdvanceEntry record auto-created with Amount=0, Deduction=5000</td><td class="priority-high">High</td><td>URS-HR-009</td></tr>
+
+<tr><td class="tc-id">IT-HR-002</td><td>Integration</td><td>Employee deletion blocked by references</td><td>Employee with attendance records</td><td>1. Create employee 2. Add attendance 3. Try delete</td><td>Delete rejected; employee preserved; error message shown</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">IT-OT-001</td><td>Integration</td><td>Order creation updates stock/inventory</td><td>Dish "Biryani" with stock=50</td><td>1. Create order for 5 Biryani 2. Check stock</td><td>Order created; stock reduced to 45</td><td class="priority-high">High</td><td>URS-OT-001, URS-IS-007</td></tr>
+
+<tr><td class="tc-id">IT-DB-001</td><td>Integration</td><td>Database backup and restore preserves all data</td><td>Database with test data in all tables</td><td>1. Record counts for all tables 2. Backup 3. Modify data 4. Restore 5. Verify counts</td><td>All table record counts match pre-backup state</td><td class="priority-high">High</td><td>URS-DB-001, URS-DB-002</td></tr>
+
+<tr><td class="tc-id">IT-GI-001</td><td>Integration</td><td>Guest creation persists to database</td><td>Empty Guest table</td><td>1. Create guest via API 2. Query database directly</td><td>Guest record exists in database with correct fields</td><td class="priority-medium">Medium</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">IT-RS-002</td><td>Integration</td><td>Hall+Garden reservation persists correctly</td><td>Hall and Garden configured</td><td>1. Create hall+garden reservation 2. Query Reservation_HallandGarden</td><td>Record exists with correct charges and tax calculations</td><td class="priority-medium">Medium</td><td>URS-RS-003</td></tr>
+
+<tr><td class="tc-id">IT-UM-001</td><td>Integration</td><td>User registration and login flow</td><td>No users exist</td><td>1. Register user 2. Login with credentials</td><td>Registration succeeds; login returns JWT token with correct role</td><td class="priority-high">High</td><td>URS-UM-001, URS-UM-002</td></tr>
+</table>
+</section>
+
+<!-- ============ REGRESSION TESTS ============ -->
+<section id="regression">
+<h2>5. Regression Tests (RT-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">RT-001</td><td>Regression</td><td>Room unavailable after check-in</td><td>Room "101" available</td><td>1. Check-in to room "101" 2. Query available rooms</td><td>Room "101" NOT in available rooms list</td><td class="priority-high">High</td><td>URS-HI-003</td></tr>
+
+<tr><td class="tc-id">RT-002</td><td>Regression</td><td>Room available after check-out</td><td>Guest checked-in to room "101"</td><td>1. Check-out from room "101" 2. Query available rooms</td><td>Room "101" IS in available rooms list</td><td class="priority-high">High</td><td>URS-HI-003</td></tr>
+
+<tr><td class="tc-id">RT-003</td><td>Regression</td><td>Reservation overlap prevents double-booking</td><td>Room "101" reserved Mar 20-25</td><td>1. Attempt reservation for room "101" Mar 22-28</td><td>Reservation rejected with overlap error</td><td class="priority-high">High</td><td>URS-RS-005</td></tr>
+
+<tr><td class="tc-id">RT-004</td><td>Regression</td><td>Tax calculations match legacy output</td><td>Known legacy input/output pairs</td><td>Run calculations with legacy input data</td><td>All outputs match legacy system exactly</td><td class="priority-high">High</td><td>URS-CI-004, URS-CC-004</td></tr>
+
+<tr><td class="tc-id">RT-005</td><td>Regression</td><td>Salary calculations match legacy output</td><td>Known legacy input/output pairs</td><td>Run salary calculations with legacy data</td><td>Salary, OvertimeAmount, NetPay match legacy exactly</td><td class="priority-high">High</td><td>URS-HR-009, URS-CC-004</td></tr>
+</table>
+</section>
+
+<!-- ============ FUNCTIONAL TESTS ============ -->
+<section id="functional">
+<h2>6. Functional Tests (FT-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">FT-GI-001</td><td>Functional</td><td>Guest full CRUD workflow</td><td>API running</td><td>1. POST /guests 2. GET /guests/{id} 3. PUT /guests/{id} 4. DELETE /guests/{id}</td><td>Create returns 201; Get returns guest; Update returns 200; Delete returns 204</td><td class="priority-high">High</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">FT-HI-001</td><td>Functional</td><td>Room full CRUD workflow</td><td>API running</td><td>1. POST /rooms 2. GET /rooms/{no} 3. PUT /rooms/{no} 4. DELETE /rooms/{no}</td><td>All CRUD operations return correct status codes and data</td><td class="priority-high">High</td><td>URS-HI-002</td></tr>
+
+<tr><td class="tc-id">FT-EM-001</td><td>Functional</td><td>Employee full CRUD workflow</td><td>API running</td><td>1. POST /employees 2. GET /employees/{id} 3. PUT /employees/{id} 4. DELETE /employees/{id}</td><td>All CRUD operations work; delete only succeeds when no references</td><td class="priority-high">High</td><td>URS-HR-001</td></tr>
+
+<tr><td class="tc-id">FT-IS-001</td><td>Functional</td><td>Dish full CRUD workflow</td><td>API running</td><td>1. POST /inventory/dishes 2. GET 3. PUT 4. DELETE</td><td>All operations succeed; duplicate name handled on create</td><td class="priority-high">High</td><td>URS-IS-001</td></tr>
+
+<tr><td class="tc-id">FT-GI-002</td><td>Functional</td><td>Guest search/filter by name</td><td>Multiple guests in database</td><td>GET /guests?search=John</td><td>Returns only guests with names starting with "John"</td><td class="priority-medium">Medium</td><td>URS-GI-002</td></tr>
+
+<tr><td class="tc-id">FT-RP-001</td><td>Functional</td><td>Guest report generation</td><td>Guests in database</td><td>GET /reports/guests?format=pdf</td><td>Returns valid PDF with all guest data</td><td class="priority-medium">Medium</td><td>URS-RP-005</td></tr>
+
+<tr><td class="tc-id">FT-RP-002</td><td>Functional</td><td>Check-in report generation</td><td>Check-in records exist</td><td>GET /reports/checkins?from=...&amp;to=...</td><td>Returns valid report with date-filtered data</td><td class="priority-medium">Medium</td><td>URS-RP-008</td></tr>
+
+<tr><td class="tc-id">FT-RP-003</td><td>Functional</td><td>Employee payment report</td><td>Payment records exist</td><td>GET /reports/employee-payments</td><td>Returns valid report with all payment data</td><td class="priority-medium">Medium</td><td>URS-RP-004</td></tr>
+
+<tr><td class="tc-id">FT-RP-004</td><td>Functional</td><td>Transaction report with date filter</td><td>Transaction records exist</td><td>GET /reports/transactions?from=...&amp;to=...</td><td>Returns filtered transaction data</td><td class="priority-medium">Medium</td><td>URS-RP-016</td></tr>
+
+<tr><td class="tc-id">FT-DE-001</td><td>Functional</td><td>Excel export of guest records</td><td>Guest records in database</td><td>GET /guests/export/excel</td><td>Returns valid .xlsx file with all guest data</td><td class="priority-medium">Medium</td><td>URS-DE-001</td></tr>
+
+<tr><td class="tc-id">FT-UM-001</td><td>Functional</td><td>Admin role full access</td><td>Logged in as Admin</td><td>Access all endpoints including stock save</td><td>All operations succeed</td><td class="priority-high">High</td><td>URS-UM-006</td></tr>
+
+<tr><td class="tc-id">FT-UM-002</td><td>Functional</td><td>User role restricted access</td><td>Logged in as User</td><td>Attempt stock save and admin-only operations</td><td>Restricted operations return 403 Forbidden</td><td class="priority-high">High</td><td>URS-UM-006</td></tr>
+
+<tr><td class="tc-id">FT-RP-005</td><td>Functional</td><td>All 16 report endpoints respond</td><td>API running with test data</td><td>Call each of the 16 report endpoints</td><td>All endpoints return 200 with valid report data</td><td class="priority-high">High</td><td>URS-RP-001 to URS-RP-016</td></tr>
+
+<tr><td class="tc-id">FT-CI-001</td><td>Functional</td><td>Check-in search/filter capabilities</td><td>Multiple check-in records</td><td>Test all filter parameters: roomNo, guestName, dateRange</td><td>All filters return correct results matching legacy behavior</td><td class="priority-medium">Medium</td><td>URS-CC-005</td></tr>
+
+<tr><td class="tc-id">FT-RS-001</td><td>Functional</td><td>Reservation search/filter</td><td>Multiple reservations</td><td>Test filters: roomNo, guestName, status, dateRange</td><td>All filters return correct results</td><td class="priority-medium">Medium</td><td>URS-CC-005</td></tr>
+</table>
+</section>
+
+<!-- ============ NON-FUNCTIONAL TESTS ============ -->
+<section id="nonfunctional">
+<h2>7. Non-Functional Tests (NFT-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">NFT-001</td><td>Performance</td><td>API response time &lt; 200ms for CRUD</td><td>Database with 1000+ records per table</td><td>Measure response time for GET/POST/PUT/DELETE on each entity</td><td>p95 response time &lt; 200ms</td><td class="priority-high">High</td><td>URS-CC-005</td></tr>
+
+<tr><td class="tc-id">NFT-002</td><td>Load</td><td>Handle 50 concurrent users</td><td>API deployed; load testing tool configured</td><td>Simulate 50 concurrent users performing mixed operations</td><td>No errors; response times acceptable; no deadlocks</td><td class="priority-medium">Medium</td><td>—</td></tr>
+
+<tr><td class="tc-id">NFT-003</td><td>Scalability</td><td>Database handles 10,000+ records per table</td><td>Synthetic data seeded (10K+ rows)</td><td>Run all queries and reports against large dataset</td><td>All operations complete within acceptable time; no timeouts</td><td class="priority-medium">Medium</td><td>—</td></tr>
+
+<tr><td class="tc-id">NFT-004</td><td>Security</td><td>Password hashing uses bcrypt with cost factor</td><td>User created with password</td><td>Inspect stored password hash in database</td><td>Hash starts with "$2a$" or "$2b$"; cost factor &ge; 10</td><td class="priority-high">High</td><td>URS-UM-005</td></tr>
+
+<tr><td class="tc-id">NFT-005</td><td>Security</td><td>SQL injection prevention</td><td>API running</td><td>Send SQL injection payloads in all input fields (e.g., "'; DROP TABLE Users; --")</td><td>All inputs sanitized; no SQL errors; parameterized queries used</td><td class="priority-high">High</td><td>—</td></tr>
+
+<tr><td class="tc-id">NFT-006</td><td>Security</td><td>Input validation on all endpoints</td><td>API running</td><td>Send invalid data types, overflow values, XSS payloads</td><td>All invalid input rejected with 400 Bad Request; no server errors</td><td class="priority-high">High</td><td>—</td></tr>
+</table>
+</section>
+
+<!-- ============ PERFORMANCE TESTS ============ -->
+<section id="performance">
+<h2>8. Performance Tests (PT-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr><td class="tc-id">PT-001</td><td>Performance</td><td>Bulk guest creation (1000 records)</td><td>Empty Guest table</td><td>Create 1000 guests via API in sequence</td><td>All 1000 created successfully; total time &lt; 60 seconds</td><td class="priority-medium">Medium</td><td>URS-GI-001</td></tr>
+
+<tr><td class="tc-id">PT-002</td><td>Performance</td><td>Complex dashboard query performance</td><td>10,000+ records across CheckIn_Room, Temp_Reservation, Guest</td><td>Call dashboard endpoint (joins across 3+ tables)</td><td>Response time &lt; 500ms</td><td class="priority-medium">Medium</td><td>URS-DA-001</td></tr>
+
+<tr><td class="tc-id">PT-003</td><td>Performance</td><td>Report generation under load</td><td>10,000+ records; 10 concurrent report requests</td><td>Request all 16 report types concurrently</td><td>All reports generated without timeout or error</td><td class="priority-medium">Medium</td><td>URS-RP-001 to URS-RP-016</td></tr>
+
+<tr><td class="tc-id">PT-004</td><td>Performance</td><td>Excel export with 10,000 rows</td><td>10,000 employee records</td><td>Call Excel export endpoint</td><td>Valid .xlsx generated; response time &lt; 10 seconds</td><td class="priority-medium">Medium</td><td>URS-DE-001</td></tr>
+</table>
+</section>
+
+<!-- ============ E2E TESTS ============ -->
+<section id="e2e">
+<h2>9. End-to-End Tests (E2E-)</h2>
+<table class="tc-table">
+<tr><th style="width:90px">Test ID</th><th>Category</th><th>Title</th><th>Preconditions</th><th>Steps</th><th>Expected Result</th><th>Priority</th><th style="width:90px">URS Ref</th></tr>
+
+<tr>
+  <td class="tc-id">E2E-001</td><td>E2E</td><td>Complete guest lifecycle</td><td>API running with clean DB</td>
+  <td>1. Register guest 2. Create reservation 3. Check-in (verify room unavailable) 4. Create food order 5. Check-out with full billing 6. Generate room invoice 7. Verify room available again</td>
+  <td>All steps complete successfully; room availability toggles correctly; invoice contains all charges and taxes; all calculations match formulas</td>
+  <td class="priority-high">High</td><td>URS-GI-001, URS-RS-001, URS-CI-001, URS-OT-001, URS-CI-003, URS-OT-008</td>
+</tr>
+
+<tr>
+  <td class="tc-id">E2E-002</td><td>E2E</td><td>Complete employee lifecycle</td><td>API running with clean DB</td>
+  <td>1. Register employee 2. Record attendance (5 days P, 2 days A) 3. Record advance payment 4. Process salary payment with deduction 5. Generate salary slip 6. Verify advance entry auto-created</td>
+  <td>Employee created; attendance tracked; salary calculated correctly (BasicSalary*5/30); overtime and deduction applied; salary slip generated; advance entry exists</td>
+  <td class="priority-high">High</td><td>URS-HR-001, URS-HR-004, URS-HR-007, URS-HR-009, URS-HR-010</td>
+</tr>
+
+<tr>
+  <td class="tc-id">E2E-003</td><td>E2E</td><td>Complete inventory lifecycle</td><td>API running with clean DB</td>
+  <td>1. Add food item 2. Record purchase inventory (20 units) 3. Verify stock = 20 4. Create order (5 units) 5. Verify stock = 15</td>
+  <td>Item created; purchase updates stock; order deducts stock; all quantities correct</td>
+  <td class="priority-high">High</td><td>URS-IS-001, URS-IS-005, URS-IS-007, URS-OT-001</td>
+</tr>
+
+<tr>
+  <td class="tc-id">E2E-004</td><td>E2E</td><td>Admin user full workflow</td><td>Admin user registered</td>
+  <td>1. Login as Admin 2. Access all endpoints 3. Save stock 4. Delete employee 5. Access all reports</td>
+  <td>Admin has unrestricted access to all features</td>
+  <td class="priority-high">High</td><td>URS-UM-006</td>
+</tr>
+
+<tr>
+  <td class="tc-id">E2E-005</td><td>E2E</td><td>Restricted user workflow</td><td>User (non-admin) registered</td>
+  <td>1. Login as User 2. Access normal endpoints 3. Attempt stock save 4. Attempt admin-only operations</td>
+  <td>Normal operations succeed; stock save rejected; admin operations return 403</td>
+  <td class="priority-high">High</td><td>URS-UM-006</td>
+</tr>
+</table>
+</section>
+
+<!-- ============ COVERAGE MATRIX ============ -->
+<section id="matrix">
+<h2>10. Coverage Matrix</h2>
+<p>Test coverage by module and test type:</p>
+<table class="coverage-table">
+  <tr><th>Module</th><th>Unit (UT)</th><th>Integration (IT)</th><th>Regression (RT)</th><th>Functional (FT)</th><th>Non-Func (NFT)</th><th>Perf (PT)</th><th>E2E</th><th>Total</th></tr>
+  <tr><td>User Management &amp; Auth</td><td>5</td><td>1</td><td>0</td><td>2</td><td>2</td><td>0</td><td>2</td><td>12</td></tr>
+  <tr><td>Hotel Information</td><td>5</td><td>0</td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td><td>8</td></tr>
+  <tr><td>Guest Information</td><td>5</td><td>1</td><td>0</td><td>2</td><td>0</td><td>1</td><td>1</td><td>10</td></tr>
+  <tr><td>Reservation</td><td>5</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>9</td></tr>
+  <tr><td>Check-In / Check-Out</td><td>30</td><td>2</td><td>2</td><td>1</td><td>0</td><td>0</td><td>1</td><td>36</td></tr>
+  <tr><td>Orders &amp; Transactions</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>3</td></tr>
+  <tr><td>Inventory &amp; Stock</td><td>10</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>12</td></tr>
+  <tr><td>Human Resource / Payroll</td><td>23</td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>28</td></tr>
+  <tr><td>Reporting</td><td>0</td><td>0</td><td>0</td><td>5</td><td>0</td><td>1</td><td>0</td><td>6</td></tr>
+  <tr><td>Data Export (Excel)</td><td>3</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>5</td></tr>
+  <tr><td>Database Backup/Restore</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+  <tr><td>Dashboard</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+  <tr><td>Cross-Cutting (Security/Perf)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>4</td><td>0</td><td>0</td><td>4</td></tr>
+  <tr><td><strong>TOTAL</strong></td><td><strong>86</strong></td><td><strong>9</strong></td><td><strong>6</strong></td><td><strong>16</strong></td><td><strong>6</strong></td><td><strong>4</strong></td><td><strong>7</strong></td><td><strong>135</strong></td></tr>
+</table>
+</section>
+
+</main>
+</body>
+</html>

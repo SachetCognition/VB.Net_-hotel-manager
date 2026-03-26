@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URS-HMS-001 — User Requirement Specification</title>
+<style>
+:root {
+  --primary: #1a3a5c;
+  --primary-light: #2c5f8a;
+  --accent: #3a7bd5;
+  --bg: #f8f9fa;
+  --white: #ffffff;
+  --border: #d1d9e0;
+  --text: #2c3e50;
+  --text-light: #5a6c7d;
+  --row-alt: #eef3f8;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; display: flex; }
+/* Sidebar Navigation */
+nav.sidebar {
+  width: 280px; min-height: 100vh; background: var(--primary); color: #fff;
+  position: fixed; top: 0; left: 0; overflow-y: auto; padding: 20px 0; z-index: 100;
+}
+nav.sidebar h3 { padding: 10px 20px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #8ab4d6; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; }
+nav.sidebar a { display: block; padding: 6px 20px; color: #c5d8e8; text-decoration: none; font-size: 13px; transition: all 0.2s; }
+nav.sidebar a:hover { background: var(--primary-light); color: #fff; padding-left: 25px; }
+nav.sidebar .nav-section { margin-bottom: 10px; }
+/* Main Content */
+main { margin-left: 280px; padding: 40px 50px; max-width: 1100px; width: calc(100% - 280px); }
+h1 { color: var(--primary); font-size: 28px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 5px; }
+h2 { color: var(--primary); font-size: 22px; margin-top: 40px; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+h3 { color: var(--primary-light); font-size: 18px; margin-top: 25px; margin-bottom: 10px; }
+h4 { color: var(--text); font-size: 15px; margin-top: 15px; margin-bottom: 8px; }
+p { margin-bottom: 12px; }
+.doc-meta { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 20px 25px; margin: 20px 0 30px; }
+.doc-meta table { width: 100%; border-collapse: collapse; }
+.doc-meta td { padding: 6px 12px; font-size: 14px; }
+.doc-meta td:first-child { font-weight: 600; width: 200px; color: var(--primary); }
+.approval-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.approval-table th, .approval-table td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 13px; }
+.approval-table th { background: var(--primary); color: #fff; }
+/* Requirements Table */
+table.req-table { width: 100%; border-collapse: collapse; margin: 15px 0 25px; font-size: 13px; }
+table.req-table th { background: var(--primary); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; }
+table.req-table td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+table.req-table tr:nth-child(even) td { background: var(--row-alt); }
+table.req-table tr:hover td { background: #dbe8f4; }
+.req-id { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.deprecated { background: #fff3cd !important; }
+.glossary-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.glossary-table th { background: var(--primary); color: #fff; padding: 8px 12px; text-align: left; }
+.glossary-table td { padding: 8px 12px; border: 1px solid var(--border); }
+.glossary-table tr:nth-child(even) td { background: var(--row-alt); }
+ul, ol { margin: 10px 0 10px 25px; }
+li { margin-bottom: 4px; }
+code { background: #e9ecef; padding: 2px 6px; border-radius: 3px; font-size: 12px; font-family: 'Consolas', monospace; }
+.formula { background: #f0f4f8; border-left: 4px solid var(--accent); padding: 12px 16px; margin: 10px 0; font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.8; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+.badge-new { background: #d4edda; color: #155724; }
+.badge-changed { background: #fff3cd; color: #856404; }
+.badge-deprecated { background: #f8d7da; color: #721c24; }
+@media print {
+  nav.sidebar { display: none; }
+  main { margin-left: 0; padding: 20px; max-width: 100%; width: 100%; }
+  table.req-table { font-size: 11px; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <h3>Table of Contents</h3>
+  <div class="nav-section">
+    <a href="#header">Document Info</a>
+    <a href="#purpose">1. Purpose &amp; Scope</a>
+    <a href="#glossary">2. Glossary</a>
+    <a href="#mod1">3. Module 1: User Management</a>
+    <a href="#mod2">4. Module 2: Hotel Information</a>
+    <a href="#mod3">5. Module 3: Guest Information</a>
+    <a href="#mod4">6. Module 4: Reservation</a>
+    <a href="#mod5">7. Module 5: Check-In/Check-Out</a>
+    <a href="#mod6">8. Module 6: Orders &amp; Transactions</a>
+    <a href="#mod7">9. Module 7: Inventory &amp; Stock</a>
+    <a href="#mod8">10. Module 8: Human Resources</a>
+    <a href="#mod9">11. Module 9: Reporting</a>
+    <a href="#mod10">12. Module 10: Data Export</a>
+    <a href="#mod11">13. Module 11: Scheduling</a>
+    <a href="#mod12">14. Module 12: DB Backup/Restore</a>
+    <a href="#mod13">15. Module 13: Dashboard</a>
+    <a href="#crosscutting">16. Cross-Cutting Requirements</a>
+    <a href="#deprecated">17. Deprecated Features</a>
+    <a href="#traceability">18. Traceability Matrix</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section id="header">
+<h1>User Requirement Specification<br>Hotel Management System Migration to Modern .NET</h1>
+
+<div class="doc-meta">
+<table>
+  <tr><td>Document ID:</td><td>URS-HMS-001</td></tr>
+  <tr><td>Version:</td><td>1.0</td></tr>
+  <tr><td>Date:</td><td>2026-03-26</td></tr>
+  <tr><td>Status:</td><td>Draft</td></tr>
+  <tr><td>Classification:</td><td>Internal</td></tr>
+  <tr><td>Author:</td><td>Migration Engineering Team</td></tr>
+</table>
+</div>
+
+<h3>Approval Signatures</h3>
+<table class="approval-table">
+  <tr><th>Role</th><th>Name</th><th>Signature</th><th>Date</th></tr>
+  <tr><td>Project Manager</td><td></td><td></td><td></td></tr>
+  <tr><td>Technical Lead</td><td></td><td></td><td></td></tr>
+  <tr><td>QA Lead</td><td></td><td></td><td></td></tr>
+  <tr><td>Business Stakeholder</td><td></td><td></td><td></td></tr>
+</table>
+
+<h3>Revision History</h3>
+<table class="approval-table">
+  <tr><th>Version</th><th>Date</th><th>Author</th><th>Description</th></tr>
+  <tr><td>1.0</td><td>2026-03-26</td><td>Migration Engineering Team</td><td>Initial release &mdash; complete catalog of all legacy business functions</td></tr>
+</table>
+</section>
+
+<!-- ============ PURPOSE & SCOPE ============ -->
+<section id="purpose">
+<h2>1. Purpose &amp; Scope</h2>
+<h3>1.1 Purpose</h3>
+<p>This User Requirement Specification (URS) formally catalogs every business function present in the legacy Hotel Management System (HMS) desktop application. It serves as the single source of truth to ensure <strong>zero functionality is deprecated</strong> during migration, except where explicitly listed in the Deprecated Features section.</p>
+
+<h3>1.2 Migration Scope</h3>
+<table class="glossary-table">
+  <tr><th>Aspect</th><th>Legacy (Current)</th><th>Target (Modern)</th></tr>
+  <tr><td>Language</td><td>VB.NET (Windows Forms)</td><td>C# (.NET 8+)</td></tr>
+  <tr><td>Framework</td><td>.NET Framework 4.0</td><td>ASP.NET Core 8 Web API</td></tr>
+  <tr><td>Database</td><td>Microsoft Access (.accdb via OleDb)</td><td>SQL Server (via EF Core)</td></tr>
+  <tr><td>Reporting</td><td>Crystal Reports</td><td>Modern reporting (PDF/Excel generation)</td></tr>
+  <tr><td>Architecture</td><td>Monolithic desktop (WinForms)</td><td>Layered REST API (Clean Architecture)</td></tr>
+  <tr><td>Authentication</td><td>Base64 "encryption" (ModFunc.vb)</td><td>bcrypt/Argon2 password hashing + JWT</td></tr>
+  <tr><td>Excel Export</td><td>COM Interop (Microsoft.Office.Interop.Excel)</td><td>ClosedXML / EPPlus (no Office required)</td></tr>
+</table>
+
+<h3>1.3 Objectives</h3>
+<ul>
+  <li>Migrate all business logic with identical functional behavior</li>
+  <li>Preserve all tax calculation formulas exactly as implemented</li>
+  <li>Maintain all data validation rules and business constraints</li>
+  <li>Replicate all 16 Crystal Reports as modern PDF/Excel equivalents</li>
+  <li>Ensure zero data loss during database migration</li>
+  <li>Improve security posture (password hashing, parameterized queries, RBAC)</li>
+</ul>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+<h2>2. Glossary</h2>
+<table class="glossary-table">
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Guest</td><td>A person who stays at or uses hotel facilities. Identified by a unique GuestID (format: "G-" + 6 random digits).</td></tr>
+  <tr><td>Reservation</td><td>A future booking of a room, hall, or garden for a guest, stored in the Temp_Reservation table. Status: "Reserved".</td></tr>
+  <tr><td>Check-In</td><td>The process of a guest occupying a room. Creates a record in CheckIn_Room with status "Checked In".</td></tr>
+  <tr><td>Check-Out</td><td>The process of a guest vacating a room with final bill generation. Creates a record in Checkout_Room.</td></tr>
+  <tr><td>Room</td><td>A hotel accommodation unit with RoomNo (PK), RoomType (AC/Non-AC/Deluxe/Suite), and RoomCharges.</td></tr>
+  <tr><td>Order</td><td>A food/beverage order placed by a checked-in guest or restaurant patron.</td></tr>
+  <tr><td>Transaction</td><td>A financial transaction recorded against a guest or the hotel.</td></tr>
+  <tr><td>Employee</td><td>A hotel staff member. Identified by EmployeeID (format: "E-" + 6 random digits).</td></tr>
+  <tr><td>Inventory</td><td>Food, beverage, beer, and liquor items available for order/sale.</td></tr>
+  <tr><td>Stock</td><td>Current quantity levels of inventory items.</td></tr>
+  <tr><td>Hall</td><td>A hotel event/conference hall available for reservation with per-day charges.</td></tr>
+  <tr><td>Garden</td><td>A hotel garden venue available for reservation with per-day charges.</td></tr>
+  <tr><td>Extra Bed</td><td>An additional bed that can be added to a room during check-in at a configured charge.</td></tr>
+  <tr><td>Service Tax</td><td>A percentage-based tax applied on the SubTotal of a booking.</td></tr>
+  <tr><td>Luxury Tax</td><td>A percentage-based tax applied on (SubTotal + ServiceTaxAmount).</td></tr>
+  <tr><td>Education Cess</td><td>A secondary tax = ServiceTaxPer &times; 2 / 100, applied on ServiceTaxAmount.</td></tr>
+  <tr><td>Higher Education Cess</td><td>A secondary tax = ServiceTaxPer &times; 1 / 100, applied on ServiceTaxAmount.</td></tr>
+  <tr><td>Currency</td><td>A configurable currency unit from the CurrencySet table used in financial transactions.</td></tr>
+  <tr><td>Advance Entry</td><td>A salary advance paid to an employee, tracked for deduction during payroll processing.</td></tr>
+  <tr><td>Payroll / Net Pay</td><td>Employee salary calculation: NetPay = Salary + OvertimeAmount - Deduction.</td></tr>
+</table>
+</section>
+
+<!-- ============ MODULE 1: USER MANAGEMENT ============ -->
+<section id="mod1">
+<h2>3. Module 1: User Management &amp; Authentication</h2>
+<p><strong>Source folder:</strong> <code>User Management/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-UM-001</td>
+    <td>User Registration</td>
+    <td>System shall allow creation of new user accounts with Username, Password, and UserType (Admin/User). Passwords must be securely hashed before storage.</td>
+    <td>New user can be created; password stored as bcrypt/Argon2 hash; user appears in Users table.</td>
+    <td><code>frmRegistration.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-UM-002</td>
+    <td>User Login with Role-Based Access</td>
+    <td>System shall authenticate users via Username + Password + UserType selection. The legacy system provides a UserType dropdown (Admin/User). Upon successful login, user is directed to the main dashboard with role-appropriate permissions.</td>
+    <td>Admin login grants full access; User login restricts certain operations (e.g., stock save disabled); invalid credentials rejected.</td>
+    <td><code>frmLogin.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-UM-003</td>
+    <td>Password Change</td>
+    <td>System shall allow authenticated users to change their password by providing old password and new password. New password must be hashed before storage.</td>
+    <td>Password updated in database; old password no longer works; new password authenticates successfully.</td>
+    <td><code>frmChangePassword.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-UM-004</td>
+    <td>Login Activity Tracking</td>
+    <td>System shall record login activity details including username, login time, and session information for audit purposes.</td>
+    <td>Each login creates an audit record; records viewable by admin.</td>
+    <td><code>frmLoginDetails.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-UM-005</td>
+    <td>Secure Password Storage</td>
+    <td>System shall use bcrypt or Argon2 for password hashing, replacing the legacy Base64 encoding found in <code>ModFunc.vb</code> Encrypt/Decrypt functions. <span class="badge badge-changed">SECURITY UPGRADE</span></td>
+    <td>No plaintext or Base64 passwords in database; password verification uses constant-time comparison.</td>
+    <td><code>Checkin and Check out/ModFunc.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-UM-006</td>
+    <td>Role-Based Access Control</td>
+    <td>System shall enforce role-based access: Admin has full access to all features; User role has restricted access (e.g., Stock save buttons disabled, as implemented in frmMainMenu.vb lines 362-372 where <code>lblUserType.Text = "User"</code> disables <code>frmStock.btnSave</code> and <code>frmStock.btnSave1</code>).</td>
+    <td>User role cannot save stock records; User role cannot access admin-only features; Admin has unrestricted access.</td>
+    <td><code>frmMainMenu.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 2: HOTEL INFORMATION ============ -->
+<section id="mod2">
+<h2>4. Module 2: Hotel Information Management</h2>
+<p><strong>Source folder:</strong> <code>Hotel Information/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-HI-001</td>
+    <td>Hotel Profile Management</td>
+    <td>System shall allow management of hotel information including name, address, contact details, and other profile data stored in HotelInfo table.</td>
+    <td>Hotel info can be created, read, updated; displayed across the application where referenced.</td>
+    <td><code>frmHotelInfo.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-002</td>
+    <td>Room Management</td>
+    <td>System shall provide full CRUD for rooms with fields: RoomNo (PK), RoomType (AC/Non-AC/Deluxe/Suite), RoomCharges (decimal). Must include duplicate room number validation and autocomplete search functionality.</td>
+    <td>Rooms can be added, viewed, updated, deleted; duplicate RoomNo rejected; autocomplete works for room search.</td>
+    <td><code>frmRoom.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-003</td>
+    <td>Room Availability Dashboard</td>
+    <td>System shall display a real-time dashboard showing which rooms are currently available (not checked-in and not reserved for the given date range).</td>
+    <td>Available rooms correctly exclude rooms with active check-ins and reservations; dashboard refreshes on demand.</td>
+    <td><code>frmRoomsAvailability.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-004</td>
+    <td>Currency Management</td>
+    <td>System shall allow management of currencies in the CurrencySet table for multi-currency support across all financial transactions.</td>
+    <td>Currencies can be added/edited/deleted; currency dropdown populated in check-in, check-out, and reservation forms.</td>
+    <td><code>frmCurrency.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-005</td>
+    <td>Hall Management</td>
+    <td>System shall manage hotel hall information with configurable per-day charges. Hall charges are used in reservation and check-in calculations.</td>
+    <td>Hall charges retrievable; used in Compute1/Compute2 calculations during check-in.</td>
+    <td><code>frmHall.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-006</td>
+    <td>Garden Management</td>
+    <td>System shall manage hotel garden information with configurable per-day charges. Garden charges are used in reservation and check-in calculations.</td>
+    <td>Garden charges retrievable; used in Compute1/Compute2 calculations during check-in.</td>
+    <td><code>frmGarden.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-007</td>
+    <td>Extra Bed Configuration</td>
+    <td>System shall allow configuration of extra bed options and charges that can be applied during check-in.</td>
+    <td>Extra bed option available during check-in; charges applied correctly.</td>
+    <td><code>frmExtraBed.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HI-008</td>
+    <td>Tax Information Management</td>
+    <td>System shall allow configuration of tax parameters (service tax %, luxury tax %) used across all billing calculations.</td>
+    <td>Tax percentages configurable; correctly applied in check-in and check-out billing.</td>
+    <td><code>frmtaxinformation.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 3: GUEST INFORMATION ============ -->
+<section id="mod3">
+<h2>5. Module 3: Guest Information Management</h2>
+<p><strong>Source folder:</strong> <code>Guest Information/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-GI-001</td>
+    <td>Guest Registration</td>
+    <td>System shall allow registration of guests with auto-generated GuestID (format: "G-" + 6 random digits using RNGCryptoServiceProvider). Fields: GuestName (required), Address (required), City (required), ContactNo (required, numeric only), IDType (required, dropdown), IDNumber (required), Notes (optional).</td>
+    <td>GuestID auto-generated in correct format; all required fields validated; ContactNo accepts numeric input only; record saved to Guest table.</td>
+    <td><code>frmGuest.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-GI-002</td>
+    <td>Guest Records Search/Browse</td>
+    <td>System shall provide browsable guest records with name-based search functionality (LIKE pattern matching on GuestName). Records displayed in a data grid with columns: Guest ID, Guest Name, Address, City, Contact No, ID Type, ID Number, Notes.</td>
+    <td>Search filters guests by name prefix; clicking a record populates detail fields; grid ordered by GuestName.</td>
+    <td><code>frmGuestRecord1.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-GI-003</td>
+    <td>Guest Report Generation</td>
+    <td>System shall generate printable guest reports with filtering and print/PDF export capability.</td>
+    <td>Report displays guest data; supports print and PDF export.</td>
+    <td><code>frmGuestsReport.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 4: RESERVATION ============ -->
+<section id="mod4">
+<h2>6. Module 4: Reservation Management</h2>
+<p><strong>Source folder:</strong> <code>Reservation/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-RS-001</td>
+    <td>Room Reservation</td>
+    <td>System shall allow room reservation with guest linking, date range (DateIN/DateOUT), room selection, and status tracking. Reservation stored in Temp_Reservation table with status "Reserved".</td>
+    <td>Reservation created with all fields; status set to "Reserved"; room blocked for date range.</td>
+    <td><code>frmReservation.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-RS-002</td>
+    <td>Reservation Records with Multiple Views</td>
+    <td>System shall provide multiple views for browsing reservation records including room reservations and various filtering options.</td>
+    <td>All reservations viewable; multiple view layouts available; data consistent across views.</td>
+    <td><code>frmReservationRecord1.vb</code>, <code>frmReservationRecord3.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-RS-003</td>
+    <td>Hall and Garden Reservation</td>
+    <td>System shall support reservations for hall and garden facilities, including combined (hall+garden) and individual (hall or garden) bookings. Each booking includes date ranges, rates, charges, taxes, discount, and currency selection. Stored in Reservation_HallandGarden and Reservation_HallorGarden tables.</td>
+    <td>Both combined and individual reservations supported; calculations correct; records viewable and editable.</td>
+    <td><code>frmReservationRecord_HallandGarden.vb</code>, <code>frmReservationRecord_HallorGarden1.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-RS-004</td>
+    <td>Reservation Reporting</td>
+    <td>System shall generate reservation reports with date filtering and print/PDF export capability.</td>
+    <td>Report displays reservation data; supports date-based filtering and export.</td>
+    <td><code>frmReservationReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-RS-005</td>
+    <td>Date Overlap/Conflict Detection</td>
+    <td>System shall detect date overlaps when creating reservations by checking the Temp_Reservation table for existing reservations on the same room with overlapping date ranges.</td>
+    <td>Overlapping reservation rejected with error; non-overlapping reservation accepted; boundary dates handled correctly.</td>
+    <td><code>frmReservation.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 5: CHECK-IN / CHECK-OUT ============ -->
+<section id="mod5">
+<h2>7. Module 5: Check-In and Check-Out</h2>
+<p><strong>Source folder:</strong> <code>Checkin and Check out/</code></p>
+
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-CI-001</td>
+    <td>Check-In with Full Pricing</td>
+    <td>System shall process guest check-in with room assignment, date range (DateIN/DateOUT), guest count (adults/kids), and full pricing calculation including: RoomCharges, NoOfDays, TotalRoomCharges, OtherCharges, ServiceTax %, LuxuryTax %, Discount %, GrandTotal, TotalPaid, Balance, ExtraBed option, and currency selection.</td>
+    <td>All fields captured; pricing calculated per formulas in URS-CI-004; record saved to CheckIn_Room; status = "Checked In".</td>
+    <td><code>frmCheckIn.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-002</td>
+    <td>Room Availability Validation</td>
+    <td>System shall validate room availability before check-in by checking both the Temp_Reservation AND CheckIn_Room tables for date overlaps on the selected room.</td>
+    <td>Check-in blocked if room is reserved or already occupied for overlapping dates; available rooms allowed.</td>
+    <td><code>frmCheckIn.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-003</td>
+    <td>Check-Out Processing with Bill Generation</td>
+    <td>System shall process check-out with complete bill generation including all taxes, education cess, and higher education cess calculations. Creates record in Checkout_Room and Tax_Room tables. Includes auto-generated BillNo (format: "B" + sequential ID).</td>
+    <td>Check-out creates bill record; all tax calculations correct; bill printable; BillNo auto-generated.</td>
+    <td><code>frmCheckOut.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-004</td>
+    <td>Tax Calculation Formulas (MUST BE PRESERVED EXACTLY)</td>
+    <td>
+      <p>The following formulas from <code>frmCheckIn.vb::Compute()</code> and <code>frmCheckOut.vb::Calculate()</code> must produce identical results:</p>
+      <div class="formula">
+        <strong>Room Check-In/Out (Compute):</strong><br>
+        NoOfDays = (DateOUT == DateIN) ? 1 : (DateOUT - DateIN).Days<br>
+        TotalRoomCharges = RoomCharges &times; NoOfDays<br>
+        Discount = ((TotalRoomCharges + OtherCharges) &times; DiscountPer) / 100<br>
+        SubTotal = TotalRoomCharges + OtherCharges - Discount<br>
+        ServiceTaxAmount = Round((SubTotal &times; ServiceTaxPer) / 100, 2)<br>
+        LuxuryTaxAmount = Round(((SubTotal + ServiceTaxAmount) &times; LuxuryTaxPer) / 100, 2)<br>
+        GrandTotal = SubTotal + ServiceTaxAmount + LuxuryTaxAmount<br>
+        Balance = GrandTotal - TotalPaid<br><br>
+        <strong>Check-Out Additional (Calculate):</strong><br>
+        EducessTax = (ServiceTaxPer &times; 2) / 100<br>
+        EducessTaxAmount = Round((ServiceTaxAmount &times; EducessTax) / 100, 2)<br>
+        HEducessTax = (ServiceTaxPer &times; 1) / 100<br>
+        HEducessTaxAmount = Round((ServiceTaxAmount &times; HEducessTax) / 100, 2)
+      </div>
+    </td>
+    <td>For any given set of inputs, the calculated outputs must match the legacy system exactly (within floating-point rounding).</td>
+    <td><code>frmCheckIn.vb</code>, <code>frmCheckOut.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-005</td>
+    <td>Checked-In Records Views</td>
+    <td>System shall provide multiple views for browsing currently checked-in guest records with various filtering and display options.</td>
+    <td>All checked-in records viewable; multiple view layouts; records show complete check-in details.</td>
+    <td><code>frmCheckedInRecord.vb</code>, <code>frmCheckedInRecord2.vb</code>, <code>frmCheckedInRecord4.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-006</td>
+    <td>Checked-Out Records</td>
+    <td>System shall display records of all checked-out guests with bill details and checkout information.</td>
+    <td>All checkout records viewable; bill details complete; linked to original check-in records.</td>
+    <td><code>frmCheckedOutRecord.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CI-007</td>
+    <td>Check-In/Out Report Generation</td>
+    <td>System shall generate printable reports for both check-in and check-out records with date filtering and print/PDF export.</td>
+    <td>Reports generated with correct data; date filtering works; print/PDF export functional.</td>
+    <td><code>frmCheckINReport.vb</code>, <code>frmCheckOutReport.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 6: ORDER & TRANSACTION ============ -->
+<section id="mod6">
+<h2>8. Module 6: Order and Transaction Management</h2>
+<p><strong>Source folder:</strong> <code>Order and Transaction/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-OT-001</td>
+    <td>Order Creation</td>
+    <td>System shall allow creation of food/beverage orders linked to checked-in guests. Implements role-based access where UserType is passed from main menu to restrict operations for non-admin users.</td>
+    <td>Orders created with item selection, quantities, pricing; role-based restrictions enforced.</td>
+    <td><code>frmOrder.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-002</td>
+    <td>Restaurant Order Management</td>
+    <td>System shall support restaurant orders for walk-in customers (not linked to room check-in), with separate order tracking and receipts.</td>
+    <td>Restaurant orders created independently; receipts generated; records browsable.</td>
+    <td><code>frmRestaurant.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-003</td>
+    <td>Order Records Browsing</td>
+    <td>System shall provide browsable records for both room orders and restaurant orders with multiple view options.</td>
+    <td>All orders viewable; room and restaurant orders distinguished; filtering available.</td>
+    <td><code>frmOrdersRecord.vb</code>, <code>frmOrdersRecord1.vb</code>, <code>frmRestaurantOrdersRecord.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-004</td>
+    <td>Order Receipt/Invoice Generation</td>
+    <td>System shall generate printable receipts/invoices for both room orders and restaurant orders.</td>
+    <td>Receipts generated with correct totals; printable; matches legacy format.</td>
+    <td><code>frmOrderReceipt.vb</code>, <code>frmRestaurantorderReceipt.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-005</td>
+    <td>Transaction Management</td>
+    <td>System shall allow recording of financial transactions including type, amount, date, and associated guest/reference information.</td>
+    <td>Transactions created with all required fields; viewable in records; linked to guests where applicable.</td>
+    <td><code>frmTransaction.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-006</td>
+    <td>Transaction Records</td>
+    <td>System shall provide browsable transaction records with multiple view options and filtering.</td>
+    <td>All transactions viewable; multiple views available; filtering works correctly.</td>
+    <td><code>frmTransactionRecord.vb</code>, <code>frmTransactionRecord1.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-007</td>
+    <td>Transaction Reporting</td>
+    <td>System shall generate transaction reports with date filtering and print/PDF export.</td>
+    <td>Reports display correct transaction data; filtering and export functional.</td>
+    <td><code>frmTransactionReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-008</td>
+    <td>Invoice Generation for Rooms</td>
+    <td>System shall generate detailed invoices for room stays including all charges, taxes, and payment details.</td>
+    <td>Invoice contains all billing fields; matches legacy rptInvoice_Room format; printable.</td>
+    <td><code>frmInvoice_Room.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-OT-009</td>
+    <td>Invoice Generation for Hall/Garden</td>
+    <td>System shall generate invoices for both combined hall+garden and individual hall or garden bookings with all charges and taxes.</td>
+    <td>Both invoice types generated correctly; matches legacy format; printable.</td>
+    <td><code>frmInvoice_HallandGarden.vb</code>, <code>frmInvoice_HallorGarden.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 7: INVENTORY & STOCK ============ -->
+<section id="mod7">
+<h2>9. Module 7: Inventory and Stock Management</h2>
+<p><strong>Source folder:</strong> <code>Inventory and Stock/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-IS-001</td>
+    <td>Food/Dish Item Management</td>
+    <td>System shall provide CRUD for food/dish items with fields: DishName, Category, Rate. Must include duplicate name validation and autocomplete search on dish names.</td>
+    <td>Items created/read/updated/deleted; duplicate DishName rejected; autocomplete works.</td>
+    <td><code>frmFood.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-002</td>
+    <td>Food Records</td>
+    <td>System shall provide browsable food/dish records with multiple view options and search functionality.</td>
+    <td>All food items viewable; search and filtering functional.</td>
+    <td><code>frmFoodRecord.vb</code>, <code>frmFoodRecord1.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-003</td>
+    <td>Beer/Beverage Management</td>
+    <td>System shall provide CRUD for beer/beverage items with inventory tracking and browsable records.</td>
+    <td>Beer items managed; records browsable; inventory quantities tracked.</td>
+    <td><code>frmBeer.vb</code>, <code>frmBeerRecord.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-004</td>
+    <td>Liquor Management</td>
+    <td>System shall provide CRUD for liquor items with master list management and browsable records.</td>
+    <td>Liquor items managed via master list; records browsable; quantities tracked.</td>
+    <td><code>frmLiquor.vb</code>, <code>frmLiquor_Master.vb</code>, <code>frmLiquorRecord.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-005</td>
+    <td>Purchase Inventory Entry</td>
+    <td>System shall allow recording of inventory purchases with item, quantity, cost, and date information.</td>
+    <td>Purchases recorded; updates stock levels; records browsable.</td>
+    <td><code>frmPurchaseInventory.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-006</td>
+    <td>Purchased Inventory Records &amp; Reporting</td>
+    <td>System shall provide browsable purchased inventory records and generate purchase reports with date filtering.</td>
+    <td>All purchase records viewable; reports generated with correct data; date filtering works.</td>
+    <td><code>frmPurchasedInventoryRecord.vb</code>, <code>frmPurchasedInventoryReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-007</td>
+    <td>Stock Overview</td>
+    <td>System shall display current stock levels for all inventory items. Admin has full access; User role has restricted save (save buttons disabled per frmMainMenu.vb role check).</td>
+    <td>Stock levels displayed correctly; Admin can modify; User role read-only with save disabled.</td>
+    <td><code>frmStock.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-IS-008</td>
+    <td>Additional Taxes on Inventory</td>
+    <td>System shall support recording and viewing of additional taxes applied to inventory items.</td>
+    <td>Additional tax records viewable; taxes applied to inventory correctly.</td>
+    <td><code>frmAdditionalTaxesRecords.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 8: HUMAN RESOURCE ============ -->
+<section id="mod8">
+<h2>10. Module 8: Human Resource Management</h2>
+<p><strong>Source folder:</strong> <code>Human Resource/</code></p>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-HR-001</td>
+    <td>Employee Registration</td>
+    <td>System shall allow employee registration with auto-generated EmployeeID (format: "E-" + 6 random digits). Fields: EmployeeName (required), Address (required), MobileNo (required), Email (with regex validation: <code>^[a-zA-Z][\w\.-]{2,28}[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$</code>), BloodGroup/Gender, Department (autocomplete from existing), Designation (autocomplete from existing), DateOfJoining, Salary (numeric with decimal), BasicWorkingTime. Referential integrity check before delete &mdash; checks attendance, payment, and advance tables.</td>
+    <td>Employee created with auto-ID; all validations enforced; delete blocked if referenced in attendance/payment/advance tables; autocomplete works for department/designation.</td>
+    <td><code>frmEmployee_registration.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-002</td>
+    <td>Employee Records with Search &amp; Excel Export</td>
+    <td>System shall provide browsable employee records with name-based search and export to Excel functionality (replacing COM Interop with ClosedXML/EPPlus).</td>
+    <td>Records searchable by name; Excel export produces valid .xlsx file; all columns exported correctly.</td>
+    <td><code>frmEmployeesRecord.vb</code>, <code>frmEmployeesRecord1.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-003</td>
+    <td>Employee Reporting</td>
+    <td>System shall generate employee reports with print/PDF export.</td>
+    <td>Reports contain correct employee data; printable; exportable.</td>
+    <td><code>frmEmployeeReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-004</td>
+    <td>Attendance Tracking</td>
+    <td>System shall track daily employee attendance with status (Present/Absent), working hours, and overtime tracking.</td>
+    <td>Attendance recorded per employee per day; overtime hours captured; status correctly set.</td>
+    <td><code>frmAttendance.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-005</td>
+    <td>Attendance Records &amp; Reporting</td>
+    <td>System shall provide browsable attendance records and generate attendance reports with date filtering.</td>
+    <td>Records filterable by date range and employee; reports generated correctly.</td>
+    <td><code>frmEmployeeAttendanceRecord.vb</code>, <code>frmAttendanceReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-006</td>
+    <td>Overtime Tracking &amp; Reporting</td>
+    <td>System shall track and report employee overtime hours with search and reporting capabilities.</td>
+    <td>Overtime searchable by employee/date; reports generated; overtime totals calculated correctly.</td>
+    <td><code>frmSearchByOverTime.vb</code>, <code>frmOverTimeReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-007</td>
+    <td>Advance Payment Entry &amp; Records</td>
+    <td>System shall record salary advance payments to employees with fields: WorkingDate, EmployeeID, Amount, Deduction. Provides browsable records and reports.</td>
+    <td>Advance entries created; running balance tracked (sum of Amount - sum of Deduction); records and reports available.</td>
+    <td><code>frmAdvance.vb</code>, <code>frmAdvanceEntryRecord.vb</code>, <code>frmAdvanceEntryReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-008</td>
+    <td>Deduction Entry Records</td>
+    <td>System shall provide browsable records of all salary deductions made during payroll processing.</td>
+    <td>Deduction records viewable; linked to payroll entries.</td>
+    <td><code>frmDeductionEntryRecord.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-009</td>
+    <td>Employee Payment/Salary Processing</td>
+    <td>
+      <p>System shall process employee salary with the following exact calculations:</p>
+      <div class="formula">
+        Salary = (BasicSalary &times; PresentDays) / 30<br>
+        OvertimeAmount = (TotalOvertimeMinutes &times; OvertimeRate) / 60<br>
+        NetPay = Salary + OvertimeAmount - Deduction
+      </div>
+      <p>Additional business rules:</p>
+      <ul>
+        <li>Prevents duplicate payment for same employee on same date</li>
+        <li>Deduction cannot exceed advance amount</li>
+        <li>NetPay must be &gt; 0</li>
+        <li>Auto-creates advance entry record for deductions (Amount=0, Deduction=entered value)</li>
+        <li>PaymentID auto-generated: "SP-" + 9 random digits</li>
+        <li>PresentDays calculated from attendance records (count of status='P' in date range)</li>
+      </ul>
+    </td>
+    <td>Salary calculated correctly per formula; duplicate payment prevented; advance entry auto-created; all validations enforced.</td>
+    <td><code>frmEmployeePayment.vb</code>, <code>frmEmployeePaymentRecord1.vb</code>, <code>frmEmployeePaymentReport.vb</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-HR-010</td>
+    <td>Salary Slip Generation &amp; Reporting</td>
+    <td>System shall generate individual salary slips for employees (replacing Crystal Reports rptSalarySlip) and batch salary slip reports.</td>
+    <td>Salary slip generated with all payment details; printable; batch report available.</td>
+    <td><code>frmSalarySlip.vb</code>, <code>frmSalarySlipsReport.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 9: REPORTING ============ -->
+<section id="mod9">
+<h2>11. Module 9: Reporting</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr><td class="req-id">URS-RP-001</td><td>Advance Payment Report</td><td>Replicate rptAdvancePayment Crystal Report with equivalent data fields, groupings, and totals.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptAdvancePayment.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-002</td><td>Attendance Report</td><td>Replicate rptAttendance Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptAttendance.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-003</td><td>Employee Report</td><td>Replicate rptEmployee Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptEmployee.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-004</td><td>Employee Payment Report</td><td>Replicate rptEmployeePayment Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptEmployeePayment.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-005</td><td>Guest Report</td><td>Replicate rptGuest Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptGuest.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-006</td><td>Invoice &mdash; Hall and Garden</td><td>Replicate rptInvoice_HallandGarden Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptInvoice_HallandGarden.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-007</td><td>Invoice &mdash; Hall or Garden</td><td>Replicate rptInvoice_HallorGarden Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptInvoice_HallorGarden.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-008</td><td>Invoice &mdash; Room</td><td>Replicate rptInvoice_Room Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptInvoice_Room.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-009</td><td>Order Invoice</td><td>Replicate rptOrderInvoice Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptOrderInvoice.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-010</td><td>Overtime Report</td><td>Replicate rptOverTime Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptOverTime.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-011</td><td>Purchased Inventory Report</td><td>Replicate rptPurchasedInventory Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptPurchasedInventory.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-012</td><td>Reservation Report</td><td>Replicate rptReservation Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptReservation.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-013</td><td>Restaurant Order Receipt</td><td>Replicate rptRestaurantOrderReceipt Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptRestaurantOrderReceipt.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-014</td><td>Salary Slip</td><td>Replicate rptSalarySlip Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptSalarySlip.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-015</td><td>Salary Slips (Batch)</td><td>Replicate rptSalarySlips Crystal Report for batch generation.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptSalarySlips.rpt</code></td></tr>
+  <tr><td class="req-id">URS-RP-016</td><td>Transaction Report</td><td>Replicate rptTransaction Crystal Report.</td><td>Report matches legacy output; print/PDF export available.</td><td><code>rptTransaction.rpt</code></td></tr>
+</table>
+</section>
+
+<!-- ============ MODULE 10: DATA EXPORT ============ -->
+<section id="mod10">
+<h2>12. Module 10: Data Export</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-DE-001</td>
+    <td>Excel Export (No Office Required)</td>
+    <td>System shall export any data grid/table to Excel format (.xlsx) without requiring Microsoft Office to be installed. Replaces legacy COM Interop (<code>Microsoft.Office.Interop.Excel</code>) with EPPlus or ClosedXML library. Must preserve: column headers, all data rows, bold header row, auto-fit column widths. <span class="badge badge-changed">TECHNOLOGY CHANGE</span></td>
+    <td>Valid .xlsx file generated; opens in Excel/LibreOffice; headers bold; columns auto-fit; no Office dependency.</td>
+    <td><code>frmEmployee_registration.vb::exportExcel()</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 11: SCHEDULING ============ -->
+<section id="mod11">
+<h2>13. Module 11: Scheduling</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-SC-001</td>
+    <td>Appointment/Schedule Management</td>
+    <td>System shall provide scheduling and appointment management functionality with custom appointment forms and schedule views.</td>
+    <td>Appointments can be created, viewed, updated, deleted; schedule view displays all appointments.</td>
+    <td><code>CustomAppointmentForm.vb</code>, <code>FrmSchedule.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 12: DATABASE BACKUP/RESTORE ============ -->
+<section id="mod12">
+<h2>14. Module 12: Database Backup and Restore</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-DB-001</td>
+    <td>Database Backup</td>
+    <td>System shall provide database backup functionality. Replaces legacy File.Copy of .accdb file (to <code>C:\DBBackup\HMS_DB {datetime}.accdb</code>) with proper SQL Server backup using <code>BACKUP DATABASE</code> command. Backup file named with timestamp. <span class="badge badge-changed">TECHNOLOGY CHANGE</span></td>
+    <td>Backup creates valid SQL Server .bak file; timestamped filename; backup completes without error.</td>
+    <td><code>frmMainMenu.vb::BackupToolStripMenuItem_Click</code></td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-DB-002</td>
+    <td>Database Restore</td>
+    <td>System shall provide database restore functionality from a previously created backup file using SQL Server <code>RESTORE DATABASE</code> command.</td>
+    <td>Restore from .bak file succeeds; all data restored; application functional after restore.</td>
+    <td><code>frmMainMenu.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ MODULE 13: DASHBOARD ============ -->
+<section id="mod13">
+<h2>15. Module 13: Dashboard</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th><th style="width:140px">Source</th></tr>
+
+  <tr>
+    <td class="req-id">URS-DA-001</td>
+    <td>Main Menu Dashboard</td>
+    <td>System shall display a dashboard showing: (1) Currently checked-in guests with Room No, Guest ID, Guest Name, Date In, Date Out; (2) Current reservations with Room No, Guest ID, Guest Name, Date In, Date Out. Auto-refreshes on a timer (legacy uses Timer2 with 1-second interval). Also displays hall/garden reservation details.</td>
+    <td>Dashboard shows live check-in and reservation data; auto-refreshes; data matches actual database state.</td>
+    <td><code>frmMainMenu.vb</code></td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ CROSS-CUTTING REQUIREMENTS ============ -->
+<section id="crosscutting">
+<h2>16. Cross-Cutting Requirements</h2>
+<table class="req-table">
+  <tr><th style="width:120px">Req ID</th><th style="width:200px">Title</th><th>Description</th><th style="width:200px">Acceptance Criteria</th></tr>
+
+  <tr>
+    <td class="req-id">URS-CC-001</td>
+    <td>Zero Data Loss Migration</td>
+    <td>All data from the legacy Microsoft Access database must be migrated to SQL Server with zero data loss. Every record in every table must be preserved.</td>
+    <td>Row counts match; data integrity verified; no truncation or corruption.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-002</td>
+    <td>User Account Migration</td>
+    <td>Existing user accounts must be migrated. Since legacy uses Base64 encoding (not true encryption), passwords must be re-hashed using bcrypt. Users may need to reset passwords on first login.</td>
+    <td>User accounts exist in new system; passwords re-hashed; password reset mechanism available.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-003</td>
+    <td>Multi-Currency Support Preserved</td>
+    <td>The CurrencySet table and all currency selection dropdowns must be preserved across check-in, check-out, reservations, and invoices.</td>
+    <td>All currency options available; currency correctly associated with financial records.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-004</td>
+    <td>Tax Calculation Parity</td>
+    <td>All tax calculations (service tax, luxury tax, education cess, higher education cess) must produce identical results to the legacy system for the same inputs.</td>
+    <td>Test with known legacy inputs produces identical outputs; rounding behavior preserved.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-005</td>
+    <td>Search/Filter Capabilities</td>
+    <td>All search and filter functionality present in legacy forms (name search, date filtering, room number search, etc.) must be preserved in the API with equivalent query parameters.</td>
+    <td>All existing search patterns available via API; results match legacy behavior.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-006</td>
+    <td>Print Functionality</td>
+    <td>Print functionality for all reports and invoices must be preserved via PDF generation or equivalent print-ready output.</td>
+    <td>All 16 reports generate printable output; invoices printable; formatting professional.</td>
+  </tr>
+  <tr>
+    <td class="req-id">URS-CC-007</td>
+    <td>Date-Based Filtering</td>
+    <td>All date-based filtering (date range queries, date comparisons) must behave identically to the legacy system, including boundary date handling.</td>
+    <td>Date filters produce same results as legacy; boundary dates handled correctly.</td>
+  </tr>
+</table>
+</section>
+
+<!-- ============ DEPRECATED FEATURES ============ -->
+<section id="deprecated">
+<h2>17. Deprecated Features (NOT Migrated)</h2>
+<table class="req-table">
+  <tr><th style="width:200px">Feature</th><th>Reason for Deprecation</th><th style="width:140px">Source Files</th></tr>
+  <tr class="deprecated"><td>Chat / Remote Admin</td><td>Unauthenticated TCP backdoor &mdash; allows remote command execution (shutdown, restart, logoff), mouse lock/release, file transfer, and CD-ROM control. Critical security vulnerability.</td><td><code>frmServer.vb</code>, <code>frmClient.vb</code></td></tr>
+  <tr class="deprecated"><td>Flash Controls (FlashControlV71)</td><td>Adobe Flash is end-of-life (EOL since Dec 2020). Flash components are no longer supported in modern browsers or .NET.</td><td>Designer files</td></tr>
+  <tr class="deprecated"><td>WMI Hardware Licensing</td><td>Hardware ID-based licensing using WMI is incompatible with cloud/containerized deployment. Splash screen activation check removed.</td><td><code>frmSplash.vb</code>, <code>Encryption.vb</code></td></tr>
+  <tr class="deprecated"><td>Base64 Password "Encryption"</td><td>Base64 encoding is not encryption. Replaced by proper bcrypt/Argon2 password hashing per URS-UM-005.</td><td><code>ModFunc.vb</code></td></tr>
+  <tr class="deprecated"><td>CloudToolkitN6</td><td>Unknown third-party UI dependency with hardcoded filesystem path. Not compatible with modern .NET / web deployment.</td><td>Designer files</td></tr>
+</table>
+</section>
+
+<!-- ============ TRACEABILITY MATRIX ============ -->
+<section id="traceability">
+<h2>18. Traceability Matrix</h2>
+<p>This table maps every legacy .vb form file to its corresponding URS requirement ID(s).</p>
+<table class="req-table">
+  <tr><th>Legacy File</th><th>URS Requirement ID(s)</th><th>Module</th></tr>
+  <tr><td><code>frmRegistration.vb</code></td><td>URS-UM-001</td><td>User Management</td></tr>
+  <tr><td><code>frmLogin.vb</code></td><td>URS-UM-002</td><td>User Management</td></tr>
+  <tr><td><code>frmChangePassword.vb</code></td><td>URS-UM-003</td><td>User Management</td></tr>
+  <tr><td><code>frmLoginDetails.vb</code></td><td>URS-UM-004</td><td>User Management</td></tr>
+  <tr><td><code>ModFunc.vb</code></td><td>URS-UM-005</td><td>User Management</td></tr>
+  <tr><td><code>frmMainMenu.vb</code></td><td>URS-UM-006, URS-DA-001, URS-DB-001, URS-DB-002</td><td>User Mgmt / Dashboard / Backup</td></tr>
+  <tr><td><code>frmHotelInfo.vb</code></td><td>URS-HI-001</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmRoom.vb</code></td><td>URS-HI-002</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmRoomsAvailability.vb</code></td><td>URS-HI-003</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmCurrency.vb</code></td><td>URS-HI-004</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmHall.vb</code></td><td>URS-HI-005</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmGarden.vb</code></td><td>URS-HI-006</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmExtraBed.vb</code></td><td>URS-HI-007</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmtaxinformation.vb</code></td><td>URS-HI-008</td><td>Hotel Information</td></tr>
+  <tr><td><code>frmGuest.vb</code></td><td>URS-GI-001</td><td>Guest Information</td></tr>
+  <tr><td><code>frmGuestRecord1.vb</code></td><td>URS-GI-002</td><td>Guest Information</td></tr>
+  <tr><td><code>frmGuestsReport.vb</code></td><td>URS-GI-003</td><td>Guest Information</td></tr>
+  <tr><td><code>frmReservation.vb</code></td><td>URS-RS-001, URS-RS-005</td><td>Reservation</td></tr>
+  <tr><td><code>frmReservationRecord1.vb</code></td><td>URS-RS-002</td><td>Reservation</td></tr>
+  <tr><td><code>frmReservationRecord3.vb</code></td><td>URS-RS-002</td><td>Reservation</td></tr>
+  <tr><td><code>frmReservationRecord_HallandGarden.vb</code></td><td>URS-RS-003</td><td>Reservation</td></tr>
+  <tr><td><code>frmReservationRecord_HallorGarden1.vb</code></td><td>URS-RS-003</td><td>Reservation</td></tr>
+  <tr><td><code>frmReservationReport.vb</code></td><td>URS-RS-004</td><td>Reservation</td></tr>
+  <tr><td><code>frmCheckIn.vb</code></td><td>URS-CI-001, URS-CI-002, URS-CI-004</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckOut.vb</code></td><td>URS-CI-003, URS-CI-004</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckedInRecord.vb</code></td><td>URS-CI-005</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckedInRecord2.vb</code></td><td>URS-CI-005</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckedInRecord4.vb</code></td><td>URS-CI-005</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckedOutRecord.vb</code></td><td>URS-CI-006</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckINReport.vb</code></td><td>URS-CI-007</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmCheckOutReport.vb</code></td><td>URS-CI-007</td><td>Check-In/Out</td></tr>
+  <tr><td><code>frmOrder.vb</code></td><td>URS-OT-001</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmRestaurant.vb</code></td><td>URS-OT-002</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmOrdersRecord.vb</code></td><td>URS-OT-003</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmOrdersRecord1.vb</code></td><td>URS-OT-003</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmRestaurantOrdersRecord.vb</code></td><td>URS-OT-003</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmOrderReceipt.vb</code></td><td>URS-OT-004</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmRestaurantorderReceipt.vb</code></td><td>URS-OT-004</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmTransaction.vb</code></td><td>URS-OT-005</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmTransactionRecord.vb</code></td><td>URS-OT-006</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmTransactionRecord1.vb</code></td><td>URS-OT-006</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmTransactionReport.vb</code></td><td>URS-OT-007</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmInvoice_Room.vb</code></td><td>URS-OT-008</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmInvoice_HallandGarden.vb</code></td><td>URS-OT-009</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmInvoice_HallorGarden.vb</code></td><td>URS-OT-009</td><td>Orders &amp; Transactions</td></tr>
+  <tr><td><code>frmFood.vb</code></td><td>URS-IS-001</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmFoodRecord.vb</code></td><td>URS-IS-002</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmFoodRecord1.vb</code></td><td>URS-IS-002</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmBeer.vb</code></td><td>URS-IS-003</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmBeerRecord.vb</code></td><td>URS-IS-003</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmLiquor.vb</code></td><td>URS-IS-004</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmLiquor_Master.vb</code></td><td>URS-IS-004</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmLiquorRecord.vb</code></td><td>URS-IS-004</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmPurchaseInventory.vb</code></td><td>URS-IS-005</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmPurchasedInventoryRecord.vb</code></td><td>URS-IS-006</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmPurchasedInventoryReport.vb</code></td><td>URS-IS-006</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmStock.vb</code></td><td>URS-IS-007</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmAdditionalTaxesRecords.vb</code></td><td>URS-IS-008</td><td>Inventory &amp; Stock</td></tr>
+  <tr><td><code>frmEmployee_registration.vb</code></td><td>URS-HR-001, URS-DE-001</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeesRecord.vb</code></td><td>URS-HR-002</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeesRecord1.vb</code></td><td>URS-HR-002</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeeReport.vb</code></td><td>URS-HR-003</td><td>Human Resource</td></tr>
+  <tr><td><code>frmAttendance.vb</code></td><td>URS-HR-004</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeeAttendanceRecord.vb</code></td><td>URS-HR-005</td><td>Human Resource</td></tr>
+  <tr><td><code>frmAttendanceReport.vb</code></td><td>URS-HR-005</td><td>Human Resource</td></tr>
+  <tr><td><code>frmSearchByOverTime.vb</code></td><td>URS-HR-006</td><td>Human Resource</td></tr>
+  <tr><td><code>frmOverTimeReport.vb</code></td><td>URS-HR-006</td><td>Human Resource</td></tr>
+  <tr><td><code>frmAdvance.vb</code></td><td>URS-HR-007</td><td>Human Resource</td></tr>
+  <tr><td><code>frmAdvanceEntryRecord.vb</code></td><td>URS-HR-007</td><td>Human Resource</td></tr>
+  <tr><td><code>frmAdvanceEntryReport.vb</code></td><td>URS-HR-007</td><td>Human Resource</td></tr>
+  <tr><td><code>frmDeductionEntryRecord.vb</code></td><td>URS-HR-008</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeePayment.vb</code></td><td>URS-HR-009</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeePaymentRecord1.vb</code></td><td>URS-HR-009</td><td>Human Resource</td></tr>
+  <tr><td><code>frmEmployeePaymentReport.vb</code></td><td>URS-HR-009</td><td>Human Resource</td></tr>
+  <tr><td><code>frmSalarySlip.vb</code></td><td>URS-HR-010</td><td>Human Resource</td></tr>
+  <tr><td><code>frmSalarySlipsReport.vb</code></td><td>URS-HR-010</td><td>Human Resource</td></tr>
+  <tr><td><code>CustomAppointmentForm.vb</code></td><td>URS-SC-001</td><td>Scheduling</td></tr>
+  <tr><td><code>FrmSchedule.vb</code></td><td>URS-SC-001</td><td>Scheduling</td></tr>
+  <tr><td><code>frmServer.vb</code></td><td><span class="badge badge-deprecated">DEPRECATED</span></td><td>Chat (removed)</td></tr>
+  <tr><td><code>frmClient.vb</code></td><td><span class="badge badge-deprecated">DEPRECATED</span></td><td>Chat (removed)</td></tr>
+  <tr><td><code>frmSplash.vb</code></td><td><span class="badge badge-deprecated">DEPRECATED</span></td><td>Licensing (removed)</td></tr>
+  <tr><td><code>Encryption.vb</code></td><td><span class="badge badge-deprecated">DEPRECATED</span></td><td>Licensing (removed)</td></tr>
+  <tr><td><code>frmActivation.vb</code></td><td><span class="badge badge-deprecated">DEPRECATED</span></td><td>Licensing (removed)</td></tr>
+</table>
+</section>
+
+</main>
+</body>
+</html>
