@@ -40,15 +40,10 @@ public class CheckOutService : ICheckOutService
         // Calculate education cess (from frmCheckOut.vb::Calculate())
         var cessResult = CalculateEducationCess(checkIn.ServiceTaxPer, taxResult.ServiceTaxAmount);
 
-        // Auto-generate BillNo: "B" + sequential ID
-        var maxId = await _context.Set<CheckoutRoom>().AnyAsync()
-            ? await _context.Set<CheckoutRoom>().MaxAsync(c => c.ID) + 1
-            : 1;
-        var billNo = $"B{maxId}";
-
+        // First save checkout to get database-generated ID, then derive BillNo from it
         var checkout = new CheckoutRoom
         {
-            BillNo = billNo,
+            BillNo = "TEMP",  // Placeholder — will be updated after SaveChanges gives us the ID
             GuestID = checkIn.GuestID,
             RoomNo = checkIn.RoomNo,
             RoomCharges = checkIn.RoomCharges,
@@ -84,7 +79,17 @@ public class CheckOutService : ICheckOutService
             CheckOutDate = DateTime.UtcNow
         };
 
-        // Create Tax_Room record
+        _context.Set<CheckoutRoom>().Add(checkout);
+
+        // Update check-in status
+        checkIn.Status = "Checked Out";
+        await _context.SaveChangesAsync();
+
+        // Now we have the database-generated ID — derive BillNo from it (concurrency-safe)
+        var billNo = $"B{checkout.ID}";
+        checkout.BillNo = billNo;
+
+        // Create Tax_Room record with the real BillNo
         var taxRoom = new TaxRoom
         {
             BillNo = billNo,
@@ -99,11 +104,7 @@ public class CheckOutService : ICheckOutService
             HEducessTaxAmount = cessResult.HEducessTaxAmount
         };
 
-        _context.Set<CheckoutRoom>().Add(checkout);
         _context.Set<TaxRoom>().Add(taxRoom);
-
-        // Update check-in status
-        checkIn.Status = "Checked Out";
         await _context.SaveChangesAsync();
 
         return MapToResponse(checkout);

@@ -179,6 +179,24 @@ public class PayrollServiceTests : IDisposable
             Salary = 30000m, DateOfJoining = DateTime.Today.AddYears(-1)
         };
         _context.Set<Employee>().Add(employee);
+
+        // Must have advance balance >= deduction
+        _context.Set<AdvanceEntry>().Add(new AdvanceEntry
+        {
+            EmployeeID = "E-123456", EmployeeName = "Jane Doe",
+            WorkingDate = DateTime.Today.AddDays(-5), Amount = 10000m, Deduction = 0m
+        });
+
+        // Add attendance so salary > 0 and NetPay > 0
+        for (int i = 1; i <= 20; i++)
+        {
+            _context.Set<EmployeeAttendance>().Add(new EmployeeAttendance
+            {
+                EmployeeID = "E-123456", EmployeeName = "Jane Doe",
+                WorkingDate = DateTime.Today.AddDays(-30 + i),
+                Status = "P", Overtime = "00:00:00", Department = "HR"
+            });
+        }
         await _context.SaveChangesAsync();
 
         var request = new ProcessPaymentRequest(
@@ -193,6 +211,25 @@ public class PayrollServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task ProcessPaymentAsync_DeductionExceedsAdvance_ThrowsArgumentException()
+    {
+        var employee = new Employee
+        {
+            EmployeeID = "E-123456", EmployeeName = "Jane Doe",
+            Salary = 30000m, DateOfJoining = DateTime.Today.AddYears(-1)
+        };
+        _context.Set<Employee>().Add(employee);
+        await _context.SaveChangesAsync();
+
+        // No advance balance, but trying to deduct 5000
+        var request = new ProcessPaymentRequest(
+            "E-123456", DateTime.Today.AddDays(-30), DateTime.Today, 100m, 5000m);
+
+        var act = async () => await _service.ProcessPaymentAsync(request);
+        await act.Should().ThrowAsync<ArgumentException>().WithMessage("*advance amount*");
+    }
+
+    [Fact]
     public async Task ProcessPaymentAsync_ZeroDeduction_NoAdvanceEntry()
     {
         var employee = new Employee
@@ -201,6 +238,17 @@ public class PayrollServiceTests : IDisposable
             Salary = 30000m, DateOfJoining = DateTime.Today.AddYears(-1)
         };
         _context.Set<Employee>().Add(employee);
+
+        // Add attendance so salary > 0 and NetPay > 0
+        for (int i = 1; i <= 10; i++)
+        {
+            _context.Set<EmployeeAttendance>().Add(new EmployeeAttendance
+            {
+                EmployeeID = "E-123456", EmployeeName = "Jane Doe",
+                WorkingDate = DateTime.Today.AddDays(-30 + i),
+                Status = "P", Overtime = "00:00:00", Department = "HR"
+            });
+        }
         await _context.SaveChangesAsync();
 
         var request = new ProcessPaymentRequest(

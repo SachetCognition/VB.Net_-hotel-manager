@@ -51,6 +51,14 @@ public class PayrollIntegrationTests : IDisposable
         }
         await _context.SaveChangesAsync();
 
+        // Add advance balance so deduction is valid
+        _context.Set<AdvanceEntry>().Add(new AdvanceEntry
+        {
+            EmployeeID = "E-123456", EmployeeName = "John Doe",
+            WorkingDate = new DateTime(2026, 1, 5), Amount = 5000m, Deduction = 0m
+        });
+        await _context.SaveChangesAsync();
+
         // Process payment with deduction
         var request = new ProcessPaymentRequest(
             "E-123456", new DateTime(2026, 1, 1), new DateTime(2026, 1, 31), 50m, 2000m);

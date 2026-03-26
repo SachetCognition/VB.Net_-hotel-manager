@@ -57,8 +57,16 @@ public class PayrollService : IPayrollService
         // Get advance balance
         var advanceBalance = await GetAdvanceBalanceAsync(request.EmployeeID);
 
+        // Validate deduction does not exceed advance — from frmEmployeePayment.vb
+        if (request.Deduction > advanceBalance)
+            throw new ArgumentException($"You can not deduct more than advance amount. Advance balance: {advanceBalance}");
+
         // NetPay = Salary + OvertimeAmount - Deduction
         var netPay = CalculateNetPay(salary, overtimeAmount, request.Deduction);
+
+        // Validate NetPay must be positive — from frmEmployeePayment.vb
+        if (netPay <= 0)
+            throw new ArgumentException("Net pay should be greater than zero");
 
         var paymentId = GeneratePaymentId();
 
@@ -75,7 +83,7 @@ public class PayrollService : IPayrollService
             BasicSalary = employee.Salary,
             PresentDays = presentDays,
             Salary = salary,
-            TotalOvertime = totalOvertime.ToString(@"hh\:mm\:ss"),
+            TotalOvertime = $"{(int)totalOvertime.TotalHours:D2}:{totalOvertime.Minutes:D2}:{totalOvertime.Seconds:D2}",
             OvertimeRate = request.OvertimeRate,
             OvertimeAmount = overtimeAmount,
             Advance = advanceBalance,
