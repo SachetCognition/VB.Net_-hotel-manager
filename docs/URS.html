@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Management System &mdash; User Requirement Specification</title>
+<style>
+:root{--primary:#1a237e;--accent:#0d47a1;--bg:#fafafa;--text:#212121;--border:#e0e0e0;--success:#2e7d32;--warning:#f57f17;--danger:#c62828}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;padding:20px}
+.container{max-width:1100px;margin:0 auto;background:#fff;padding:40px 50px;box-shadow:0 2px 8px rgba(0,0,0,.08);border-radius:8px}
+h1{color:var(--primary);font-size:2em;border-bottom:3px solid var(--primary);padding-bottom:10px;margin-bottom:20px}
+h2{color:var(--accent);font-size:1.5em;margin-top:40px;margin-bottom:15px;border-left:4px solid var(--accent);padding-left:12px}
+h3{color:#333;font-size:1.2em;margin-top:25px;margin-bottom:10px}
+h4{color:#555;margin-top:15px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.92em}
+th,td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+th{background:#e8eaf6;color:var(--primary);font-weight:600}
+tr:nth-child(even){background:#f5f5f5}
+.meta-table{width:auto;margin-bottom:30px}
+.meta-table td{border:none;padding:4px 20px 4px 0}
+.meta-table td:first-child{font-weight:600;color:#555}
+ul,ol{margin:10px 0 10px 25px}
+li{margin:4px 0}
+code{background:#eceff1;padding:2px 6px;border-radius:3px;font-size:.9em;color:#d32f2f}
+pre{background:#263238;color:#eee;padding:15px;border-radius:5px;overflow-x:auto;font-size:.85em;margin:10px 0}
+.toc{background:#e8eaf6;border-radius:6px;padding:20px 30px;margin:20px 0 30px}
+.toc h2{margin-top:0;border:none;padding:0}
+.toc ol{margin:10px 0 0 20px}
+.toc li{margin:3px 0}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.8em;font-weight:600;color:#fff}
+.badge-high{background:var(--danger)}
+.badge-medium{background:var(--warning);color:#333}
+.badge-low{background:var(--success)}
+.formula{background:#fff3e0;border-left:4px solid #ff9800;padding:12px 16px;margin:10px 0;font-family:monospace;font-size:.95em}
+.note{background:#e3f2fd;border-left:4px solid #2196f3;padding:10px 16px;margin:10px 0;font-size:.92em}
+.security-issue{background:#ffebee;border-left:4px solid var(--danger);padding:10px 16px;margin:10px 0}
+@media print{body{padding:0;background:#fff}.container{box-shadow:none;padding:20px}h2{page-break-before:auto}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Hotel Management System &mdash; User Requirement Specification</h1>
+
+<table class="meta-table">
+<tr><td>Document Version</td><td>1.0</td></tr>
+<tr><td>Date</td><td>2026-04-02</td></tr>
+<tr><td>Author</td><td>Devin (Automated Modernization)</td></tr>
+<tr><td>Source System</td><td>VB.NET Hotel Management System (Legacy)</td></tr>
+<tr><td>Target Platform</td><td>.NET 8 / C# / Entity Framework Core / SQLite</td></tr>
+<tr><td>Status</td><td>Final</td></tr>
+</table>
+
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#mod1">Module 1: User Management</a></li>
+<li><a href="#mod2">Module 2: Guest Management</a></li>
+<li><a href="#mod3">Module 3: Hotel Information</a></li>
+<li><a href="#mod4">Module 4: Check-In</a></li>
+<li><a href="#mod5">Module 5: Check-Out</a></li>
+<li><a href="#mod6">Module 6: Reservation</a></li>
+<li><a href="#mod7">Module 7: Order &amp; Transaction</a></li>
+<li><a href="#mod8">Module 8: Inventory &amp; Stock</a></li>
+<li><a href="#mod9">Module 9: Human Resource</a></li>
+<li><a href="#mod10">Module 10: Tax Information</a></li>
+<li><a href="#mod11">Module 11: System</a></li>
+<li><a href="#mod12">Module 12: Reporting</a></li>
+<li><a href="#schema">Database Schema</a></li>
+<li><a href="#nfr">Non-Functional Requirements</a></li>
+</ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="mod1">Module 1: User Management</h2>
+
+<h3>1.1 Overview</h3>
+<p>The system supports two user roles: <strong>Admin</strong> and <strong>User</strong>. Role-based access controls certain operations (e.g., stock management save/delete restricted by role as found in <code>frmMainMenu.vb</code> lines 363&ndash;371 and <code>frmStock.vb</code>).</p>
+
+<h3>1.2 Functional Requirements</h3>
+
+<h4>FR-UM-001: Login</h4>
+<ul>
+<li>User provides Username, Password, and UserType (Admin/User).</li>
+<li>System validates credentials against the database.</li>
+<li>On success, user is redirected to the Main Menu with role-appropriate access.</li>
+<li>On failure, an error message is displayed.</li>
+</ul>
+
+<h4>FR-UM-002: User Registration</h4>
+<ul>
+<li>New users can register with Username, Password, and UserType.</li>
+<li>Duplicate username check is enforced.</li>
+</ul>
+
+<h4>FR-UM-003: Change Password</h4>
+<ul>
+<li>Authenticated users can change their password.</li>
+<li>Old password verification is required.</li>
+<li>New password is stored (legacy uses Base64 encoding via <code>ModFunc.vb</code>).</li>
+</ul>
+
+<h4>FR-UM-004: Login Details Viewing</h4>
+<ul>
+<li>Admin users can view login activity records.</li>
+</ul>
+
+<h4>FR-UM-005: Role-Based Access</h4>
+<table>
+<tr><th>Feature</th><th>Admin</th><th>User</th></tr>
+<tr><td>Stock — Save/Delete</td><td>Allowed</td><td>Restricted</td></tr>
+<tr><td>User Management</td><td>Full Access</td><td>Limited</td></tr>
+<tr><td>Backup/Restore</td><td>Allowed</td><td>Restricted</td></tr>
+<tr><td>Activation</td><td>Allowed</td><td>Restricted</td></tr>
+</table>
+
+<div class="security-issue">
+<strong>Security Issue (Legacy):</strong> Passwords are stored using Base64 encoding (Encrypt/Decrypt functions in <code>ModFunc.vb</code>). This is NOT secure. The modernized system MUST use BCrypt password hashing.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="mod2">Module 2: Guest Management</h2>
+
+<h3>2.1 Overview</h3>
+<p>Manages guest records for hotel operations. Source: <code>Guest Information/frmGuest.vb</code> (223 lines).</p>
+
+<h3>2.2 Data Fields</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Validation</th></tr>
+<tr><td>GuestID</td><td>String</td><td>Auto-generated</td><td>Format: "G-" + 6 random numeric digits (RNGCryptoServiceProvider)</td></tr>
+<tr><td>GuestName</td><td>String</td><td>Yes</td><td>Non-empty</td></tr>
+<tr><td>Address</td><td>String</td><td>Yes</td><td>Non-empty</td></tr>
+<tr><td>City</td><td>String</td><td>Yes</td><td>Non-empty</td></tr>
+<tr><td>ContactNo</td><td>String</td><td>Yes</td><td>Numeric only (KeyPress validation: Chr(48)-Chr(57) + backspace)</td></tr>
+<tr><td>IDType</td><td>String (Dropdown)</td><td>Yes</td><td>Must select from dropdown</td></tr>
+<tr><td>IDNumber</td><td>String</td><td>Yes</td><td>Non-empty</td></tr>
+<tr><td>Notes</td><td>String</td><td>No</td><td>Optional free text</td></tr>
+</table>
+
+<h3>2.3 Functional Requirements</h3>
+
+<h4>FR-GM-001: Add Guest</h4>
+<ul>
+<li>Validate all required fields (GuestName, Address, City, ContactNo, IDType, IDNumber).</li>
+<li>Auto-generate GuestID as "G-" + 6 random digits using cryptographic random number generator.</li>
+<li>Insert record into Guest table.</li>
+<li>Display success message.</li>
+</ul>
+
+<h4>FR-GM-002: Update Guest</h4>
+<ul>
+<li>Select guest from DataGridView by clicking row header.</li>
+<li>Form fields populate with selected guest data.</li>
+<li>Modify fields and click Update.</li>
+<li>Save button is disabled; Update and Delete buttons are enabled after selection.</li>
+</ul>
+
+<h4>FR-GM-003: Delete Guest</h4>
+<ul>
+<li>Select guest from DataGridView.</li>
+<li>Confirmation dialog shown before deletion.</li>
+<li>If confirmed, record is deleted.</li>
+<li>Success or "No record found" message is displayed.</li>
+</ul>
+
+<h4>FR-GM-004: Search Guest</h4>
+<ul>
+<li>Search by guest name using LIKE prefix match (<code>GuestName LIKE 'search%'</code>).</li>
+<li>DataGridView updates in real-time as user types.</li>
+</ul>
+
+<h4>FR-GM-005: View All Guests</h4>
+<ul>
+<li>On form load, all guests are displayed in DataGridView ordered by GuestName.</li>
+</ul>
+
+<div class="security-issue">
+<strong>Security Issue (Legacy):</strong> Guest CRUD operations use string concatenation for SQL queries, creating SQL injection vulnerabilities. The modernized system MUST use parameterized queries.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="mod3">Module 3: Hotel Information</h2>
+
+<h3>3.1 Hotel Info (<code>frmHotelInfo.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Required</th></tr>
+<tr><td>HotelName</td><td>String</td><td>Yes</td></tr>
+<tr><td>Address</td><td>String</td><td>Yes</td></tr>
+<tr><td>ContactNo</td><td>String</td><td>Yes</td></tr>
+<tr><td>AltContactNo (ContactNo1)</td><td>String</td><td>No</td></tr>
+<tr><td>Email</td><td>String</td><td>No</td></tr>
+<tr><td>TIN</td><td>String</td><td>No</td></tr>
+<tr><td>ServiceTaxNo (STNo)</td><td>String</td><td>No</td></tr>
+<tr><td>Logo</td><td>Image (binary)</td><td>No</td></tr>
+</table>
+<ul>
+<li><strong>Business Rule:</strong> Only 1 hotel info record is allowed. System checks record count before insert.</li>
+<li>CRUD operations: Add, Update, Delete.</li>
+</ul>
+
+<h3>3.2 Room Management (<code>frmRoom.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Validation</th></tr>
+<tr><td>RoomNo</td><td>String</td><td>Required, unique (duplicate check)</td></tr>
+<tr><td>RoomType</td><td>String (Dropdown)</td><td>Required</td></tr>
+<tr><td>RoomCharges</td><td>Numeric</td><td>Required, numeric only</td></tr>
+</table>
+<ul>
+<li>Search by room number.</li>
+<li>Duplicate room number prevention.</li>
+</ul>
+
+<h3>3.3 Hall Management (<code>frmHall.vb</code>)</h3>
+<ul><li>Hall charges configuration (single record).</li></ul>
+
+<h3>3.4 Garden Management (<code>frmGarden.vb</code>)</h3>
+<ul><li>Garden charges configuration (single record).</li></ul>
+
+<h3>3.5 Extra Bed (<code>frmExtraBed.vb</code>)</h3>
+<ul><li>Extra bed charges per day.</li></ul>
+
+<h3>3.6 Currency Management (<code>frmCurrency.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Validation</th></tr>
+<tr><td>CS_Currency</td><td>Required, duplicate name check</td></tr>
+</table>
+<ul><li>CRUD with duplicate currency name prevention.</li></ul>
+
+<h3>3.7 Rooms Availability (<code>frmRoomsAvailability.vb</code>)</h3>
+<ul><li>View which rooms are available for a given date range.</li></ul>
+
+<!-- ============================================================ -->
+<h2 id="mod4">Module 4: Check-In</h2>
+
+<h3>4.1 Overview</h3>
+<p>The most complex module in the system. Source: <code>Checkin and Check out/frmCheckIn.vb</code> (2422 lines). Handles guest check-in, billing calculations, room assignment, and payment tracking.</p>
+
+<h3>4.2 Workflow</h3>
+<ol>
+<li>Select guest from DataGridView (guests loaded from Guest table).</li>
+<li>Select room from available rooms.</li>
+<li>Set DateIn and DateOut.</li>
+<li>System performs billing calculation automatically.</li>
+<li>Optional: Select extra bed, currency, enter other charges, discount, etc.</li>
+<li>Enter payment amount.</li>
+<li>Save check-in record.</li>
+</ol>
+
+<h3>4.3 Billing Calculation (Compute Sub)</h3>
+<div class="formula">
+<strong>Step 1:</strong> NoOfDays = DateOut &minus; DateIn (minimum 1 if same day)<br>
+<strong>Step 2:</strong> TotalRoomCharges = RoomCharges &times; NoOfDays<br>
+<strong>Step 3:</strong> Discount = ((TotalRoomCharges + OtherCharges) &times; DiscountPer) / 100 &nbsp; <em>[truncated to integer via CInt]</em><br>
+<strong>Step 4:</strong> SubTotal = (TotalRoomCharges + OtherCharges) &minus; Discount &nbsp; <em>[truncated to integer via CInt]</em><br>
+<strong>Step 5:</strong> ServiceTaxAmount = (SubTotal &times; ServiceTaxPer) / 100 &nbsp; <em>[rounded to 2 decimal places]</em><br>
+<strong>Step 6:</strong> LuxuryTaxAmount = ((SubTotal + ServiceTaxAmount) &times; LuxuryTaxPer) / 100 &nbsp; <em>[rounded to 2 decimal places]</em><br>
+<strong>Step 7:</strong> GrandTotal = SubTotal + ServiceTaxAmount + LuxuryTaxAmount &nbsp; <em>[truncated to integer via CInt]</em><br>
+<strong>Step 8:</strong> Balance = GrandTotal &minus; TotalPaid &nbsp; <em>[truncated to integer via CInt]</em>
+</div>
+<div class="note">
+<strong>Important:</strong> The LuxuryTax base includes ServiceTaxAmount (cascading tax). ServiceTax and LuxuryTax amounts are rounded to 2 decimal places using <code>Math.Round</code>, but GrandTotal and Balance are truncated to integers using <code>CInt</code>.
+</div>
+
+<h3>4.4 Room Availability Check</h3>
+<ul>
+<li>Cannot book if room has status "Reserved" in <code>Temp_Reservation</code> for overlapping dates.</li>
+<li>Cannot book if room has status "Checked In" in <code>CheckIn_Room</code> for overlapping dates.</li>
+<li>Date overlap logic: <code>(RequestedDateIn &lt; ExistingDateOut) AND (RequestedDateOut &gt; ExistingDateIn)</code></li>
+</ul>
+
+<h3>4.5 Validations</h3>
+<ul>
+<li>DateOut must be &ge; DateIn.</li>
+<li>TotalPaid cannot exceed GrandTotal.</li>
+<li>Room must be selected.</li>
+<li>Guest must be selected.</li>
+</ul>
+
+<h3>4.6 Data Fields (CheckIn_Room Table)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td>ID</td><td>Auto-increment</td><td>Primary key</td></tr>
+<tr><td>GuestID</td><td>String (FK)</td><td>Reference to Guest</td></tr>
+<tr><td>RoomNo</td><td>String (FK)</td><td>Reference to Room</td></tr>
+<tr><td>RoomCharges</td><td>Numeric</td><td>Per-night rate</td></tr>
+<tr><td>DateIN</td><td>DateTime</td><td>Check-in date</td></tr>
+<tr><td>DateOUT</td><td>DateTime</td><td>Check-out date</td></tr>
+<tr><td>NoOfAdults</td><td>Integer</td><td>Number of adults</td></tr>
+<tr><td>NoOfKids</td><td>Integer</td><td>Number of children</td></tr>
+<tr><td>NoOfDays</td><td>Integer</td><td>Calculated stay duration</td></tr>
+<tr><td>TotalRoomCharges</td><td>Numeric</td><td>RoomCharges &times; NoOfDays</td></tr>
+<tr><td>OtherCharges</td><td>Numeric</td><td>Additional charges</td></tr>
+<tr><td>SubTotal</td><td>Numeric</td><td>After discount</td></tr>
+<tr><td>ServiceTaxPer</td><td>Decimal</td><td>Service tax percentage</td></tr>
+<tr><td>ServiceTaxAmount</td><td>Decimal</td><td>Calculated service tax</td></tr>
+<tr><td>LuxuryTaxPer</td><td>Decimal</td><td>Luxury tax percentage</td></tr>
+<tr><td>LuxuryTaxAmount</td><td>Decimal</td><td>Calculated luxury tax</td></tr>
+<tr><td>DiscountPer</td><td>Decimal</td><td>Discount percentage</td></tr>
+<tr><td>Discount</td><td>Numeric</td><td>Calculated discount amount</td></tr>
+<tr><td>GrandTotal</td><td>Numeric</td><td>Final bill amount</td></tr>
+<tr><td>TotalPaid</td><td>Numeric</td><td>Amount paid</td></tr>
+<tr><td>Balance</td><td>Numeric</td><td>Remaining balance</td></tr>
+<tr><td>Status</td><td>String</td><td>"Checked In" or "Checked Out"</td></tr>
+<tr><td>Notes</td><td>String</td><td>Optional notes</td></tr>
+<tr><td>ExtraBed</td><td>Boolean/String</td><td>Whether extra bed requested</td></tr>
+<tr><td>CurrencyID</td><td>String (FK)</td><td>Currency reference</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="mod5">Module 5: Check-Out</h2>
+
+<h3>5.1 Overview</h3>
+<p>Handles guest check-out with additional tax calculations. Source: <code>Checkin and Check out/frmCheckOut.vb</code> (809 lines).</p>
+
+<h3>5.2 Workflow</h3>
+<ol>
+<li>Select checked-in guest from DataGridView (filtered by Status = "Checked In").</li>
+<li>System loads check-in data and recalculates billing.</li>
+<li>Additional education cess taxes are computed.</li>
+<li>Restaurant order PaymentDue is added to OtherCharges.</li>
+<li>Save checkout record.</li>
+<li>Update CheckIn_Room status to "Checked Out".</li>
+<li>Create Tax_Room record with additional tax details.</li>
+<li>Print invoice via Crystal Reports (rptInvoice_Room).</li>
+</ol>
+
+<h3>5.3 Additional Tax Calculations (Calculate Sub)</h3>
+<div class="formula">
+<strong>Base calculations:</strong> Same as Check-In (NoOfDays through GrandTotal)<br><br>
+<strong>Additional Taxes:</strong><br>
+EducessTax = (ServiceTaxPer &times; 2) / 100 &nbsp; <em>[rounded to 2 decimals]</em><br>
+EducessTaxAmount = (ServiceTaxAmount &times; EducessTax) / 100 &nbsp; <em>[rounded to 2 decimals]</em><br>
+HEduCessTax = (ServiceTaxPer &times; 1) / 100 &nbsp; <em>[rounded to 2 decimals]</em><br>
+HEducessTaxAmount = (ServiceTaxAmount &times; HEduCessTax) / 100 &nbsp; <em>[rounded to 2 decimals]</em>
+</div>
+
+<h3>5.4 Business Rules</h3>
+<ul>
+<li><strong>Double checkout prevention:</strong> Checks if CheckInID already exists in <code>Checkout_Room</code> table.</li>
+<li>Creates <code>Checkout_Room</code> record with BillNo, CheckInID, CheckOutDate, Notes, HotelID, CurrencyID.</li>
+<li>Creates <code>Tax_Room</code> record with BillID, HEduTax, HEduTaxAmount, EducationalTax, EducationalTaxAmount.</li>
+<li>Updates <code>CheckIn_Room</code> Status to "Checked Out".</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="mod6">Module 6: Reservation</h2>
+
+<h3>6.1 Overview</h3>
+<p>Inferred from project file references and SQL statements in <code>frmCheckIn.vb</code>. The reservation system manages advance room/hall/garden bookings.</p>
+
+<h3>6.2 Reservation Types</h3>
+<table>
+<tr><th>Type</th><th>Table</th><th>Description</th></tr>
+<tr><td>Room Reservation</td><td>Temp_Reservation</td><td>Reserve a room with Status="Reserved" for date range</td></tr>
+<tr><td>Hall Reservation</td><td>Reservation_HallorGarden</td><td>Reserve hall only</td></tr>
+<tr><td>Garden Reservation</td><td>Reservation_HallorGarden</td><td>Reserve garden only</td></tr>
+<tr><td>Hall + Garden</td><td>Reservation_HallandGarden</td><td>Combined hall and garden reservation</td></tr>
+</table>
+
+<h3>6.3 Key Fields (Temp_Reservation)</h3>
+<table>
+<tr><th>Field</th><th>Type</th></tr>
+<tr><td>ReservationID</td><td>String (auto-generated)</td></tr>
+<tr><td>GuestID</td><td>String (FK)</td></tr>
+<tr><td>RoomNo</td><td>String (FK)</td></tr>
+<tr><td>DateIn</td><td>DateTime</td></tr>
+<tr><td>DateOut</td><td>DateTime</td></tr>
+<tr><td>Status</td><td>String ("Reserved")</td></tr>
+<tr><td>Notes</td><td>String</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="mod7">Module 7: Order &amp; Transaction</h2>
+
+<h3>7.1 Overview</h3>
+<p>Manages room service and restaurant orders linked to checked-in guests. Source: <code>Order and Transaction/</code> directory.</p>
+
+<h3>7.2 Features</h3>
+<ul>
+<li><strong>Room Service Orders:</strong> Linked to CheckInID. Items from Food, Liquor, Beer menus.</li>
+<li><strong>Restaurant Orders:</strong> Standalone orders for restaurant guests.</li>
+<li><strong>Transaction Management:</strong> Payment tracking for orders.</li>
+<li><strong>Invoice Generation:</strong> Invoices for Room, Hall/Garden, Hall+Garden orders.</li>
+</ul>
+
+<h3>7.3 Key Table (Order_Info)</h3>
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td>CheckInId</td><td>FK to CheckIn_Room</td></tr>
+<tr><td>PaymentDue</td><td>Outstanding amount (added to OtherCharges at checkout)</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="mod8">Module 8: Inventory &amp; Stock</h2>
+
+<h3>8.1 Food Items (<code>frmFood.vb</code>)</h3>
+<ul><li>CRUD for food menu items used in room service and restaurant orders.</li></ul>
+
+<h3>8.2 Liquor Items (<code>frmLiquor.vb</code>, <code>frmLiquor_Master.vb</code>)</h3>
+<ul><li>CRUD for liquor items. Master table for liquor names.</li></ul>
+
+<h3>8.3 Beer Items (<code>frmBeer.vb</code>)</h3>
+<ul><li>CRUD for beer items (ID, BeerName).</li></ul>
+
+<h3>8.4 Stock Management (<code>frmStock.vb</code>)</h3>
+
+<h4>Liquor Stock</h4>
+<table>
+<tr><th>Field</th><th>Type</th><th>Validation</th></tr>
+<tr><td>StockID</td><td>String</td><td>Auto-generated</td></tr>
+<tr><td>LiquorName</td><td>String (Dropdown)</td><td>Required, duplicate name check</td></tr>
+<tr><td>NoOfBottles</td><td>Integer</td><td>Required, numeric only</td></tr>
+<tr><td>Volume</td><td>Decimal</td><td>Required, numeric only</td></tr>
+<tr><td>TotalVolume</td><td>Decimal</td><td>Auto-calculated</td></tr>
+<tr><td>StockDate</td><td>DateTime</td><td>Auto-set</td></tr>
+</table>
+<div class="formula">TotalVolume = (NoOfBottles &times; Volume) + ExistingVolume</div>
+
+<h4>Beer Stock</h4>
+<table>
+<tr><th>Field</th><th>Type</th></tr>
+<tr><td>StockID</td><td>String</td></tr>
+<tr><td>BeerID</td><td>String (FK to Beer)</td></tr>
+<tr><td>NoOfBottles</td><td>Integer</td></tr>
+<tr><td>StockDate</td><td>DateTime</td></tr>
+</table>
+
+<h4>Role-Based Permissions</h4>
+<ul>
+<li><strong>Admin:</strong> Full access (Save, Update, Delete).</li>
+<li><strong>User:</strong> Save and Delete buttons are disabled.</li>
+</ul>
+
+<h3>8.5 Purchase Inventory (<code>frmPurchaseInventory.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Validation</th></tr>
+<tr><td>ProductName</td><td>String</td><td>Required</td></tr>
+<tr><td>Category</td><td>String (Dropdown)</td><td>Required</td></tr>
+<tr><td>TransactionType</td><td>String (Dropdown)</td><td>Required</td></tr>
+<tr><td>PartyName</td><td>String</td><td>Required</td></tr>
+<tr><td>Quantity</td><td>Integer</td><td>Required, numeric only</td></tr>
+<tr><td>Unit</td><td>String</td><td>Required</td></tr>
+<tr><td>UnitPrice</td><td>Decimal</td><td>Required</td></tr>
+<tr><td>TotalPrice</td><td>Decimal</td><td>Auto-calculated</td></tr>
+<tr><td>PurchaseDate</td><td>DateTime</td><td>Auto-set</td></tr>
+</table>
+<div class="formula">TotalPrice = Quantity &times; UnitPrice</div>
+<p>Filter by: ProductName, Category, PartyName, TransactionType with running total display.</p>
+
+<!-- ============================================================ -->
+<h2 id="mod9">Module 9: Human Resource</h2>
+
+<h3>9.1 Employee Registration (<code>frmEmployee_registration.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Validation</th></tr>
+<tr><td>EmployeeID</td><td>String</td><td>Auto-generated: "E-" + 6 random digits</td></tr>
+<tr><td>EmployeeName</td><td>String</td><td>Required, alpha characters only</td></tr>
+<tr><td>Address</td><td>String</td><td>Required</td></tr>
+<tr><td>MobileNo</td><td>String</td><td>Required</td></tr>
+<tr><td>Email</td><td>String</td><td>Regex validated: <code>^[a-zA-Z][\w\.-]{2,28}[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$</code></td></tr>
+<tr><td>BloodGroup/Gender</td><td>String</td><td>Dropdown selection</td></tr>
+<tr><td>Department</td><td>String (Combo)</td><td>Required, alpha only, auto-uppercase</td></tr>
+<tr><td>Designation</td><td>String (Combo)</td><td>Required, alpha only, auto-uppercase</td></tr>
+<tr><td>DateOfJoining</td><td>DateTime</td><td>Date picker</td></tr>
+<tr><td>Salary</td><td>Decimal</td><td>Required, decimal input allowed (max 16 digits, 2 decimal places)</td></tr>
+<tr><td>BasicWorkingTime</td><td>String (TimeSpan)</td><td>Required</td></tr>
+</table>
+
+<h4>Business Rules</h4>
+<ul>
+<li>Uses parameterized queries for insert (11 parameters).</li>
+<li><strong>Cannot delete</strong> if employee is referenced in: EmployeeAttendance, EmployeePayment, or AdvanceEntry tables.</li>
+<li>Export to Excel functionality (via Microsoft.Office.Interop.Excel in legacy; ClosedXML in modern).</li>
+<li>Search by employee name (LIKE prefix match).</li>
+</ul>
+
+<h3>9.2 Attendance (<code>frmAttendance.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Validation</th></tr>
+<tr><td>WorkingDate</td><td>DateTime</td><td>Date picker</td></tr>
+<tr><td>EmployeeID</td><td>String (Combo)</td><td>Required</td></tr>
+<tr><td>Status</td><td>String (P/A)</td><td>Required</td></tr>
+<tr><td>InTime</td><td>DateTime</td><td>Time picker (if Present)</td></tr>
+<tr><td>OutTime</td><td>DateTime</td><td>Time picker (if Present)</td></tr>
+<tr><td>Overtime</td><td>TimeSpan</td><td>Auto-calculated</td></tr>
+<tr><td>BasicWorkingTime</td><td>TimeSpan</td><td>From employee registration</td></tr>
+</table>
+<div class="formula">Overtime = OutTime &minus; InTime &minus; BasicWorkingTime</div>
+<ul>
+<li><strong>Duplicate check:</strong> One attendance record per employee per date.</li>
+<li>If Status = "A" (Absent): InTime and OutTime set to "00:00:00", Overtime = "00:00:00".</li>
+<li>Uses parameterized queries for insert.</li>
+</ul>
+
+<h3>9.3 Employee Payment (<code>frmEmployeePayment.vb</code>)</h3>
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td>PaymentID</td><td>Auto-generated: "SP-" + 9 random digits</td></tr>
+<tr><td>DateFrom / DateTo</td><td>Payment period</td></tr>
+<tr><td>EmployeeID</td><td>Selected from combo</td></tr>
+<tr><td>PresentDays</td><td>Count of 'P' status in date range</td></tr>
+<tr><td>Salary</td><td>Calculated from BasicSalary and PresentDays</td></tr>
+<tr><td>Advance</td><td>Sum of advances minus deductions from AdvanceEntry</td></tr>
+<tr><td>Overtime</td><td>Sum of overtime hours in date range</td></tr>
+<tr><td>OvertimeRate</td><td>User-entered rate per hour</td></tr>
+<tr><td>OvertimeAmount</td><td>Calculated from total overtime and rate</td></tr>
+<tr><td>Deduction</td><td>User-entered deduction amount</td></tr>
+<tr><td>NetPay</td><td>Final payment amount</td></tr>
+<tr><td>PaymentDate</td><td>Date of payment</td></tr>
+<tr><td>ModeOfPayment</td><td>Payment method</td></tr>
+<tr><td>PaymentModeDetails</td><td>Additional payment details</td></tr>
+</table>
+
+<h4>Payment Calculations</h4>
+<div class="formula">
+Salary = CInt((BasicSalary &times; PresentDays) / 30)<br>
+OvertimeAmount = CInt((TotalMinutes &times; Rate) / 60)<br>
+NetPay = Salary + OvertimeAmount &minus; Deduction
+</div>
+
+<h4>Business Rules</h4>
+<ul>
+<li><strong>Duplicate payment check:</strong> Employee cannot be paid twice on the same date.</li>
+<li>Deduction cannot exceed Advance amount.</li>
+<li>NetPay must be &ge; 0.</li>
+<li>On save, creates an AdvanceEntry record with amount=0 and deduction=Deduction.</li>
+<li>Salary slip printing via Crystal Reports (rptSalarySlip).</li>
+</ul>
+
+<h3>9.4 Advance &amp; Deduction Entry</h3>
+<ul>
+<li>Track advance amounts and deductions per employee.</li>
+<li>AdvanceEntry table: WorkingDate, EmployeeID, Amount, Deduction.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="mod10">Module 10: Tax Information</h2>
+
+<h3>10.1 Overview</h3>
+<p>Source: <code>frmtaxinformation.vb</code>. Simple salary range and tax percentage management.</p>
+
+<h3>10.2 Data Fields</h3>
+<table>
+<tr><th>Field</th><th>Type</th></tr>
+<tr><td>Salray (sic)</td><td>String (salary range description)</td></tr>
+<tr><td>taxinP</td><td>Decimal (tax percentage)</td></tr>
+</table>
+
+<h3>10.3 Business Rules</h3>
+<ul>
+<li><strong>Only 1 record allowed</strong> (checked via count query before insert).</li>
+<li>CRUD operations with single-record constraint.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="mod11">Module 11: System</h2>
+
+<h3>11.1 Hardware-Based Activation</h3>
+<p>Sources: <code>frmActivation.vb</code>, <code>frmSplash.vb</code>.</p>
+<ul>
+<li>Uses WMI to retrieve ProcessorID and SerialNumber.</li>
+<li>Custom <code>Encryption.MakePassword</code> with identifier "659" generates activation key.</li>
+<li>Activation record stored in Activation table (HardwareID, SerialNo, ActivationID).</li>
+</ul>
+
+<h3>11.2 Database Backup</h3>
+<ul>
+<li>Backup destination: <code>C:\DBBackup</code> with timestamp suffix.</li>
+<li>File copy of the Access database file.</li>
+</ul>
+
+<h3>11.3 Database Restore</h3>
+<ul>
+<li>Restore from file dialog selection.</li>
+<li>Overwrites current database with backup file.</li>
+</ul>
+
+<h3>11.4 Chat Server/Client</h3>
+<p>Sources: <code>Chat/frmServer.vb</code>, <code>Chat/frmClient.vb</code>.</p>
+<ul>
+<li>TCP socket-based internal messaging system.</li>
+<li>Server broadcasts to connected clients.</li>
+<li>Supports English and Urdu input modes.</li>
+<li>Remote admin commands: Shutdown, Restart, Logoff, Input Lock/Release.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="mod12">Module 12: Reporting</h2>
+
+<h3>12.1 Crystal Reports (Legacy)</h3>
+<p>The legacy system uses 16 Crystal Report templates. In the modernized system, these will be replaced with QuestPDF report generation.</p>
+
+<table>
+<tr><th>#</th><th>Report</th><th>Description</th></tr>
+<tr><td>1</td><td>rptGuest</td><td>Guest listing report</td></tr>
+<tr><td>2</td><td>rptEmployee</td><td>Employee listing report</td></tr>
+<tr><td>3</td><td>rptAttendance</td><td>Employee attendance report</td></tr>
+<tr><td>4</td><td>rptEmployeePayment</td><td>Employee payment records</td></tr>
+<tr><td>5</td><td>rptOverTime</td><td>Overtime records report</td></tr>
+<tr><td>6</td><td>rptSalarySlip</td><td>Individual salary slip</td></tr>
+<tr><td>7</td><td>rptSalarySlips</td><td>Batch salary slips</td></tr>
+<tr><td>8</td><td>rptReservation</td><td>Reservation listing</td></tr>
+<tr><td>9</td><td>rptTransaction</td><td>Transaction records</td></tr>
+<tr><td>10</td><td>rptInvoice_Room</td><td>Room check-out invoice</td></tr>
+<tr><td>11</td><td>rptInvoice_HallorGarden</td><td>Hall or Garden invoice</td></tr>
+<tr><td>12</td><td>rptInvoice_HallandGarden</td><td>Hall and Garden combined invoice</td></tr>
+<tr><td>13</td><td>rptOrderInvoice</td><td>Order invoice</td></tr>
+<tr><td>14</td><td>rptRestaurantOrderReceipt</td><td>Restaurant order receipt</td></tr>
+<tr><td>15</td><td>rptPurchasedInventory</td><td>Purchased inventory report</td></tr>
+<tr><td>16</td><td>rptAdvancePayment</td><td>Advance payment report</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="schema">Database Schema</h2>
+
+<h3>Entity-Relationship Overview</h3>
+<p>The following schema is inferred from all SQL statements found in the VB.NET source code.</p>
+
+<table>
+<tr><th>Table</th><th>Primary Key</th><th>Columns</th><th>Foreign Keys</th></tr>
+<tr><td><strong>Guest</strong></td><td>GuestID</td><td>GuestID, GuestName, Address, City, ContactNo, IDType, IDNumber, Notes</td><td>&mdash;</td></tr>
+<tr><td><strong>Room</strong></td><td>RoomNo</td><td>RoomNo, RoomType, RoomCharges</td><td>&mdash;</td></tr>
+<tr><td><strong>CheckIn_Room</strong></td><td>ID (auto)</td><td>ID, GuestID, RoomNo, RoomCharges, DateIN, DateOUT, NoOfAdults, NoOfKids, NoOfDays, TotalRoomCharges, OtherCharges, SubTotal, ServiceTaxPer, ServiceTaxAmount, LuxuryTaxPer, LuxuryTaxAmount, DiscountPer, Discount, GrandTotal, TotalPaid, Balance, Status, Notes, ExtraBed, CurrencyID</td><td>GuestID &rarr; Guest, RoomNo &rarr; Room</td></tr>
+<tr><td><strong>Checkout_Room</strong></td><td>ID (auto)</td><td>ID, BillNo, CheckInID, CheckOutDate, Notes, HotelID, CurrencyID</td><td>CheckInID &rarr; CheckIn_Room</td></tr>
+<tr><td><strong>Tax_Room</strong></td><td>BillID</td><td>BillID, HEduTax, HEduTaxAmount, EducationalTax, EducationalTaxAmount</td><td>BillID &rarr; Checkout_Room</td></tr>
+<tr><td><strong>Temp_Reservation</strong></td><td>ReservationID</td><td>ReservationID, GuestID, RoomNo, DateIn, DateOut, Status, Notes</td><td>GuestID &rarr; Guest, RoomNo &rarr; Room</td></tr>
+<tr><td><strong>Reservation_HallorGarden</strong></td><td>ID</td><td>(Inferred: ID, GuestID, Type, DateIn, DateOut, Charges, Status, Notes)</td><td>GuestID &rarr; Guest</td></tr>
+<tr><td><strong>Reservation_HallandGarden</strong></td><td>ID</td><td>(Inferred: ID, GuestID, DateIn, DateOut, HallCharges, GardenCharges, Status, Notes)</td><td>GuestID &rarr; Guest</td></tr>
+<tr><td><strong>Order_Info</strong></td><td>ID</td><td>(Inferred: ID, CheckInId, Items, PaymentDue, OrderDate)</td><td>CheckInId &rarr; CheckIn_Room</td></tr>
+<tr><td><strong>EmployeeRegistration</strong></td><td>EmployeeID</td><td>EmployeeID, EmployeeName, Address, MobileNo, Email, BloodGroup, Department, Designation, DateOfJoining, Salary, BasicWorkingTime</td><td>&mdash;</td></tr>
+<tr><td><strong>EmployeeAttendance</strong></td><td>(WorkingDate, EmployeeID)</td><td>WorkingDate, EmployeeID, Status, InTime, OutTime, Overtime, BasicWorkingTime</td><td>EmployeeID &rarr; EmployeeRegistration</td></tr>
+<tr><td><strong>EmployeePayment</strong></td><td>PaymentID</td><td>PaymentID, DateFrom, DateTo, EmployeeID, PresentDays, Salary, Advance, Deduction, OverTime, OverTimeRate, OverTimeAmount, PaymentDate, ModeOfPayment, PaymentModeDetails, NetPay</td><td>EmployeeID &rarr; EmployeeRegistration</td></tr>
+<tr><td><strong>AdvanceEntry</strong></td><td>(WorkingDate, EmployeeID)</td><td>WorkingDate, EmployeeID, Amount, Deduction</td><td>EmployeeID &rarr; EmployeeRegistration</td></tr>
+<tr><td><strong>PurchasedInventory</strong></td><td>ID (auto)</td><td>ID, ProductName, Quantity, Unit, Price, PurchaseDate, TotalPrice, Category, TransactionType, PartyName</td><td>&mdash;</td></tr>
+<tr><td><strong>Stock</strong></td><td>StockID</td><td>StockID, LiquorName, NoOfBottles, Volume, TotalVolume, StockDate</td><td>&mdash;</td></tr>
+<tr><td><strong>Stock_Beer</strong></td><td>StockID</td><td>StockID, BeerID, NoOfBottles, StockDate</td><td>BeerID &rarr; Beer</td></tr>
+<tr><td><strong>Beer</strong></td><td>ID</td><td>ID, BeerName</td><td>&mdash;</td></tr>
+<tr><td><strong>Liquor_master</strong></td><td>LiquorName</td><td>LiquorName</td><td>&mdash;</td></tr>
+<tr><td><strong>Food</strong></td><td>ID</td><td>(Inferred: ID, FoodName, Price, Category)</td><td>&mdash;</td></tr>
+<tr><td><strong>HotelInfo</strong></td><td>ID (auto)</td><td>ID, HotelName, Address, ContactNo, ContactNo1, Email, TIN, STNo, Logo</td><td>&mdash;</td></tr>
+<tr><td><strong>CurrencySet</strong></td><td>ID (auto)</td><td>ID, CS_Currency</td><td>&mdash;</td></tr>
+<tr><td><strong>Hall</strong></td><td>&mdash;</td><td>Charges</td><td>&mdash;</td></tr>
+<tr><td><strong>Garden</strong></td><td>&mdash;</td><td>Charges</td><td>&mdash;</td></tr>
+<tr><td><strong>ExtraBed</strong></td><td>&mdash;</td><td>Charges</td><td>&mdash;</td></tr>
+<tr><td><strong>Taxinfo</strong></td><td>&mdash;</td><td>Salray, taxinP</td><td>&mdash;</td></tr>
+<tr><td><strong>Activation</strong></td><td>&mdash;</td><td>HardwareID, SerialNo, ActivationID</td><td>&mdash;</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="nfr">Non-Functional Requirements</h2>
+
+<h3>NFR-001: Security</h3>
+<table>
+<tr><th>Issue</th><th>Legacy Behavior</th><th>Required Fix</th></tr>
+<tr><td>Password Storage</td><td>Base64 encoding (ModFunc.vb Encrypt/Decrypt)</td><td>Use BCrypt hashing</td></tr>
+<tr><td>SQL Injection</td><td>String concatenation in 80%+ of queries (frmGuest.vb, frmCheckIn.vb, frmStock.vb, etc.)</td><td>Use parameterized queries / EF Core everywhere</td></tr>
+<tr><td>Custom Encryption</td><td>Custom Encryption.MakePassword with hardcoded identifier "659"</td><td>Use standard .NET cryptography (AES, RSA)</td></tr>
+<tr><td>Connection Strings</td><td>Hardcoded in ConnectionString.vb module</td><td>Use configuration files with secrets management</td></tr>
+</table>
+
+<h3>NFR-002: Role-Based Access Control</h3>
+<ul>
+<li>Two roles: Admin and User.</li>
+<li>Admin has full access to all modules including stock management, backup/restore, and user management.</li>
+<li>User role has restricted access (stock save/delete disabled, backup/restore restricted).</li>
+</ul>
+
+<h3>NFR-003: Data Access</h3>
+<table>
+<tr><th>Legacy</th><th>Modern</th></tr>
+<tr><td>Microsoft Access (.accdb) via OleDb</td><td>SQLite via Entity Framework Core</td></tr>
+<tr><td>Raw SQL string concatenation</td><td>EF Core LINQ queries + parameterized SQL</td></tr>
+<tr><td>No connection pooling / disposal</td><td>Proper IDisposable/using patterns</td></tr>
+</table>
+
+<h3>NFR-004: Reporting</h3>
+<table>
+<tr><th>Legacy</th><th>Modern</th></tr>
+<tr><td>Crystal Reports</td><td>QuestPDF for PDF generation</td></tr>
+<tr><td>Microsoft.Office.Interop.Excel</td><td>ClosedXML for Excel export</td></tr>
+</table>
+
+<h3>NFR-005: UI Framework</h3>
+<table>
+<tr><th>Legacy</th><th>Modern</th></tr>
+<tr><td>VB.NET WinForms (.NET Framework 4.x)</td><td>C# WinForms (.NET 8)</td></tr>
+<tr><td>Flash-based splash screen dependency</td><td>Removed entirely</td></tr>
+</table>
+
+<h3>NFR-006: Code Quality</h3>
+<ul>
+<li>Enable nullable reference types (C# strict typing).</li>
+<li>Use <code>using</code> statements / <code>IDisposable</code> for all database connections.</li>
+<li>Follow SOLID principles and separation of concerns.</li>
+<li>Target &gt;90% code coverage with unit and integration tests.</li>
+</ul>
+
+<h3>NFR-007: Backup &amp; Restore</h3>
+<ul>
+<li>Database backup to configurable directory with timestamp.</li>
+<li>Restore from backup file with confirmation dialog.</li>
+<li>Admin-only access.</li>
+</ul>
+
+</div>
+</body>
+</html>
