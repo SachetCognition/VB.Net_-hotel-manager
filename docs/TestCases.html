@@ -102,7 +102,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateNoOfDays with same date for DateIn and DateOut</td>
 <td>Returns 1 (minimum 1 day for same-day check-in/out)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-002</td>
@@ -111,7 +111,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateNoOfDays with Jan 1 to Jan 6</td>
 <td>Returns 5 days</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-003</td>
@@ -120,7 +120,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateTotalRoomCharges(1000, 5)</td>
 <td>Returns 5000 (RoomCharges x NoOfDays)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-004</td>
@@ -129,7 +129,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateDiscount(5000, 500, 0)</td>
 <td>Returns 0 (0% discount)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-005</td>
@@ -138,7 +138,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateDiscount(5000, 500, 50)</td>
 <td>Returns 2750 (50% of 5500)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-006</td>
@@ -147,7 +147,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateSubTotal(5000, 500, 2750)</td>
 <td>Returns 2750 (5000+500-2750)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-007</td>
@@ -156,7 +156,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateServiceTaxAmount(2750, 12.36)</td>
 <td>Result rounded to 2 decimal places</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-008</td>
@@ -165,7 +165,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateLuxuryTaxAmount with SubTotal, ServiceTaxAmount, and 5%</td>
 <td>LuxuryTax base includes ServiceTaxAmount</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-009</td>
@@ -174,7 +174,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateGrandTotal(2750, 339.90, 154.50)</td>
 <td>Returns CInt(2750 + 339.90 + 154.50) using banker's rounding</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-010</td>
@@ -183,7 +183,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateBalance(3000, 2000)</td>
 <td>Returns 1000</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-011</td>
@@ -192,7 +192,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateEducessTax(12.36)</td>
 <td>Returns Round((12.36 * 2) / 100, 2)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-012</td>
@@ -201,7 +201,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateHEduCessTax(12.36)</td>
 <td>Returns Round((12.36 * 1) / 100, 2)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-013</td>
@@ -210,7 +210,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateEducessTaxAmount(339.90, eduTax)</td>
 <td>Returns Round((svcAmount * eduTax) / 100, 2)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-014</td>
@@ -219,7 +219,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateHEducessTaxAmount(339.90, hEduTax)</td>
 <td>Returns Round((svcAmount * hEduTax) / 100, 2)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-015</td>
@@ -228,7 +228,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call ComputeCheckIn with typical multi-day values</td>
 <td>NoOfDays=5, TotalRoomCharges=5000, Discount=550</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-016</td>
@@ -237,7 +237,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call ComputeCheckOut with typical values</td>
 <td>EducessTax > 0, HEduCessTax > 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-017</td>
@@ -246,7 +246,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateTotalRoomCharges(0, 5)</td>
 <td>Returns 0 (zero charges)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-018</td>
@@ -255,7 +255,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateNoOfDays with identical date</td>
 <td>Returns 1 (same-day minimum)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-019</td>
@@ -264,7 +264,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateNoOfDays for full year (Jan 1 2024 to Jan 1 2025)</td>
 <td>Returns 366 (leap year)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-020</td>
@@ -273,7 +273,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateDiscount(5000, 500, 100)</td>
 <td>Returns 5500 (100% discount)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-021</td>
@@ -282,7 +282,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateBalance(3000, 3000)</td>
 <td>Returns 0 (fully paid)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-022</td>
@@ -291,7 +291,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call ComputeCheckIn with zero taxes</td>
 <td>SubTotal=1000, ServiceTax=0, LuxuryTax=0, GrandTotal=1000</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-023</td>
@@ -300,7 +300,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateBalance(1000, 1500)</td>
 <td>Returns -500 (overpayment scenario)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-024</td>
@@ -309,7 +309,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateServiceTaxAmount(3333, 12.36)</td>
 <td>Decimal precision maintained at 2 places</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-025</td>
@@ -318,7 +318,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateNoOfDays for 1-day difference</td>
 <td>Returns 1</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-026</td>
@@ -327,7 +327,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateTotalRoomCharges(10000, 5)</td>
 <td>Returns 50000 (large values)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-027</td>
@@ -336,7 +336,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateDiscount(0, 500, 10)</td>
 <td>Returns 50 (other charges only)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-028</td>
@@ -345,7 +345,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call CalculateSubTotal(5000, 500, 0)</td>
 <td>Returns 5500 (no discount)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-029</td>
@@ -354,7 +354,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call ComputeCheckOut with additional tax fields</td>
 <td>All tax fields >= 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CALC-030</td>
@@ -363,7 +363,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>Call ComputeCheckIn end-to-end (3 days, 2000/night, 1000 other, 10% disc)</td>
 <td>All fields computed correctly, GrandTotal > SubTotal</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -387,7 +387,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 10)</td>
 <td>Returns 10000 (BasicSalary x PresentDays / 30)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-002</td>
@@ -396,7 +396,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertimeAmount(120, 250)</td>
 <td>Returns 500 ((120 x 250) / 60)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-003</td>
@@ -405,7 +405,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateNetPay(10000, 500, 1000)</td>
 <td>Returns 9500 (Salary + OT - Deduction)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-004</td>
@@ -414,7 +414,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertime(18:00, 09:00, 08:00)</td>
 <td>Returns 1 hour overtime</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-005</td>
@@ -423,7 +423,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 0)</td>
 <td>Returns 0 (zero present days)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-006</td>
@@ -432,7 +432,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 30)</td>
 <td>Returns 30000 (full month)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-007</td>
@@ -441,7 +441,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 15)</td>
 <td>Returns 15000 (half month)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-008</td>
@@ -450,7 +450,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertimeAmount(0, 250)</td>
 <td>Returns 0 (zero minutes)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-009</td>
@@ -459,7 +459,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertime(16:00, 09:00, 08:00)</td>
 <td>Returns >= 0 (negative clamped)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-010</td>
@@ -468,7 +468,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateNetPay(10000, 500, 0)</td>
 <td>Returns 10500 (zero deduction)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-011</td>
@@ -477,7 +477,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(100000, 15)</td>
 <td>Returns 50000 (large salary)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-012</td>
@@ -486,7 +486,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertimeAmount(30, 250)</td>
 <td>Returns 125 (30 minutes)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-013</td>
@@ -495,7 +495,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call ComputePayment with typical values</td>
 <td>Salary=20000, OT>0, NetPay>0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-014</td>
@@ -504,7 +504,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call ComputePayment with zero overtime</td>
 <td>Salary=25000, OvertimeAmount=0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-015</td>
@@ -513,7 +513,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertime(17:00, 09:00, 08:00)</td>
 <td>Returns 0 (exact working time)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-016</td>
@@ -522,7 +522,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 1)</td>
 <td>Returns 1000 (one day)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-017</td>
@@ -531,7 +531,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateNetPay(1000, 0, 2000)</td>
 <td>Returns -1000 (negative result)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-018</td>
@@ -540,7 +540,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateOvertimeAmount(120, 0)</td>
 <td>Returns 0 (zero rate)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-019</td>
@@ -549,7 +549,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call CalculateSalary(30000, 31)</td>
 <td>Returns 31000 (31 days edge case)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-EMP-020</td>
@@ -558,7 +558,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>Call ComputePayment with all zeros</td>
 <td>Salary=0, OT=0, NetPay=0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -582,7 +582,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalPrice(10, 50)</td>
 <td>Returns 500 (Qty x UnitPrice)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-002</td>
@@ -591,7 +591,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalVolume(5, 100, 350)</td>
 <td>Returns 850 ((5x100)+350)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-003</td>
@@ -600,7 +600,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalPrice(0, 50)</td>
 <td>Returns 0 (zero quantity)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-004</td>
@@ -609,7 +609,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalPrice(10, 0)</td>
 <td>Returns 0 (zero price)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-005</td>
@@ -618,7 +618,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalPrice(1000, 100)</td>
 <td>Returns 100000 (large quantity)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-006</td>
@@ -627,7 +627,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalVolume(5, 100, 0)</td>
 <td>Returns 500 (zero existing)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-007</td>
@@ -636,7 +636,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalVolume(0, 100, 350)</td>
 <td>Returns 350 (zero bottles)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-008</td>
@@ -645,7 +645,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalVolume(5, 75.1, 250)</td>
 <td>Returns 625.5 (decimal volume)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-009</td>
@@ -654,7 +654,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalPrice(1, 99.99)</td>
 <td>Returns 99.99 (single item)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-INV-010</td>
@@ -663,7 +663,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>Call CalculateTotalVolume(0, 0, 0)</td>
 <td>Returns 0 (all zeros)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -687,7 +687,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with all valid fields</td>
 <td>Returns true, no errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-002</td>
@@ -696,7 +696,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty name</td>
 <td>Returns false, 'Guest Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-003</td>
@@ -705,7 +705,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty address</td>
 <td>Returns false, 'Address is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-004</td>
@@ -714,7 +714,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty city</td>
 <td>Returns false, 'City is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-005</td>
@@ -723,7 +723,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty contact</td>
 <td>Returns false, 'Contact No is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-006</td>
@@ -732,7 +732,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with non-numeric contact 'abc'</td>
 <td>Returns false, 'Contact No must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-007</td>
@@ -741,7 +741,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty ID type</td>
 <td>Returns false, 'ID Type is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-008</td>
@@ -750,7 +750,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with empty ID number</td>
 <td>Returns false, 'ID Number is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-009</td>
@@ -759,7 +759,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with all empty fields</td>
 <td>Returns false, 6 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-010</td>
@@ -768,7 +768,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with whitespace-only fields</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-011</td>
@@ -777,7 +777,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with valid numeric contact</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-012</td>
@@ -786,7 +786,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateGuest with contact containing spaces</td>
 <td>Returns false, 'Contact No must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-013</td>
@@ -795,7 +795,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-014</td>
@@ -804,7 +804,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with empty room number</td>
 <td>Returns false, 'Room No is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-015</td>
@@ -813,7 +813,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with empty room type</td>
 <td>Returns false, 'Room Type is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-016</td>
@@ -822,7 +822,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with empty charges</td>
 <td>Returns false, 'Room Charges is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-017</td>
@@ -831,7 +831,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with non-numeric charges</td>
 <td>Returns false, 'Room Charges must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-018</td>
@@ -840,7 +840,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateRoom with all empty fields</td>
 <td>Returns false, 3 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-019</td>
@@ -849,7 +849,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-020</td>
@@ -858,7 +858,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with empty name</td>
 <td>Returns false, 'Hotel Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-021</td>
@@ -867,7 +867,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with empty address</td>
 <td>Returns false, 'Address is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-022</td>
@@ -876,7 +876,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with empty contact</td>
 <td>Returns false, 'Contact No is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-023</td>
@@ -885,7 +885,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with all empty fields</td>
 <td>Returns false, 3 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-024</td>
@@ -894,7 +894,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateHotelInfo with whitespace-only fields</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-025</td>
@@ -903,7 +903,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-026</td>
@@ -912,7 +912,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with empty room</td>
 <td>Returns false, 'Room must be selected'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-027</td>
@@ -921,7 +921,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with empty guest</td>
 <td>Returns false, 'Guest must be selected'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-028</td>
@@ -930,7 +930,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with DateOut before DateIn</td>
 <td>Returns false, 'Check-out date must be on or after check-in date'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-029</td>
@@ -939,7 +939,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with TotalPaid exceeding GrandTotal</td>
 <td>Returns false, 'Total Paid cannot exceed Grand Total'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-030</td>
@@ -948,7 +948,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with same date (same-day valid)</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-031</td>
@@ -957,7 +957,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with zero paid</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-032</td>
@@ -966,7 +966,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with exact paid amount</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-033</td>
@@ -975,7 +975,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with all empty fields</td>
 <td>Returns false, >= 3 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-034</td>
@@ -984,7 +984,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with whitespace room</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-035</td>
@@ -993,7 +993,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-036</td>
@@ -1002,7 +1002,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with empty currency</td>
 <td>Returns false, 'Currency must be selected'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-037</td>
@@ -1011,7 +1011,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with empty guest</td>
 <td>Returns false, 'Guest must be selected'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-038</td>
@@ -1020,7 +1020,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with paid exceeding total</td>
 <td>Returns false, 'Total Paid cannot exceed Grand Total'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-039</td>
@@ -1029,7 +1029,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with exact payment</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-040</td>
@@ -1038,7 +1038,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with zero payment</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-041</td>
@@ -1047,7 +1047,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckOut with all empty fields</td>
 <td>Returns false, >= 2 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-042</td>
@@ -1056,7 +1056,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-043</td>
@@ -1065,7 +1065,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty name</td>
 <td>Returns false, 'Employee Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-044</td>
@@ -1074,7 +1074,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with non-alpha name 'John123'</td>
 <td>Returns false, 'Employee Name must contain only letters'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-045</td>
@@ -1083,7 +1083,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty address</td>
 <td>Returns false, 'Address is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-046</td>
@@ -1092,7 +1092,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty mobile</td>
 <td>Returns false, 'Mobile No is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-047</td>
@@ -1101,7 +1101,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty email</td>
 <td>Returns false, 'Email is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-048</td>
@@ -1110,7 +1110,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with invalid email 'notanemail'</td>
 <td>Returns false, 'Invalid email format'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-049</td>
@@ -1119,7 +1119,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty department</td>
 <td>Returns false, 'Department is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-050</td>
@@ -1128,7 +1128,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with non-alpha department 'IT123'</td>
 <td>Returns false, 'Department must contain only letters'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-051</td>
@@ -1137,7 +1137,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty designation</td>
 <td>Returns false, 'Designation is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-052</td>
@@ -1146,7 +1146,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with non-alpha designation</td>
 <td>Returns false, 'Designation must contain only letters'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-053</td>
@@ -1155,7 +1155,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with empty salary</td>
 <td>Returns false, 'Salary is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-054</td>
@@ -1164,7 +1164,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with non-numeric salary 'abc'</td>
 <td>Returns false, 'Salary must be a valid number'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-055</td>
@@ -1173,7 +1173,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with all empty fields</td>
 <td>Returns false, >= 7 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-056</td>
@@ -1182,7 +1182,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with name containing spaces 'John Doe'</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-057</td>
@@ -1191,7 +1191,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateEmployee with decimal salary '50000.50'</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-058</td>
@@ -1200,7 +1200,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateAttendance with valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-059</td>
@@ -1209,7 +1209,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateAttendance with empty employee ID</td>
 <td>Returns false, 'Employee ID is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-060</td>
@@ -1218,7 +1218,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateAttendance with empty status</td>
 <td>Returns false, 'Status is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-061</td>
@@ -1227,7 +1227,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateAttendance with invalid status 'X'</td>
 <td>Returns false, 'Status must be P or A'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-062</td>
@@ -1236,7 +1236,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-063</td>
@@ -1245,7 +1245,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with empty employee ID</td>
 <td>Returns false, 'Employee ID is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-064</td>
@@ -1254,7 +1254,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with empty overtime rate</td>
 <td>Returns false, 'Overtime Rate is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-065</td>
@@ -1263,7 +1263,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with empty payment mode</td>
 <td>Returns false, 'Mode of Payment is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-066</td>
@@ -1272,7 +1272,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with deduction > advance</td>
 <td>Returns false, 'Deduction cannot exceed Advance'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-067</td>
@@ -1281,7 +1281,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with negative net pay</td>
 <td>Returns false, 'Net Pay must be >= 0'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-068</td>
@@ -1290,7 +1290,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with zero net pay</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-069</td>
@@ -1299,7 +1299,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with equal deduction and advance</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-070</td>
@@ -1308,7 +1308,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with all empty fields</td>
 <td>Returns false, >= 3 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-071</td>
@@ -1317,7 +1317,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePayment with large net pay</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-072</td>
@@ -1326,7 +1326,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-073</td>
@@ -1335,7 +1335,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty product name</td>
 <td>Returns false, 'Product Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-074</td>
@@ -1344,7 +1344,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty category</td>
 <td>Returns false, 'Category is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-075</td>
@@ -1353,7 +1353,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty transaction type</td>
 <td>Returns false, 'Transaction Type is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-076</td>
@@ -1362,7 +1362,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty party name</td>
 <td>Returns false, 'Party Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-077</td>
@@ -1371,7 +1371,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty quantity</td>
 <td>Returns false, 'Quantity is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-078</td>
@@ -1380,7 +1380,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with non-numeric quantity</td>
 <td>Returns false, 'Quantity must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-079</td>
@@ -1389,7 +1389,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with empty unit</td>
 <td>Returns false, 'Unit is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-080</td>
@@ -1398,7 +1398,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with all empty fields</td>
 <td>Returns false, >= 6 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-081</td>
@@ -1407,7 +1407,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with whitespace fields</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-082</td>
@@ -1416,7 +1416,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with valid quantity '999'</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-083</td>
@@ -1425,7 +1425,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidatePurchaseInventory with decimal quantity '10.5'</td>
 <td>Returns false, 'Quantity must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-084</td>
@@ -1434,7 +1434,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-085</td>
@@ -1443,7 +1443,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with empty liquor name</td>
 <td>Returns false, 'Liquor Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-086</td>
@@ -1452,7 +1452,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with empty bottles</td>
 <td>Returns false, 'No of Bottles is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-087</td>
@@ -1461,7 +1461,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with non-numeric bottles</td>
 <td>Returns false, 'No of Bottles must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-088</td>
@@ -1470,7 +1470,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with empty volume</td>
 <td>Returns false, 'Volume is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-089</td>
@@ -1479,7 +1479,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStock with all empty fields</td>
 <td>Returns false, 3 errors</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-090</td>
@@ -1488,7 +1488,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStockBeer with all valid fields</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-091</td>
@@ -1497,7 +1497,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStockBeer with empty beer</td>
 <td>Returns false, 'Beer must be selected'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-092</td>
@@ -1506,7 +1506,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStockBeer with empty bottles</td>
 <td>Returns false, 'No of Bottles is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-093</td>
@@ -1515,7 +1515,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateStockBeer with non-numeric bottles</td>
 <td>Returns false, 'No of Bottles must be numeric'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-094</td>
@@ -1524,7 +1524,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCurrency with 'USD'</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-095</td>
@@ -1533,7 +1533,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCurrency with empty string</td>
 <td>Returns false, 'Currency Name is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-096</td>
@@ -1542,7 +1542,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCurrency with whitespace only</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-097</td>
@@ -1551,7 +1551,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCurrency with long name 'United States Dollar'</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-098</td>
@@ -1560,7 +1560,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateTaxInfo with valid salary range and tax %</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-099</td>
@@ -1569,7 +1569,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateTaxInfo with empty salary range</td>
 <td>Returns false, 'Salary range is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-100</td>
@@ -1578,7 +1578,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateTaxInfo with empty tax percentage</td>
 <td>Returns false, 'Tax Percentage is required'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-101</td>
@@ -1587,7 +1587,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateTaxInfo with non-numeric tax 'abc'</td>
 <td>Returns false, 'Tax Percentage must be a valid number'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-102</td>
@@ -1596,7 +1596,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('123456')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-103</td>
@@ -1605,7 +1605,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('0')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-104</td>
@@ -1614,7 +1614,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('abc')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-105</td>
@@ -1623,7 +1623,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('12.5')</td>
 <td>Returns false (not integer)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-106</td>
@@ -1632,7 +1632,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-107</td>
@@ -1641,7 +1641,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('123 456')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-108</td>
@@ -1650,7 +1650,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('John')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-109</td>
@@ -1659,7 +1659,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('John Doe')</td>
 <td>Returns true (spaces allowed)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-110</td>
@@ -1668,7 +1668,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('John123')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-111</td>
@@ -1677,7 +1677,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-112</td>
@@ -1686,7 +1686,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('John!@#')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-113</td>
@@ -1695,7 +1695,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('123.45')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-114</td>
@@ -1704,7 +1704,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('0')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-115</td>
@@ -1713,7 +1713,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('abc')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-116</td>
@@ -1722,7 +1722,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-117</td>
@@ -1731,7 +1731,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsValidEmail('john@test.com')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-118</td>
@@ -1740,7 +1740,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsValidEmail('john.doe@company.org')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-119</td>
@@ -1749,7 +1749,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsValidEmail('notanemail')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-120</td>
@@ -1758,7 +1758,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsValidEmail('@test.com')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-VAL-121</td>
@@ -1767,7 +1767,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsValidEmail('')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -1791,7 +1791,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Guest repository available</td>
 <td>Create guest record and verify persistence</td>
 <td>Guest persisted with correct GuestName</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-G-002</td>
@@ -1800,7 +1800,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Guest repository available</td>
 <td>Read all guest records</td>
 <td>Returns 2 guests</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-G-003</td>
@@ -1809,7 +1809,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Guest repository available</td>
 <td>Update guest name and verify change</td>
 <td>GuestName updated successfully</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-G-004</td>
@@ -1818,7 +1818,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Guest repository available</td>
 <td>Delete guest and verify removal</td>
 <td>Guest no longer found (null)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-G-005</td>
@@ -1827,7 +1827,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Guest repository available</td>
 <td>Find guests by city filter</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-R-006</td>
@@ -1836,7 +1836,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Room repository available</td>
 <td>Create room record and verify persistence</td>
 <td>Room persisted with correct RoomType</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-R-007</td>
@@ -1845,7 +1845,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Room repository available</td>
 <td>Read all room records</td>
 <td>Returns 2 rooms</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-R-008</td>
@@ -1854,7 +1854,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Room repository available</td>
 <td>Update room charges and verify change</td>
 <td>RoomCharges updated successfully</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-R-009</td>
@@ -1863,7 +1863,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Room repository available</td>
 <td>Delete room and verify removal</td>
 <td>Room no longer found (null)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-R-010</td>
@@ -1872,7 +1872,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Room repository available</td>
 <td>Find rooms by type filter</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-H-011</td>
@@ -1881,7 +1881,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Hotel Info repository available</td>
 <td>Create hotel info record and verify</td>
 <td>HotelInfo persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-H-012</td>
@@ -1890,7 +1890,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Hotel Info repository available</td>
 <td>Read hotel info by ID</td>
 <td>Returns correct HotelName</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-H-013</td>
@@ -1899,7 +1899,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Hotel Info repository available</td>
 <td>Update hotel name and verify</td>
 <td>HotelName updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-H-014</td>
@@ -1908,7 +1908,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Hotel Info repository available</td>
 <td>Delete hotel info and verify removal</td>
 <td>HotelInfo no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-H-015</td>
@@ -1917,7 +1917,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Hotel Info repository available</td>
 <td>Count hotel info records</td>
 <td>Returns accurate count</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-C-016</td>
@@ -1926,7 +1926,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Currency repository available</td>
 <td>Create currency record and verify</td>
 <td>Currency persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-C-017</td>
@@ -1935,7 +1935,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Currency repository available</td>
 <td>Read all currencies</td>
 <td>Returns 2 currencies</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-C-018</td>
@@ -1944,7 +1944,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Currency repository available</td>
 <td>Update currency name and verify</td>
 <td>CS_Currency updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-C-019</td>
@@ -1953,7 +1953,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Currency repository available</td>
 <td>Delete currency and verify removal</td>
 <td>Currency no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-C-020</td>
@@ -1962,7 +1962,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Currency repository available</td>
 <td>Check currency exists by name</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-E-021</td>
@@ -1971,7 +1971,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Employee repository available</td>
 <td>Create employee record and verify</td>
 <td>Employee persisted with all fields</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-E-022</td>
@@ -1980,7 +1980,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Employee repository available</td>
 <td>Read all employees</td>
 <td>Returns 2 employees</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-E-023</td>
@@ -1989,7 +1989,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Employee repository available</td>
 <td>Update employee salary and verify</td>
 <td>Salary updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-E-024</td>
@@ -1998,7 +1998,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Employee repository available</td>
 <td>Delete employee and verify removal</td>
 <td>Employee no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-E-025</td>
@@ -2007,7 +2007,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Employee repository available</td>
 <td>Find employees by department</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-S-026</td>
@@ -2016,7 +2016,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Stock repository available</td>
 <td>Create stock record and verify</td>
 <td>Stock persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-S-027</td>
@@ -2025,7 +2025,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Stock repository available</td>
 <td>Read all stocks</td>
 <td>Returns 2 stocks</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-S-028</td>
@@ -2034,7 +2034,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Stock repository available</td>
 <td>Update stock bottles and verify</td>
 <td>NoOfBottles updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-S-029</td>
@@ -2043,7 +2043,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Stock repository available</td>
 <td>Delete stock and verify removal</td>
 <td>Stock no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-S-030</td>
@@ -2052,7 +2052,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Stock repository available</td>
 <td>Find stock by liquor name</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-PI-031</td>
@@ -2061,7 +2061,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Purchase Inventory repository available</td>
 <td>Create purchase inventory and verify</td>
 <td>PurchasedInventory persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-PI-032</td>
@@ -2070,7 +2070,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Purchase Inventory repository available</td>
 <td>Read all inventory items</td>
 <td>Returns 2 items</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-PI-033</td>
@@ -2079,7 +2079,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Purchase Inventory repository available</td>
 <td>Update inventory quantity and verify</td>
 <td>Quantity and TotalPrice updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-PI-034</td>
@@ -2088,7 +2088,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Purchase Inventory repository available</td>
 <td>Delete inventory item and verify</td>
 <td>Item no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-PI-035</td>
@@ -2097,7 +2097,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Purchase Inventory repository available</td>
 <td>Find inventory by category</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-CI-036</td>
@@ -2106,7 +2106,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Check-In repository available</td>
 <td>Create check-in record with FK dependencies</td>
 <td>CheckInRoom persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-CI-037</td>
@@ -2115,7 +2115,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Check-In repository available</td>
 <td>Read check-in record</td>
 <td>Returns correct Status</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-CI-038</td>
@@ -2124,7 +2124,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Check-In repository available</td>
 <td>Update check-in status to Checked Out</td>
 <td>Status updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-CI-039</td>
@@ -2133,7 +2133,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Check-In repository available</td>
 <td>Delete check-in record</td>
 <td>CheckInRoom no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-CI-040</td>
@@ -2142,7 +2142,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Check-In repository available</td>
 <td>Find check-ins by status</td>
 <td>Returns filtered result set</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-TI-041</td>
@@ -2151,7 +2151,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Tax Info repository available</td>
 <td>Create tax info record</td>
 <td>TaxInfo persisted</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-TI-042</td>
@@ -2160,7 +2160,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Tax Info repository available</td>
 <td>Read tax info by ID</td>
 <td>Returns correct TaxInP</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-TI-043</td>
@@ -2169,7 +2169,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Tax Info repository available</td>
 <td>Update tax percentage</td>
 <td>TaxInP updated</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-TI-044</td>
@@ -2178,7 +2178,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Tax Info repository available</td>
 <td>Delete tax info record</td>
 <td>TaxInfo no longer found</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-CRUD-TI-045</td>
@@ -2187,7 +2187,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>In-memory database initialized, Tax Info repository available</td>
 <td>Count tax info records</td>
 <td>Returns accurate count</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -2211,7 +2211,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Room '101' exists in DB</td>
 <td>Check if room '101' already exists before adding duplicate</td>
 <td>Duplicate detected (AnyAsync returns true)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-002</td>
@@ -2220,7 +2220,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Currency 'USD' exists in DB</td>
 <td>Check if currency 'USD' already exists</td>
 <td>Duplicate detected</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-003</td>
@@ -2229,7 +2229,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>One hotel info record exists</td>
 <td>Check count before allowing new record</td>
 <td>canAdd = false (count != 0)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-004</td>
@@ -2238,7 +2238,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Stock 'Whisky' exists in DB</td>
 <td>Check if stock name already exists</td>
 <td>Duplicate detected</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-005</td>
@@ -2247,7 +2247,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>One tax info record exists</td>
 <td>Check count before allowing new record</td>
 <td>canAdd = false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-006</td>
@@ -2256,7 +2256,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Room BB-101 booked Jan 1-5 with status 'Checked In'</td>
 <td>Attempt to book same room Jan 3-7 (overlapping)</td>
 <td>Overlap detected (isBooked = true)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-007</td>
@@ -2265,7 +2265,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Room BB-102 booked Jan 1-5</td>
 <td>Attempt to book same room Jan 6-10 (non-overlapping)</td>
 <td>No overlap (isBooked = false)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-008</td>
@@ -2274,7 +2274,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Room RES-101 reserved Feb 1-5</td>
 <td>Check for reservation conflict Feb 2-4</td>
 <td>Conflict detected</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-009</td>
@@ -2283,7 +2283,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Employee E-DEL01 has attendance records</td>
 <td>Check if employee has attendance before delete</td>
 <td>hasAttendance = true (prevent delete)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-010</td>
@@ -2292,7 +2292,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Employee E-DEL02 has payment records</td>
 <td>Check if employee has payments before delete</td>
 <td>hasPayment = true (prevent delete)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-011</td>
@@ -2301,7 +2301,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Employee E-DEL03 has advance entries</td>
 <td>Check if employee has advances before delete</td>
 <td>hasAdvance = true (prevent delete)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-012</td>
@@ -2310,7 +2310,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>CheckInID 100 already in Checkout_Room</td>
 <td>Check if guest already checked out</td>
 <td>alreadyCheckedOut = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-013</td>
@@ -2319,7 +2319,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>No checkout record for CheckInID 999</td>
 <td>Check if new check-in is already checked out</td>
 <td>alreadyCheckedOut = false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-014</td>
@@ -2328,7 +2328,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Employee E-PAY01 paid today</td>
 <td>Check for duplicate payment same date</td>
 <td>alreadyPaid = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-015</td>
@@ -2337,7 +2337,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Employee E-ATT01 attendance saved today</td>
 <td>Check for duplicate attendance same date</td>
 <td>alreadySaved = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-016</td>
@@ -2346,7 +2346,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>ComputeCheckIn where TotalPaid > GrandTotal</td>
 <td>Balance is negative (service calculates, UI validates)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-017</td>
@@ -2355,7 +2355,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ValidateCheckIn with TotalPaid 0, GrandTotal 15000</td>
 <td>Field-level validation passes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-018</td>
@@ -2364,7 +2364,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>None</td>
 <td>Check if deduction (6000) exceeds advance (5000)</td>
 <td>isValid = false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-019</td>
@@ -2373,7 +2373,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateNetPay(10000, 500, 2000)</td>
 <td>NetPay = 8500 > 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-020</td>
@@ -2382,7 +2382,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateNetPay(10000, 0, 10000)</td>
 <td>NetPay = 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-021</td>
@@ -2391,7 +2391,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>User role = Admin</td>
 <td>Check if Admin can save stock</td>
 <td>canSave = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-022</td>
@@ -2400,7 +2400,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>User role = Admin</td>
 <td>Check if Admin can delete stock</td>
 <td>canDelete = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-023</td>
@@ -2409,7 +2409,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>User role = User</td>
 <td>Check if User can delete stock</td>
 <td>canDelete = false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-024</td>
@@ -2418,7 +2418,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>User role = User</td>
 <td>Check if User can save stock</td>
 <td>canSave = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-025</td>
@@ -2427,7 +2427,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>IdGenerationService instantiated</td>
 <td>Generate guest ID</td>
 <td>Format: 'G-' + 6 digits, length = 8</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-026</td>
@@ -2436,7 +2436,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>IdGenerationService instantiated</td>
 <td>Generate employee ID</td>
 <td>Format: 'E-' + 6 digits, length = 8</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-027</td>
@@ -2445,7 +2445,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>IdGenerationService instantiated</td>
 <td>Generate 100 guest IDs</td>
 <td>All 100 are unique</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-028</td>
@@ -2454,7 +2454,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>None</td>
 <td>Check DateOut (Jan 3) &lt; DateIn (Jan 5)</td>
 <td>isValid = false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-029</td>
@@ -2463,7 +2463,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays with same date</td>
 <td>Returns 1 (minimum)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-030</td>
@@ -2472,7 +2472,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Room RB-101 status 'Checked Out'</td>
 <td>Check if room can be re-booked</td>
 <td>isBooked = false (available)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-031</td>
@@ -2481,7 +2481,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Extra bed charges = 500</td>
 <td>Add extra bed charges when hasExtraBed = true</td>
 <td>otherCharges = 500</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-032</td>
@@ -2490,7 +2490,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Extra bed charges = 500</td>
 <td>No extra bed (hasExtraBed = false)</td>
 <td>otherCharges = 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-033</td>
@@ -2499,7 +2499,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Existing volume = 5000, 10 bottles x 750ml</td>
 <td>Calculate new TotalVolume</td>
 <td>12500 = (10 x 750) + 5000</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-034</td>
@@ -2508,7 +2508,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Existing volume = 5000, 0 new bottles</td>
 <td>Calculate TotalVolume with zero bottles</td>
 <td>5000 (unchanged)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-035</td>
@@ -2517,7 +2517,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>CalculateTotalPrice(25, 40)</td>
 <td>Returns 1000</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-036</td>
@@ -2526,7 +2526,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Purchase/Sale records in DB</td>
 <td>Filter by TransactionType 'Purchase'</td>
 <td>Returns only purchase records</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-037</td>
@@ -2535,7 +2535,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Records with different party names</td>
 <td>Filter by PartyName 'ABC Corp'</td>
 <td>Returns only matching records</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-038</td>
@@ -2544,7 +2544,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Multiple purchase records</td>
 <td>Calculate running total of TotalPrice</td>
 <td>Sum = 1300</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-039</td>
@@ -2553,7 +2553,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Currency 'INR' in DB</td>
 <td>Check if currency exists for check-in</td>
 <td>currencyExists = true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BIZ-040</td>
@@ -2562,7 +2562,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>None</td>
 <td>Create Tax_Room record on checkout</td>
 <td>TaxRoom record created with correct amounts</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -2586,7 +2586,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 guests seeded (2 named 'John...')</td>
 <td>Search guests by name prefix 'John'</td>
 <td>Returns 2 results (John Smith, John Doe)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-002</td>
@@ -2595,7 +2595,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 guests seeded</td>
 <td>Search guest by exact name 'Jane Wilson'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-003</td>
@@ -2604,7 +2604,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 guests seeded</td>
 <td>Search guests by prefix 'Zzz'</td>
 <td>Returns 0 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-004</td>
@@ -2613,7 +2613,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 guests seeded</td>
 <td>Search guests containing 'Smith'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-005</td>
@@ -2622,7 +2622,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 rooms seeded</td>
 <td>Search room by number '101'</td>
 <td>Returns room with type 'Deluxe'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-006</td>
@@ -2631,7 +2631,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 rooms seeded</td>
 <td>Search rooms by type 'Deluxe'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-007</td>
@@ -2640,7 +2640,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>4 rooms seeded</td>
 <td>Search room number '999'</td>
 <td>Returns null (not found)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-008</td>
@@ -2649,7 +2649,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 employees seeded (2 named 'Bob...')</td>
 <td>Search employees by name prefix 'Bob'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-009</td>
@@ -2658,7 +2658,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 employees seeded</td>
 <td>Search employees by department 'KITCHEN'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-010</td>
@@ -2667,7 +2667,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 employees seeded</td>
 <td>Search employees by designation 'CHEF'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-011</td>
@@ -2676,7 +2676,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 stocks seeded (2 start with 'J')</td>
 <td>Search stocks by name prefix 'J'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-012</td>
@@ -2685,7 +2685,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 stocks seeded</td>
 <td>Search stock by exact name 'Absolut Vodka'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-013</td>
@@ -2694,7 +2694,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by category 'Food'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-014</td>
@@ -2703,7 +2703,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by category 'Liquor'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-015</td>
@@ -2712,7 +2712,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by party 'ABC Traders'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-016</td>
@@ -2721,7 +2721,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by transaction type 'Purchase'</td>
 <td>Returns 2 results</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-017</td>
@@ -2730,7 +2730,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by transaction type 'Sale'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-018</td>
@@ -2739,7 +2739,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>2 check-in records seeded</td>
 <td>Search by status 'Checked In'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-019</td>
@@ -2748,7 +2748,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>2 check-in records seeded</td>
 <td>Search by status 'Checked Out'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SRCH-020</td>
@@ -2757,7 +2757,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>3 inventory items seeded</td>
 <td>Filter inventory by product name 'Rice'</td>
 <td>Returns 1 result</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -2781,7 +2781,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; DROP TABLE Guest;--")</td>
 <td>Returns true (injection detected)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-002</td>
@@ -2790,7 +2790,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("' UNION SELECT * FROM Users--")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-003</td>
@@ -2799,7 +2799,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("test; DELETE FROM Guest")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-004</td>
@@ -2808,7 +2808,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("admin'--")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-005</td>
@@ -2817,7 +2817,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; drop table users;")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-006</td>
@@ -2826,7 +2826,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; insert into users...")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-007</td>
@@ -2835,7 +2835,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; update users set role='admin'")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-008</td>
@@ -2844,7 +2844,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; exec xp_cmdshell 'dir'")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-009</td>
@@ -2853,7 +2853,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("admin /* comment */ --")</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-010</td>
@@ -2862,7 +2862,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("John Doe")</td>
 <td>Returns false (clean input)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-011</td>
@@ -2871,7 +2871,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("")</td>
 <td>Returns false (empty input)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-012</td>
@@ -2880,7 +2880,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection(null)</td>
 <td>Returns false (null input)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-013</td>
@@ -2889,7 +2889,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("' OR '1'='1")</td>
 <td>Returns true (search field injection)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-014</td>
@@ -2898,7 +2898,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("101'; DELETE FROM Room;--")</td>
 <td>Returns true (room number injection)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-015</td>
@@ -2907,7 +2907,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>PasswordService instantiated</td>
 <td>Hash password and verify with same password</td>
 <td>VerifyPassword returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-016</td>
@@ -2916,7 +2916,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>PasswordService instantiated</td>
 <td>Hash password and verify with different password</td>
 <td>VerifyPassword returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-017</td>
@@ -2925,7 +2925,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>PasswordService instantiated</td>
 <td>Hash same password twice</td>
 <td>Two different hashes (salt)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-018</td>
@@ -2934,7 +2934,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>PasswordService instantiated</td>
 <td>Hash a password</td>
 <td>Hash is not plain text, starts with '$2'</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-019</td>
@@ -2943,7 +2943,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; xp_cmdshell('dir')")</td>
 <td>Returns true (xp_ stored proc)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-SEC-020</td>
@@ -2952,7 +2952,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>ContainsSqlInjection("'; sp_executesql('select 1')")</td>
 <td>Returns true (sp_ stored proc)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -2976,7 +2976,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Sample CheckIn, Guest, HotelInfo data</td>
 <td>Generate room invoice PDF</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-002</td>
@@ -2985,7 +2985,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Sample data</td>
 <td>Generate room invoice and check PDF header</td>
 <td>Starts with %PDF (0x25504446)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-003</td>
@@ -2994,7 +2994,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 guest in list</td>
 <td>Generate guest report PDF</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-004</td>
@@ -3003,7 +3003,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Empty guest list</td>
 <td>Generate guest report with no data</td>
 <td>Still returns valid PDF bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-005</td>
@@ -3012,7 +3012,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 employee in list</td>
 <td>Generate employee report PDF</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-006</td>
@@ -3021,7 +3021,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Empty employee list</td>
 <td>Generate employee report with no data</td>
 <td>Still returns valid PDF bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-007</td>
@@ -3030,7 +3030,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Sample payment and employee data</td>
 <td>Generate salary slip PDF</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-008</td>
@@ -3039,7 +3039,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Sample data</td>
 <td>Generate salary slip and check PDF header</td>
 <td>Starts with %P (0x2550)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-009</td>
@@ -3048,7 +3048,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 employee in list</td>
 <td>Export employees to Excel</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-010</td>
@@ -3057,7 +3057,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Empty employee list</td>
 <td>Export employees to Excel with no data</td>
 <td>Still returns valid Excel bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-011</td>
@@ -3066,7 +3066,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 guest in list</td>
 <td>Export guests to Excel</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-012</td>
@@ -3075,7 +3075,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Empty guest list</td>
 <td>Export guests to Excel with no data</td>
 <td>Still returns valid Excel bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-013</td>
@@ -3084,7 +3084,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 purchase inventory item</td>
 <td>Export purchase inventory to Excel</td>
 <td>Returns non-empty byte array</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-014</td>
@@ -3093,7 +3093,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>Empty inventory list</td>
 <td>Export inventory to Excel with no data</td>
 <td>Still returns valid Excel bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-015</td>
@@ -3102,7 +3102,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>1 employee in list</td>
 <td>Export to Excel and verify XLSX format</td>
 <td>Starts with PK (0x504B) - ZIP format</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-RPT-016</td>
@@ -3111,7 +3111,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>2 employees in list</td>
 <td>Generate employee report with multiple records</td>
 <td>Returns non-empty PDF bytes</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -3135,7 +3135,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Check Save button state on init</td>
 <td>Save disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-002</td>
@@ -3144,7 +3144,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Check New button state on init</td>
 <td>New enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-003</td>
@@ -3153,7 +3153,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode, no selection</td>
 <td>Check Delete button state on init</td>
 <td>Delete disabled (no selection)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-004</td>
@@ -3162,7 +3162,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Click New button</td>
 <td>Save becomes enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-005</td>
@@ -3171,7 +3171,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Click New button</td>
 <td>New becomes disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-006</td>
@@ -3180,7 +3180,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Click Save button</td>
 <td>Returns to Browse mode</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-007</td>
@@ -3189,7 +3189,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Click Save button</td>
 <td>Save becomes disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-008</td>
@@ -3198,7 +3198,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Select a row from grid</td>
 <td>Delete becomes enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-009</td>
@@ -3207,7 +3207,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Select a row from grid</td>
 <td>Update becomes enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-010</td>
@@ -3216,7 +3216,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with selection</td>
 <td>Click Edit button</td>
 <td>Fields become enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-011</td>
@@ -3225,7 +3225,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with fields populated</td>
 <td>Call Reset</td>
 <td>All fields cleared</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-012</td>
@@ -3234,7 +3234,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with selection</td>
 <td>Call Reset</td>
 <td>Selection removed</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-013</td>
@@ -3243,7 +3243,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Call Reset</td>
 <td>Returns to Browse mode</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-014</td>
@@ -3252,7 +3252,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with fields</td>
 <td>Click New button</td>
 <td>Fields cleared</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-015</td>
@@ -3261,7 +3261,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with selection</td>
 <td>Click New button</td>
 <td>Selection removed</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-016</td>
@@ -3270,7 +3270,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Select row with GuestID, GuestName, Address</td>
 <td>Fields populated with row data</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-017</td>
@@ -3279,7 +3279,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with first selection</td>
 <td>Select a different row</td>
 <td>Fields replaced with new data</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-018</td>
@@ -3288,7 +3288,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Check grid state</td>
 <td>Grid disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-019</td>
@@ -3297,7 +3297,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Check grid state</td>
 <td>Grid enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-020</td>
@@ -3306,7 +3306,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Edit mode</td>
 <td>Check grid state</td>
 <td>Grid disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-021</td>
@@ -3315,7 +3315,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Click New</td>
 <td>Mode transitions to Add</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-022</td>
@@ -3324,7 +3324,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Click Save</td>
 <td>Mode transitions to Browse</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-023</td>
@@ -3333,7 +3333,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState with selection in Browse</td>
 <td>Click Edit</td>
 <td>Mode transitions to Edit</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-024</td>
@@ -3342,7 +3342,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Edit mode</td>
 <td>Click Save</td>
 <td>Mode transitions to Browse</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-025</td>
@@ -3351,7 +3351,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse, no selection</td>
 <td>Click Edit</td>
 <td>Mode stays in Browse (edit requires selection)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-026</td>
@@ -3360,7 +3360,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse mode</td>
 <td>Check fields state</td>
 <td>Fields disabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-027</td>
@@ -3369,7 +3369,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Add mode</td>
 <td>Check fields state</td>
 <td>Fields enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-028</td>
@@ -3378,7 +3378,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Edit mode</td>
 <td>Check fields state</td>
 <td>Fields enabled</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-029</td>
@@ -3387,7 +3387,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState in Browse with selection</td>
 <td>Check Save state</td>
 <td>Save disabled (Browse mode)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-UI-030</td>
@@ -3396,7 +3396,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>FormState various states</td>
 <td>Check Delete in Browse (no sel), Browse (sel), Add</td>
 <td>Disabled, Enabled, Disabled respectively</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
@@ -3420,7 +3420,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays with same date</td>
 <td>Returns 1 (same-day minimum)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-002</td>
@@ -3429,7 +3429,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays with 1-day difference</td>
 <td>Returns 1</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-003</td>
@@ -3438,7 +3438,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays for 30-day stay</td>
 <td>Returns 30</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-004</td>
@@ -3447,7 +3447,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays for 365-day stay</td>
 <td>Returns 365</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-005</td>
@@ -3456,7 +3456,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateNoOfDays for leap year Feb (2028)</td>
 <td>Returns 29 days</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-006</td>
@@ -3465,7 +3465,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateTotalRoomCharges(0, 3)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-007</td>
@@ -3474,7 +3474,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>ComputeCheckIn with zero other charges</td>
 <td>Discount = 0 (0% of only room charges)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-008</td>
@@ -3483,7 +3483,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateDiscount(10000, 0, 0)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-009</td>
@@ -3492,7 +3492,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateDiscount(10000, 0, 100)</td>
 <td>Returns 10000 (full discount)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-010</td>
@@ -3501,7 +3501,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>ComputeCheckIn with zero tax percentages</td>
 <td>ServiceTax=0, LuxuryTax=0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-011</td>
@@ -3510,7 +3510,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>CalculateTotalRoomCharges(999999, 30)</td>
 <td>Returns 29999970</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-012</td>
@@ -3519,7 +3519,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>BillingService instantiated</td>
 <td>ComputeCheckIn with 100% tax rates</td>
 <td>GrandTotal > SubTotal</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-013</td>
@@ -3528,7 +3528,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateSalary(50000, 0)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-014</td>
@@ -3537,7 +3537,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateSalary(30000, 30)</td>
 <td>Returns 30000 (full month)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-015</td>
@@ -3546,7 +3546,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateSalary(30000, 31)</td>
 <td>Returns 31000 (edge case)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-016</td>
@@ -3555,7 +3555,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateOvertimeAmount(0, 100)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-017</td>
@@ -3564,7 +3564,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateOvertimeAmount(120, 0)</td>
 <td>Returns 0 (zero rate)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-018</td>
@@ -3573,7 +3573,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateOvertimeAmount(600, 200)</td>
 <td>Returns 2000 (10 hours)</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-019</td>
@@ -3582,7 +3582,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateNetPay(10000, 500, 10500)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-020</td>
@@ -3591,7 +3591,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>EmployeePaymentService instantiated</td>
 <td>CalculateNetPay(10000, 0, 15000)</td>
 <td>Returns -5000</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-021</td>
@@ -3600,7 +3600,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>CalculateTotalPrice(0, 100)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-022</td>
@@ -3609,7 +3609,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>CalculateTotalPrice(100, 0)</td>
 <td>Returns 0</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-023</td>
@@ -3618,7 +3618,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>CalculateTotalPrice(1, 99.99)</td>
 <td>Returns 99.99</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-024</td>
@@ -3627,7 +3627,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>InventoryService instantiated</td>
 <td>CalculateTotalPrice(999999, 1)</td>
 <td>Returns 999999</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-025</td>
@@ -3636,7 +3636,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('')</td>
 <td>Returns false</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-026</td>
@@ -3645,7 +3645,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly('0')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-027</td>
@@ -3654,7 +3654,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsAlphaOnly('A')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-028</td>
@@ -3663,7 +3663,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsNumericOnly with 1000-char string</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-029</td>
@@ -3672,7 +3672,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('0.5')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 <tr>
 <td class="id">TC-BOUND-030</td>
@@ -3681,7 +3681,7 @@ footer { text-align: center; padding: 30px; color: #999; font-size: 12px; }
 <td>ValidationService instantiated</td>
 <td>IsDecimalInput('5.0')</td>
 <td>Returns true</td>
-<td><span class="status status-notrun">Not Run</span></td>
+<td><span class="status status-pass">Passed</span></td>
 </tr>
 </tbody>
 </table>
