@@ -347,7 +347,7 @@ public class BusinessRuleTests : IDisposable
     public void Admin_CanSaveStock()
     {
         string userRole = "Admin";
-        bool canSave = userRole == "Admin" || userRole == "User";
+        bool canSave = userRole == "Admin";
         Assert.True(canSave);
     }
 
@@ -369,13 +369,13 @@ public class BusinessRuleTests : IDisposable
         Assert.False(canDelete);
     }
 
-    // TC-BIZ-024: User can save stock
+    // TC-BIZ-024: User cannot save stock
     [Fact]
-    public void User_CanSaveStock()
+    public void User_CannotSaveStock()
     {
         string userRole = "User";
-        bool canSave = userRole == "Admin" || userRole == "User";
-        Assert.True(canSave);
+        bool canSave = userRole == "Admin";
+        Assert.False(canSave);
     }
 
     // ============= ID GENERATION =============
