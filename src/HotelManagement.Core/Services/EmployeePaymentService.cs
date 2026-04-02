@@ -11,7 +11,7 @@ public class EmployeePaymentService
     /// </summary>
     public int CalculateSalary(decimal basicSalary, int presentDays)
     {
-        return (int)((basicSalary * presentDays) / 30m);
+        return Convert.ToInt32((basicSalary * presentDays) / 30m);
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ public class EmployeePaymentService
     /// </summary>
     public int CalculateOvertimeAmount(double totalMinutes, decimal rate)
     {
-        return (int)((totalMinutes * (double)rate) / 60.0);
+        return Convert.ToInt32((totalMinutes * (double)rate) / 60.0);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class EmployeePaymentService
     /// </summary>
     public int CalculateNetPay(decimal salary, decimal overtimeAmount, decimal deduction)
     {
-        return (int)(salary + overtimeAmount - deduction);
+        return Convert.ToInt32(salary + overtimeAmount - deduction);
     }
 
     /// <summary>

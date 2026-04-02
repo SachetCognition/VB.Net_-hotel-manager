@@ -2,7 +2,7 @@ namespace HotelManagement.Core.Services;
 
 /// <summary>
 /// Preserves exact billing calculation logic from frmCheckIn.vb Compute() sub.
-/// VB.NET Val() returns 0 for invalid strings, CInt truncates to integer.
+/// VB.NET Val() returns 0 for invalid strings, CInt uses banker's rounding (Convert.ToInt32).
 /// Math.Round rounds to 2 decimal places for tax amounts.
 /// </summary>
 public class BillingService
@@ -20,11 +20,11 @@ public class BillingService
 
     /// <summary>
     /// Calculate total room charges = RoomCharges × NoOfDays.
-    /// Uses CInt (truncation to integer) as in original VB.NET code.
+    /// Uses Convert.ToInt32 (banker's rounding) to match VB.NET CInt.
     /// </summary>
     public int CalculateTotalRoomCharges(decimal roomCharges, int noOfDays)
     {
-        return (int)(roomCharges * noOfDays);
+        return Convert.ToInt32(roomCharges * noOfDays);
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class BillingService
     /// </summary>
     public int CalculateDiscount(decimal totalRoomCharges, decimal otherCharges, decimal discountPer)
     {
-        return (int)(((totalRoomCharges + otherCharges) * discountPer) / 100m);
+        return Convert.ToInt32(((totalRoomCharges + otherCharges) * discountPer) / 100m);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class BillingService
     /// </summary>
     public int CalculateSubTotal(decimal totalRoomCharges, decimal otherCharges, decimal discount)
     {
-        return (int)(totalRoomCharges + otherCharges) - (int)discount;
+        return Convert.ToInt32(totalRoomCharges + otherCharges) - Convert.ToInt32(discount);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class BillingService
     /// </summary>
     public int CalculateGrandTotal(decimal subTotal, double serviceTaxAmount, double luxuryTaxAmount)
     {
-        return (int)((double)subTotal + serviceTaxAmount + luxuryTaxAmount);
+        return Convert.ToInt32((double)subTotal + serviceTaxAmount + luxuryTaxAmount);
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class BillingService
     /// </summary>
     public int CalculateBalance(decimal grandTotal, decimal totalPaid)
     {
-        return (int)(grandTotal - totalPaid);
+        return Convert.ToInt32(grandTotal - totalPaid);
     }
 
     /// <summary>
