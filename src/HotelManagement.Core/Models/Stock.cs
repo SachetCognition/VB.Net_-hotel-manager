@@ -26,8 +26,7 @@ public class StockBeer
     public string StockID { get; set; } = string.Empty;
 
     [Required]
-    [StringLength(20)]
-    public string BeerID { get; set; } = string.Empty;
+    public int BeerID { get; set; }
 
     public int NoOfBottles { get; set; }
     public DateTime StockDate { get; set; }

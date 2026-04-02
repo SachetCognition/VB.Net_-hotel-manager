@@ -166,7 +166,8 @@ public class BillingServiceTests
     [Fact]
     public void CalculateNoOfDays_365Days()
     {
-        Assert.Equal(365, _svc.CalculateNoOfDays(new DateTime(2024, 1, 1), new DateTime(2025, 1, 1)));
+        // 2024 is a leap year: Jan 1 2024 → Jan 1 2025 = 366 days
+        Assert.Equal(366, _svc.CalculateNoOfDays(new DateTime(2024, 1, 1), new DateTime(2025, 1, 1)));
     }
 
     // TC-CALC-020: Discount 100% edge case
