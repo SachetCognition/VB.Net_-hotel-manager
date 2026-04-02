@@ -85,12 +85,14 @@ public class HotelDbContext : DbContext
         {
             entity.HasKey(e => e.ID);
             entity.ToTable("Reservation_HallorGarden");
+            entity.HasOne(e => e.Guest).WithMany().HasForeignKey(e => e.GuestID).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<ReservationHallAndGarden>(entity =>
         {
             entity.HasKey(e => e.ID);
             entity.ToTable("Reservation_HallandGarden");
+            entity.HasOne(e => e.Guest).WithMany().HasForeignKey(e => e.GuestID).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -172,6 +174,7 @@ public class HotelDbContext : DbContext
         {
             entity.HasKey(e => e.ID);
             entity.ToTable("Order_Info");
+            entity.HasOne(e => e.CheckInRoom).WithMany().HasForeignKey(e => e.CheckInId).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Hall>(entity =>

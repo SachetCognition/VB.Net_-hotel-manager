@@ -111,6 +111,9 @@ public class OrderInfo
 
     [StringLength(500)]
     public string? Items { get; set; }
+
+    [ForeignKey(nameof(CheckInId))]
+    public CheckInRoom? CheckInRoom { get; set; }
 }
 
 public class Hall

@@ -58,6 +58,9 @@ public class ReservationHallOrGarden
 
     [StringLength(1000)]
     public string? Notes { get; set; }
+
+    [ForeignKey(nameof(GuestID))]
+    public Guest? Guest { get; set; }
 }
 
 public class ReservationHallAndGarden
@@ -81,4 +84,7 @@ public class ReservationHallAndGarden
 
     [StringLength(1000)]
     public string? Notes { get; set; }
+
+    [ForeignKey(nameof(GuestID))]
+    public Guest? Guest { get; set; }
 }
