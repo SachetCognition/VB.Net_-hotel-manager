@@ -4,10 +4,11 @@ namespace HotelManagement.Core.Services;
 
 /// <summary>
 /// ID generation matching VB.NET GetUniqueKey() using RNGCryptoServiceProvider.
+/// Original VB.NET uses chars "123456789" (no zero) with GetNonZeroBytes.
 /// </summary>
 public class IdGenerationService
 {
-    private static readonly char[] Digits = "0123456789".ToCharArray();
+    private static readonly char[] Digits = "123456789".ToCharArray();
 
     /// <summary>
     /// Generate Guest ID: "G-" + 6 random digits (from frmGuest.vb).
@@ -59,13 +60,13 @@ public class IdGenerationService
 
     private static string GenerateRandomDigits(int length)
     {
-        byte[] data = new byte[length];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(data);
         char[] result = new char[length];
         for (int i = 0; i < length; i++)
         {
-            result[i] = Digits[data[i] % 10];
+            // RandomNumberGenerator.GetInt32 uses rejection sampling for uniform distribution,
+            // avoiding the modulo bias of byte % 9. Range [0, 9) maps to Digits indices 0-8
+            // which are chars '1'-'9', matching the original VB.NET behavior (no zeros).
+            result[i] = Digits[RandomNumberGenerator.GetInt32(Digits.Length)];
         }
         return new string(result);
     }
