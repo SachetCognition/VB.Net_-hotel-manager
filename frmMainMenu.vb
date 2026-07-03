@@ -48,6 +48,8 @@ Public Class frmMainMenu
         Timer2.Interval = 1000
         ToolStripStatusLabel4.Text = Now
         lblUser.Text = frmLogin.UserName.Text
+        UserSession.SetUserRole(frmLogin.UserType.Text, frmLogin.UserName.Text)
+        lblUserType.Text = UserSession.GetCurrentRole()
         yonatanMainLoad()
 
     End Sub
@@ -231,6 +233,7 @@ Public Class frmMainMenu
         frmOrdersRecord1.Hide()
         frmBeer.Hide()
         frmRoomsAvailability.Hide()
+        UserSession.ClearSession()
         frmLogin.UserName.Text = ""
         frmLogin.Password.Text = ""
         frmLogin.UserType.SelectedIndex = -1
@@ -340,7 +343,7 @@ Public Class frmMainMenu
     End Sub
 
     Private Sub OrderToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OrderToolStripMenuItem.Click
-        frmOrder.lblUserType.Text = lblUserType.Text
+        frmOrder.lblUserType.Text = UserSession.GetCurrentRole()
         frmOrder.Show()
     End Sub
 
@@ -360,24 +363,26 @@ Public Class frmMainMenu
     End Sub
 
     Private Sub StockToolStripMenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StockToolStripMenuItem1.Click
-        If (lblUserType.Text = "User") Then
+        frmStock.lblUserType.Text = UserSession.GetCurrentRole()
+        If Not UserSession.IsAdmin() Then
             frmStock.btnSave.Enabled = False
             frmStock.btnSave1.Enabled = False
-            frmStock.lblUserType.Text = lblUserType.Text
-            frmStock.Show()
         End If
-        If (lblUserType.Text = "Admin") Then
-            frmStock.Show()
-        End If
+        frmStock.Show()
     End Sub
 
     Private Sub StockToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StockToolStripMenuItem.Click
+        frmStock.lblUserType.Text = UserSession.GetCurrentRole()
+        If Not UserSession.IsAdmin() Then
+            frmStock.btnSave.Enabled = False
+            frmStock.btnSave1.Enabled = False
+        End If
         Me.Hide()
         frmStock.Show()
     End Sub
 
     Private Sub OrderToolStripMenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OrderToolStripMenuItem1.Click
-
+        frmOrder.lblUserType.Text = UserSession.GetCurrentRole()
         frmOrder.Show()
     End Sub
 
@@ -456,6 +461,7 @@ Public Class frmMainMenu
     End Sub
 
     Private Sub BackupToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BackupToolStripMenuItem.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             Cursor = Cursors.WaitCursor
             Timer3.Enabled = True
@@ -473,6 +479,7 @@ Public Class frmMainMenu
     End Sub
 
     Private Sub RestoreToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RestoreToolStripMenuItem.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             Cursor = Cursors.WaitCursor
             Timer3.Enabled = True
