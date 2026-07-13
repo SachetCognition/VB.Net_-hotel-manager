@@ -1,0 +1,115 @@
+Summary
+  Generated on: 7/13/2026 - 1:16:45 PM
+  Coverage date: 7/13/2026 - 1:14:48 PM - 7/13/2026 - 1:14:51 PM
+  Parser: MultiReport (2x Cobertura)
+  Assemblies: 4
+  Classes: 87
+  Files: 35
+  Line coverage: 89.1%
+  Covered lines: 2589
+  Uncovered lines: 314
+  Coverable lines: 2903
+  Total lines: 4174
+  Branch coverage: 72.7% (665 of 914)
+  Covered branches: 665
+  Total branches: 914
+  Method coverage: 92.2% (765 of 829)
+  Full method coverage: 89.8% (745 of 829)
+  Covered methods: 765
+  Fully covered methods: 745
+  Total methods: 829
+
+HotelManager.Application                                        100%
+  HotelManager.Application.Billing.BillingCalculator            100%
+  HotelManager.Application.Billing.HallAndGardenBill            100%
+  HotelManager.Application.Billing.PayrollResult                100%
+  HotelManager.Application.Billing.StayBill                     100%
+  HotelManager.Application.Interfaces.AuthResult                100%
+  HotelManager.Application.Interfaces.ReportRequest             100%
+  HotelManager.Application.Interfaces.RoomAvailability          100%
+
+HotelManager.Domain                                            88.2%
+  HotelManager.Domain.Entities.AdvanceEntry                    83.3%
+  HotelManager.Domain.Entities.Beer                             100%
+  HotelManager.Domain.Entities.CheckInRoom                       90%
+  HotelManager.Domain.Entities.CheckoutRoom                    90.9%
+  HotelManager.Domain.Entities.CurrencySet                      100%
+  HotelManager.Domain.Entities.Dish                             100%
+  HotelManager.Domain.Entities.EmployeeAttendance              88.8%
+  HotelManager.Domain.Entities.EmployeePayment                 93.7%
+  HotelManager.Domain.Entities.EmployeeRegistration             100%
+  HotelManager.Domain.Entities.ExtraBed                         100%
+  HotelManager.Domain.Entities.Garden                           100%
+  HotelManager.Domain.Entities.Guest                            100%
+  HotelManager.Domain.Entities.Hall                             100%
+  HotelManager.Domain.Entities.HotelInfo                        100%
+  HotelManager.Domain.Entities.Liquor                            80%
+  HotelManager.Domain.Entities.LiquorMaster                     100%
+  HotelManager.Domain.Entities.OrderedProduct                  88.8%
+  HotelManager.Domain.Entities.OrderInfo                       94.7%
+  HotelManager.Domain.Entities.PurchasedInventory               100%
+  HotelManager.Domain.Entities.Registration                    42.8%
+  HotelManager.Domain.Entities.Reservation                     77.7%
+  HotelManager.Domain.Entities.ReservationHallAndGarden        96.7%
+  HotelManager.Domain.Entities.ReservationHallOrGarden           96%
+  HotelManager.Domain.Entities.RestaurantOrderedProduct        87.5%
+  HotelManager.Domain.Entities.RestaurantOrderInfo             94.1%
+  HotelManager.Domain.Entities.Room                             100%
+  HotelManager.Domain.Entities.Stock                           85.7%
+  HotelManager.Domain.Entities.StockBeer                         80%
+  HotelManager.Domain.Entities.TaxInfo                          100%
+  HotelManager.Domain.Entities.TaxOrder                        57.1%
+  HotelManager.Domain.Entities.TaxReservationHallAndGarden     71.4%
+  HotelManager.Domain.Entities.TaxReservationHallOrGarden      71.4%
+  HotelManager.Domain.Entities.TaxRestaurantOrder              28.5%
+  HotelManager.Domain.Entities.TaxRoom                         71.4%
+  HotelManager.Domain.Entities.TempReservation                 77.7%
+  HotelManager.Domain.Entities.Trans                            100%
+  HotelManager.Domain.Entities.User                              50%
+
+HotelManager.Infrastructure                                    81.6%
+  HotelManager.Infrastructure.DbPaths                             0%
+  HotelManager.Infrastructure.DbSeeder                            0%
+  HotelManager.Infrastructure.DesignTimeDbContextFactory          0%
+  HotelManager.Infrastructure.HotelDbContext                    100%
+  HotelManager.Infrastructure.Services.AuthService             72.7%
+  HotelManager.Infrastructure.Services.CurrencyService         96.2%
+  HotelManager.Infrastructure.Services.GuestService            96.7%
+  HotelManager.Infrastructure.Services.HotelInfoService         100%
+  HotelManager.Infrastructure.Services.RoomService             97.1%
+
+HotelManager.Web                                                 91%
+  HotelManager.Web.Extensions.FoundationServiceRegistration       0%
+  HotelManager.Web.Extensions.HrPayrollServiceRegistration        0%
+  HotelManager.Web.Extensions.InventoryServiceRegistration        0%
+  HotelManager.Web.Extensions.MasterDataServiceRegistration       0%
+  HotelManager.Web.Extensions.OrderServiceRegistration            0%
+  HotelManager.Web.Extensions.ReportServiceRegistration           0%
+  HotelManager.Web.Extensions.ReservationServiceRegistration      0%
+  HotelManager.Web.Services.Hr.HrPayrollService                99.6%
+  HotelManager.Web.Services.Inventory.InventoryService         94.3%
+  HotelManager.Web.Services.OrderService                         84%
+  HotelManager.Web.Services.Reports.AdvancePaymentRow           100%
+  HotelManager.Web.Services.Reports.AttendanceRow               100%
+  HotelManager.Web.Services.Reports.EmployeePaymentRow         86.6%
+  HotelManager.Web.Services.Reports.GuestRow                    100%
+  HotelManager.Web.Services.Reports.HallAndGardenInvoiceRow     100%
+  HotelManager.Web.Services.Reports.HallOrGardenInvoiceRow      100%
+  HotelManager.Web.Services.Reports.HotelHeaderRow              100%
+  HotelManager.Web.Services.Reports.InvoicePickRow              100%
+  HotelManager.Web.Services.Reports.OrderInvoiceRow              95%
+  HotelManager.Web.Services.Reports.OrderLineRow               85.7%
+  HotelManager.Web.Services.Reports.PdfDownload                   0%
+  HotelManager.Web.Services.Reports.PurchasedInventoryRow       100%
+  HotelManager.Web.Services.Reports.ReportDataService           100%
+  HotelManager.Web.Services.Reports.ReportPdfBuilder           99.2%
+  HotelManager.Web.Services.Reports.ReportService               100%
+  HotelManager.Web.Services.Reports.ReservationRow              100%
+  HotelManager.Web.Services.Reports.RestaurantReceiptRow       93.3%
+  HotelManager.Web.Services.Reports.RoomInvoiceRow             97.1%
+  HotelManager.Web.Services.Reports.SalarySlipRow               100%
+  HotelManager.Web.Services.Reservations.CheckInService        98.5%
+  HotelManager.Web.Services.Reservations.CheckOutService        100%
+  HotelManager.Web.Services.Reservations.ReservationService    94.1%
+  HotelManager.Web.Services.TransactionService                  100%
+  Program                                                         0%

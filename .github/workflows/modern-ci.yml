@@ -41,6 +41,7 @@ jobs:
           -targetdir:CoverageReport
           -reporttypes:"Html;TextSummary;Cobertura"
           -classfilters:"-HotelManager.Infrastructure.Migrations.*"
+          -filefilters:"-**/*.razor"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

@@ -61,7 +61,8 @@ dotnet test --collect:"XPlat Code Coverage"
 `.github/workflows/modern-ci.yml` runs on every PR and push to `main` touching
 `modern/`: it builds the solution, runs `dotnet test --collect:"XPlat Code Coverage"`,
 publishes a ReportGenerator HTML report as the `coverage-report` artifact, and fails
-if combined line coverage (excluding generated EF migrations) is below 80%.
+if combined line coverage (excluding generated EF migrations and `.razor` UI markup,
+which is exercised manually/e2e rather than by unit tests) is below 80%.
 
 ## Legacy fidelity notes
 
