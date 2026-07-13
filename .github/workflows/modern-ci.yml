@@ -1,0 +1,58 @@
+name: modern-ci
+
+on:
+  push:
+    branches: [main]
+    paths: ["modern/**", ".github/workflows/modern-ci.yml"]
+  pull_request:
+    paths: ["modern/**", ".github/workflows/modern-ci.yml"]
+  workflow_dispatch:
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  COVERAGE_THRESHOLD: 80
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: modern
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test with coverage
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: Install ReportGenerator
+        run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+      - name: Generate coverage report
+        run: >
+          reportgenerator
+          -reports:"TestResults/*/coverage.cobertura.xml"
+          -targetdir:CoverageReport
+          -reporttypes:"Html;TextSummary;Cobertura"
+          -classfilters:"-HotelManager.Infrastructure.Migrations.*"
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: modern/CoverageReport
+
+      - name: Enforce coverage threshold
+        run: |
+          summary=CoverageReport/Summary.txt
+          cat "$summary"
+          line=$(grep -m1 "Line coverage:" "$summary" | grep -oE '[0-9]+(\.[0-9]+)?')
+          echo "Combined line coverage: ${line}% (threshold: ${COVERAGE_THRESHOLD}%)"
+          awk -v cov="$line" -v thr="$COVERAGE_THRESHOLD" 'BEGIN { exit (cov+0 >= thr+0) ? 0 : 1 }' \
+            || { echo "::error::Combined line coverage ${line}% is below the required ${COVERAGE_THRESHOLD}%"; exit 1; }
