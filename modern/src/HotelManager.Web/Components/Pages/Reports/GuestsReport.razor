@@ -1,0 +1,58 @@
+@page "/reports/guests"
+@using HotelManager.Web.Services.Reports
+@inject ReportDataService Data
+@inject IReportService Reports
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+<PageTitle>Guest Report - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Guest Report</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_search" Label="Guest ID or Name" /></MudItem>
+        <MudItem xs="12" sm="6" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Load">Apply</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="Export">Export PDF</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_rows" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Guest ID</MudTh><MudTh>Name</MudTh><MudTh>Address</MudTh><MudTh>City</MudTh>
+        <MudTh>Contact No</MudTh><MudTh>ID Type</MudTh><MudTh>ID Number</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.GuestID</MudTd><MudTd>@context.GuestName</MudTd><MudTd>@context.Address</MudTd>
+        <MudTd>@context.City</MudTd><MudTd>@context.ContactNo</MudTd>
+        <MudTd>@context.IDType</MudTd><MudTd>@context.IDNumber</MudTd>
+    </RowTemplate>
+    <NoRecordsContent><MudText>No records found.</MudText></NoRecordsContent>
+</MudTable>
+
+@code {
+    private string? _search;
+    private IReadOnlyList<GuestRow> _rows = Array.Empty<GuestRow>();
+
+    private ReportRequest Request => new(null, null, string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => _rows = await Data.GetGuestsAsync(Request);
+
+    private async Task Export()
+    {
+        try
+        {
+            var pdf = await Reports.RenderGuestReportPdfAsync(Request);
+            await PdfDownload.DownloadAsync(JS, "guest-report.pdf", pdf);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

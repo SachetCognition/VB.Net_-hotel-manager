@@ -1,0 +1,42 @@
+@page "/reports"
+
+<PageTitle>Reports - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Reports</MudText>
+
+<MudGrid>
+    @foreach (var (title, href, icon) in _reports)
+    {
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard Elevation="2">
+                <MudCardContent>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@icon" Color="Color.Primary" />
+                        <MudText Typo="Typo.h6">@title</MudText>
+                    </MudStack>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="@href" Variant="Variant.Text" Color="Color.Primary">Open</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+@code {
+    private readonly (string, string, string)[] _reports =
+    {
+        ("Room Invoices", "/reports/room-invoices", Icons.Material.Filled.Receipt),
+        ("Hall & Garden Invoices", "/reports/hall-and-garden-invoices", Icons.Material.Filled.Receipt),
+        ("Hall or Garden Invoices", "/reports/hall-or-garden-invoices", Icons.Material.Filled.Receipt),
+        ("Room Order Invoices", "/reports/order-invoices", Icons.Material.Filled.RoomService),
+        ("Restaurant Receipts", "/reports/restaurant-receipts", Icons.Material.Filled.Restaurant),
+        ("Salary Slips", "/reports/salary-slips", Icons.Material.Filled.RequestQuote),
+        ("Attendance", "/reports/attendance", Icons.Material.Filled.EventAvailable),
+        ("Advance Payments", "/reports/advance-payments", Icons.Material.Filled.Payments),
+        ("Employee Payments", "/reports/employee-payments", Icons.Material.Filled.Paid),
+        ("Guests", "/reports/guests", Icons.Material.Filled.People),
+        ("Reservations", "/reports/reservations", Icons.Material.Filled.EventNote),
+        ("Purchased Inventory", "/reports/purchased-inventory", Icons.Material.Filled.Inventory)
+    };
+}

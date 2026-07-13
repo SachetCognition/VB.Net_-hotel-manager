@@ -1,0 +1,33 @@
+@page "/reports/room-invoices"
+@using HotelManager.Web.Services.Reports
+@inject ReportDataService Data
+@inject IReportService Reports
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+<PageTitle>Room Invoices - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Room Invoices</MudText>
+
+<InvoicePickList Title="Checked-out stays" NumberLabel="Bill No" NameLabel="Guest"
+                 Items="_items" OnExport="Export" />
+
+@code {
+    private IReadOnlyList<InvoicePickRow> _items = Array.Empty<InvoicePickRow>();
+
+    protected override async Task OnInitializedAsync() =>
+        _items = await Data.GetRoomInvoicePicksAsync();
+
+    private async Task Export(InvoicePickRow row)
+    {
+        try
+        {
+            var pdf = await Reports.RenderRoomInvoicePdfAsync(int.Parse(row.Id));
+            await PdfDownload.DownloadAsync(JS, $"room-invoice-{row.Number ?? row.Id}.pdf", pdf);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
