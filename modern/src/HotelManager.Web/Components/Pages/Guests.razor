@@ -125,9 +125,16 @@
         var confirmed = await DialogService.ShowMessageBox("Confirmation",
             "Do you really want to delete this record?", yesText: "Yes", noText: "No");
         if (confirmed != true) return;
-        await GuestSvc.DeleteAsync(guestId);
-        Snackbar.Add("Successfully deleted", Severity.Success);
-        ResetForm();
-        await Load();
+        try
+        {
+            await GuestSvc.DeleteAsync(guestId);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
     }
 }

@@ -91,6 +91,18 @@ public class CurrencyServiceTests : IClassFixture<SqliteDbFixture>
     }
 
     [Fact]
+    public async Task Update_RenameToExistingName_Throws()
+    {
+        await using var db = _fixture.CreateContext();
+        var svc = new CurrencyService(db);
+        await svc.CreateAsync(new CurrencySet { CS_Currency = "INR" });
+        var other = await svc.CreateAsync(new CurrencySet { CS_Currency = "JPY" });
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            svc.UpdateAsync(new CurrencySet { ID = other.ID, CS_Currency = "INR" }));
+        Assert.Equal("Currency Name Already Exists", ex.Message);
+    }
+
+    [Fact]
     public async Task Create_EmptyName_Throws()
     {
         await using var db = _fixture.CreateContext();

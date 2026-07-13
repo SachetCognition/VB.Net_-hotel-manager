@@ -31,6 +31,8 @@ public class CurrencyService : ICurrencyService
     {
         if (string.IsNullOrWhiteSpace(currency.CS_Currency))
             throw new ArgumentException("Please enter currency", nameof(currency));
+        if (await _db.Currencies.AnyAsync(c => c.CS_Currency == currency.CS_Currency && c.ID != currency.ID))
+            throw new InvalidOperationException("Currency Name Already Exists");
         var existing = await _db.Currencies.FirstAsync(c => c.ID == currency.ID);
         existing.CS_Currency = currency.CS_Currency;
         await _db.SaveChangesAsync();
