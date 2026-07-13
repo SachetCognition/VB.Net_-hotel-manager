@@ -1,0 +1,86 @@
+@page "/users"
+@attribute [Authorize(Roles = "Admin")]
+@inject IAuthService Auth
+@inject ISnackbar Snackbar
+
+<PageTitle>Users - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">User Management</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudText Typo="Typo.h6" Class="mb-2">Add User</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_newUserName" Label="Username" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_newName" Label="Full Name" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_newUserType" Label="Role">
+                <MudSelectItem Value="@("Admin")">Admin</MudSelectItem>
+                <MudSelectItem Value="@("User")">User</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudTextField @bind-Value="_newPassword" Label="Password" InputType="InputType.Password" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddUser">Add</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_users" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Username</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Role</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.UserName</MudTd>
+        <MudTd>@context.NameOfuser</MudTd>
+        <MudTd>@context.UserType</MudTd>
+        <MudTd>@context.Email</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => DeleteUser(context.UserName!))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Registration> _users = [];
+    private string _newUserName = "";
+    private string _newName = "";
+    private string _newUserType = "User";
+    private string _newPassword = "";
+
+    protected override async Task OnInitializedAsync() => _users = await Auth.GetUsersAsync();
+
+    private async Task AddUser()
+    {
+        if (string.IsNullOrWhiteSpace(_newUserName) || string.IsNullOrWhiteSpace(_newPassword))
+        {
+            Snackbar.Add("Username and password are required", Severity.Warning);
+            return;
+        }
+        if (await Auth.GetUserAsync(_newUserName) is not null)
+        {
+            Snackbar.Add("Username already exists", Severity.Error);
+            return;
+        }
+        await Auth.CreateUserAsync(new Registration
+        {
+            UserName = _newUserName,
+            NameOfuser = _newName,
+            UserType = _newUserType,
+            JoiningDate = DateTime.Today
+        }, _newPassword);
+        Snackbar.Add("User created", Severity.Success);
+        _newUserName = _newName = _newPassword = "";
+        _users = await Auth.GetUsersAsync();
+    }
+
+    private async Task DeleteUser(string userName)
+    {
+        await Auth.DeleteUserAsync(userName);
+        _users = await Auth.GetUsersAsync();
+    }
+}

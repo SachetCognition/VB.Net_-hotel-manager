@@ -1,0 +1,94 @@
+@page "/"
+@inject IDbContextFactory<HotelDbContext> DbFactory
+
+<PageTitle>Dashboard - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+
+<MudGrid>
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.subtitle2">Checked-In Guests</MudText>
+            <MudText Typo="Typo.h3">@_checkedInCount</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.subtitle2">Current Reservations</MudText>
+            <MudText Typo="Typo.h3">@_reservationCount</MudText>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="4">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.subtitle2">Rooms</MudText>
+            <MudText Typo="Typo.h3">@_roomCount</MudText>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.h6" Class="mb-2">Checked-In Guests</MudText>
+            <MudTable Items="_checkedIn" Dense="true" Hover="true">
+                <HeaderContent>
+                    <MudTh>Guest</MudTh>
+                    <MudTh>Room</MudTh>
+                    <MudTh>Date In</MudTh>
+                    <MudTh>Date Out</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@(context.Guest?.GuestName ?? context.GuestID)</MudTd>
+                    <MudTd>@context.RoomNo</MudTd>
+                    <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
+                    <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudText Typo="Typo.h6" Class="mb-2">Current Reservations</MudText>
+            <MudTable Items="_reservations" Dense="true" Hover="true">
+                <HeaderContent>
+                    <MudTh>Reservation</MudTh>
+                    <MudTh>Guest</MudTh>
+                    <MudTh>Room</MudTh>
+                    <MudTh>Date In</MudTh>
+                    <MudTh>Date Out</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.ReservationID</MudTd>
+                    <MudTd>@(context.Guest?.GuestName ?? context.GuestID)</MudTd>
+                    <MudTd>@context.RoomNo</MudTd>
+                    <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
+                    <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private List<CheckInRoom> _checkedIn = [];
+    private List<Reservation> _reservations = [];
+    private int _checkedInCount;
+    private int _reservationCount;
+    private int _roomCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        _checkedIn = await db.CheckIns.AsNoTracking()
+            .Include(c => c.Guest)
+            .Where(c => c.Status == "Checked In")
+            .OrderBy(c => c.RoomNo)
+            .ToListAsync();
+        _checkedInCount = _checkedIn.Count;
+        _reservations = await db.Reservations.AsNoTracking()
+            .Include(r => r.Guest)
+            .Where(r => r.Status != "Cancelled" && r.DateOUT >= DateTime.Today)
+            .OrderBy(r => r.DateIN)
+            .ToListAsync();
+        _reservationCount = _reservations.Count;
+        _roomCount = await db.Rooms.CountAsync();
+    }
+}

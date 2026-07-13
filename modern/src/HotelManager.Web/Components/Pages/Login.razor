@@ -1,0 +1,43 @@
+@page "/login"
+@layout Layout.EmptyLayout
+@attribute [AllowAnonymous]
+@inject NavigationManager Navigation
+
+<PageTitle>Login - Hotel Manager</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="d-flex align-center" Style="min-height: 100vh;">
+    <MudPaper Elevation="4" Class="pa-8" Style="width: 100%;">
+        <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-2">Hotel Manager</MudText>
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-6">Sign in to continue</MudText>
+        @if (HasError)
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">Invalid username or password.</MudAlert>
+        }
+        <form method="post" action="/account/login" data-enhance="false">
+            <input type="hidden" name="returnUrl" value="@ReturnUrl" />
+            <div class="mud-input-control mud-input-control-full-width mb-4">
+                <label class="mud-typography mud-typography-body2" for="username">Username</label>
+                <input id="username" name="username" class="mud-input-slot" required autofocus
+                       style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;" />
+            </div>
+            <div class="mud-input-control mud-input-control-full-width mb-6">
+                <label class="mud-typography mud-typography-body2" for="password">Password</label>
+                <input id="password" name="password" type="password" class="mud-input-slot" required
+                       style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;" />
+            </div>
+            <button type="submit" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-large mud-ripple" style="width:100%;">
+                Sign In
+            </button>
+        </form>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    public string? ReturnUrl { get; set; }
+
+    [SupplyParameterFromQuery(Name = "error")]
+    public string? Error { get; set; }
+
+    private bool HasError => !string.IsNullOrEmpty(Error);
+}

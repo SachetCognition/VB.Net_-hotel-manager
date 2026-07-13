@@ -1,0 +1,10 @@
+@* Left nav mirroring the legacy frmMainMenu groups. Each group lives in its own
+   component so parallel workstreams can add links without merge conflicts. *@
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+    <NavMasterEntry />
+    <NavTransactions />
+    <NavHumanResource />
+    <NavReports />
+    <NavUserManagement />
+</MudNavMenu>
