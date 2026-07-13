@@ -5,6 +5,7 @@ public static class InventoryServiceRegistration
 {
     public static IServiceCollection AddInventoryServices(this IServiceCollection services)
     {
+        services.AddScoped<HotelManager.Application.Interfaces.IInventoryService, Services.Inventory.InventoryService>();
         return services;
     }
 }

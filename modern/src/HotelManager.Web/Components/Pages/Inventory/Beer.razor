@@ -1,0 +1,108 @@
+@page "/inventory/beer"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Beer - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Beer</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4"><MudTextField @bind-Value="_beerName" Label="Beer Name" /></MudItem>
+        <MudItem xs="12" sm="3"><MudNumericField @bind-Value="_rate" Label="Rate" Min="0" /></MudItem>
+        <MudItem xs="12" sm="5" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">
+                @(string.IsNullOrEmpty(_editId) ? "Save" : "Update")
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@((string s) => SearchChanged(s))" Immediate="true"
+              Label="Search by beer name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+              Class="mb-2" />
+
+<MudTable Items="_beers" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh><MudTh>Beer Name</MudTh><MudTh>Rate</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.BeerName</MudTd>
+        <MudTd>@context.Rate</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<HotelManager.Domain.Entities.Beer> _beers = [];
+    private string _search = "";
+    private string _beerName = "";
+    private int? _rate;
+    private string _editId = "";
+    private bool _isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        await Load();
+    }
+
+    private async Task Load() => _beers = await Inventory.GetBeersAsync(_search);
+
+    private async Task SearchChanged(string value)
+    {
+        _search = value;
+        await Load();
+    }
+
+    private void Edit(HotelManager.Domain.Entities.Beer beer)
+    {
+        _editId = beer.ID;
+        _beerName = beer.BeerName ?? "";
+        _rate = beer.Rate;
+    }
+
+    private void ResetForm()
+    {
+        _editId = "";
+        _beerName = "";
+        _rate = null;
+    }
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SaveBeerAsync(new HotelManager.Domain.Entities.Beer { ID = _editId, BeerName = _beerName, Rate = _rate });
+            Snackbar.Add(string.IsNullOrEmpty(_editId) ? "Record Successfully saved" : "The Record is Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(string id)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeleteBeerAsync(id);
+            Snackbar.Add("Record Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}

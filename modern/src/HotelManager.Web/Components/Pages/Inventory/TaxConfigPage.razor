@@ -1,0 +1,91 @@
+@page "/inventory/tax-config"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Tax Config - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Additional Tax Configuration</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4"><MudTextField @bind-Value="_key" Label="Tax Key" /></MudItem>
+        <MudItem xs="12" sm="3"><MudNumericField @bind-Value="_percent" Label="Tax %" Min="0" /></MudItem>
+        <MudItem xs="12" sm="5" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">Save</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<MudTable Items="_taxes" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Tax Key</MudTh><MudTh>Tax %</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Salray</MudTd>
+        <MudTd>@context.TaxinP</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.Salray))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<TaxInfo> _taxes = [];
+    private string _key = "";
+    private int? _percent;
+    private bool _isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        await Load();
+    }
+
+    private async Task Load() => _taxes = await Inventory.GetTaxInfosAsync();
+
+    private void Edit(TaxInfo tax)
+    {
+        _key = tax.Salray;
+        _percent = tax.TaxinP;
+    }
+
+    private void ResetForm()
+    {
+        _key = "";
+        _percent = null;
+    }
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SaveTaxInfoAsync(new TaxInfo { Salray = _key, TaxinP = _percent });
+            Snackbar.Add("Successfully saved", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(string key)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeleteTaxInfoAsync(key);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}
