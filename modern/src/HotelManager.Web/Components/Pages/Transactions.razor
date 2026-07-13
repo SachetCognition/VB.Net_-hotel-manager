@@ -1,0 +1,126 @@
+@page "/transactions"
+@inject ITransactionService TransactionSvc
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Transactions - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Transactions</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudText Typo="Typo.h6" Class="mb-2">@(_editingId == 0 ? "New Transaction" : $"Edit Transaction #{_editingId}")</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_partyName" Label="Employee / Party Name" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_type" Label="Type">
+                <MudSelectItem Value="@("Credit")">Credit</MudSelectItem>
+                <MudSelectItem Value="@("Debit")">Debit</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_details" Label="Details" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_date" Label="Date" /></MudItem>
+        <MudItem xs="6" sm="1"><MudNumericField @bind-Value="_amount" Label="Amount" /></MudItem>
+        <MudItem xs="6" sm="1"><MudNumericField @bind-Value="_received" Label="Received" /></MudItem>
+        <MudItem xs="12" Class="d-flex align-center">
+            <MudText Class="mr-4">Due: @(_amount - _received)</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save" Class="mr-2">Save</MudButton>
+            <MudButton Variant="Variant.Text" OnClick="ResetForm">Clear</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@(async (string s) => { _search = s; await Load(); })"
+              Label="Search by party, type, or details" Immediate="true" Class="mb-2"
+              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+
+<MudTable Items="_transactions" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Party</MudTh><MudTh>Type</MudTh><MudTh>Details</MudTh><MudTh>Month</MudTh>
+        <MudTh>Date</MudTh><MudTh>Amount</MudTh><MudTh>Received</MudTh><MudTh>Due</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Employee_Party_Name</MudTd>
+        <MudTd>@context.TransactionType</MudTd>
+        <MudTd>@context.TransactionDetails</MudTd>
+        <MudTd>@context.TransactionMonth</MudTd>
+        <MudTd>@context.TransactionDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.TransactionAmount</MudTd>
+        <MudTd>@context.AmountReceived</MudTd>
+        <MudTd>@context.DueAmount</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Trans> _transactions = [];
+    private int _editingId;
+    private string _partyName = "";
+    private string _type = "Credit";
+    private string _details = "";
+    private DateTime? _date = DateTime.Today;
+    private int _amount;
+    private int _received;
+    private string _search = "";
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() =>
+        _transactions = await TransactionSvc.GetAllAsync(string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    private async Task Save()
+    {
+        if (string.IsNullOrWhiteSpace(_partyName))
+        {
+            Snackbar.Add("Party name is required", Severity.Warning);
+            return;
+        }
+        await TransactionSvc.SaveAsync(new Trans
+        {
+            ID = _editingId,
+            Employee_Party_Name = _partyName,
+            TransactionType = _type,
+            TransactionDetails = _details,
+            TransactionDate = _date,
+            TransactionMonth = _date?.ToString("MMMM"),
+            TransactionAmount = _amount,
+            AmountReceived = _received
+        });
+        Snackbar.Add(_editingId == 0 ? "Transaction created" : "Transaction updated", Severity.Success);
+        ResetForm();
+        await Load();
+    }
+
+    private void Edit(Trans t)
+    {
+        _editingId = t.ID;
+        _partyName = t.Employee_Party_Name ?? "";
+        _type = t.TransactionType ?? "Credit";
+        _details = t.TransactionDetails ?? "";
+        _date = t.TransactionDate;
+        _amount = t.TransactionAmount ?? 0;
+        _received = t.AmountReceived ?? 0;
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Delete Transaction", "Delete this transaction?", yesText: "Delete", cancelText: "Cancel");
+        if (confirmed != true) return;
+        await TransactionSvc.DeleteAsync(id);
+        await Load();
+    }
+
+    private void ResetForm()
+    {
+        _editingId = 0;
+        _partyName = _details = "";
+        _type = "Credit";
+        _date = DateTime.Today;
+        _amount = _received = 0;
+    }
+}
