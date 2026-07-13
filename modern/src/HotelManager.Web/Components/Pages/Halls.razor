@@ -1,0 +1,90 @@
+@page "/halls"
+@inject IRoomService RoomSvc
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Halls - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Halls</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_hallName" Label="Hall Name" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_charges" Label="Charges" Min="0" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_halls" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Hall Name</MudTh>
+        <MudTh>Charges</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.HallName</MudTd>
+        <MudTd>@context.Charges</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Hall> _halls = [];
+    private string _hallName = "";
+    private int? _charges;
+    private int? _editId;
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => _halls = await RoomSvc.GetHallsAsync();
+
+    private void ResetForm()
+    {
+        _hallName = "";
+        _charges = null;
+        _editId = null;
+    }
+
+    private void Edit(Hall hall)
+    {
+        _editId = hall.ID;
+        _hallName = hall.HallName ?? "";
+        _charges = hall.Charges;
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await RoomSvc.SaveHallAsync(new Hall { ID = _editId ?? 0, HallName = _hallName, Charges = _charges });
+            Snackbar.Add(_editId is null ? "Hall Charge Successfully saved" : "Record Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (ArgumentException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox("Confirmation",
+            "Do you really want to delete this record?", yesText: "Yes", noText: "No");
+        if (confirmed != true) return;
+        await RoomSvc.DeleteHallAsync(id);
+        Snackbar.Add("Record Successfully deleted", Severity.Success);
+        ResetForm();
+        await Load();
+    }
+}

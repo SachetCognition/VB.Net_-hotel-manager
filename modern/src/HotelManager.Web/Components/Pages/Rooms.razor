@@ -1,0 +1,117 @@
+@page "/rooms"
+@inject IRoomService RoomSvc
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@using HotelManager.Infrastructure.Services
+
+<PageTitle>Rooms - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Rooms</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_roomNo" Label="Room No" Required="true" Disabled="_editing" /></MudItem>
+        <MudItem xs="12" sm="3">
+            <MudSelect @bind-Value="_roomType" Label="Room Type" Required="true">
+                @foreach (var type in RoomService.RoomTypes)
+                {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_roomCharges" Label="Room Charges" Min="0" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editing ? "Update" : "Add")</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@(async (string s) => { _search = s; await Load(); })"
+              Label="Search by Room No" Immediate="true" Class="mb-2"
+              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+
+<MudTable Items="_rooms" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Room No</MudTh>
+        <MudTh>Room Type</MudTh>
+        <MudTh>Charges</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.RoomNo</MudTd>
+        <MudTd>@context.RoomType</MudTd>
+        <MudTd>@context.RoomCharges</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.RoomNo))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Room> _rooms = [];
+    private string _search = "";
+    private string _roomNo = "";
+    private string _roomType = "";
+    private int? _roomCharges;
+    private bool _editing;
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() =>
+        _rooms = await RoomSvc.GetRoomsAsync(string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    private void ResetForm()
+    {
+        _roomNo = "";
+        _roomType = "";
+        _roomCharges = null;
+        _editing = false;
+    }
+
+    private void Edit(Room room)
+    {
+        _roomNo = room.RoomNo;
+        _roomType = room.RoomType ?? "";
+        _roomCharges = room.RoomCharges;
+        _editing = true;
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            var room = new Room { RoomNo = _roomNo, RoomType = _roomType, RoomCharges = _roomCharges };
+            if (_editing)
+            {
+                await RoomSvc.UpdateRoomAsync(room);
+                Snackbar.Add("Successfully updated", Severity.Success);
+            }
+            else
+            {
+                await RoomSvc.CreateRoomAsync(room);
+                Snackbar.Add("Room Successfully saved", Severity.Success);
+            }
+            ResetForm();
+            await Load();
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+
+    private async Task Delete(string roomNo)
+    {
+        var confirmed = await DialogService.ShowMessageBox("Confirmation",
+            "Do you really want to delete this record?", yesText: "Yes", noText: "No");
+        if (confirmed != true) return;
+        await RoomSvc.DeleteRoomAsync(roomNo);
+        Snackbar.Add("Successfully deleted", Severity.Success);
+        ResetForm();
+        await Load();
+    }
+}
