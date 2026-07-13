@@ -167,14 +167,27 @@ public class HrPayrollService : IHrPayrollService
         entry.Amount ??= 0;
         entry.Deduction ??= 0;
 
-        if (entry.ID == 0 && entry.Amount > 0)
+        if (entry.ID == 0)
         {
-            var duplicate = await _db.AdvanceEntries.AnyAsync(a =>
-                a.EmployeeID == entry.EmployeeID && a.WorkingDate == entry.WorkingDate && a.Amount > 0);
-            if (duplicate)
-                throw new InvalidOperationException("advance is already paid to employee today");
+            if (entry.Amount > 0)
+            {
+                var duplicate = await _db.AdvanceEntries.AnyAsync(a =>
+                    a.EmployeeID == entry.EmployeeID && a.WorkingDate == entry.WorkingDate && a.Amount > 0);
+                if (duplicate)
+                    throw new InvalidOperationException("advance is already paid to employee today");
+            }
+            _db.AdvanceEntries.Add(entry);
         }
-        _db.AdvanceEntries.Add(entry);
+        else
+        {
+            var existing = await _db.AdvanceEntries.FirstOrDefaultAsync(a => a.ID == entry.ID)
+                ?? throw new InvalidOperationException("No record found");
+            existing.EmployeeID = entry.EmployeeID;
+            existing.WorkingDate = entry.WorkingDate;
+            existing.Amount = entry.Amount;
+            existing.Deduction = entry.Deduction;
+            entry = existing;
+        }
         await _db.SaveChangesAsync();
         return entry;
     }

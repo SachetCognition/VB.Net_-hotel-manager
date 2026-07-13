@@ -360,6 +360,26 @@ public class HrPayrollServiceTests : IClassFixture<HrSqliteDbFixture>
     }
 
     [Fact]
+    public async Task SaveAdvanceEntry_Update_ChangesExistingRow()
+    {
+        await using var db = _fixture.CreateContext();
+        var svc = new HrPayrollService(db);
+        var employee = await SeedEmployeeAsync(svc);
+        var saved = await svc.SaveAdvanceEntryAsync(new AdvanceEntry
+        {
+            EmployeeID = employee.EmployeeID, WorkingDate = new DateTime(2026, 6, 10), Amount = 300
+        });
+        var updated = await svc.SaveAdvanceEntryAsync(new AdvanceEntry
+        {
+            ID = saved.ID, EmployeeID = employee.EmployeeID,
+            WorkingDate = new DateTime(2026, 6, 10), Amount = 450
+        });
+        Assert.Equal(saved.ID, updated.ID);
+        Assert.Equal(450, updated.Amount);
+        Assert.Single(await svc.GetAdvanceEntriesAsync(employee.EmployeeID));
+    }
+
+    [Fact]
     public async Task DeleteAdvanceEntry_RemovesRow()
     {
         await using var db = _fixture.CreateContext();
