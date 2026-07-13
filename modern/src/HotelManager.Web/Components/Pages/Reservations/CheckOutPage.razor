@@ -1,0 +1,95 @@
+@page "/check-out"
+@inject ICheckInService CheckInSvc
+@inject ICheckOutService CheckOutSvc
+@inject ISnackbar Snackbar
+
+<PageTitle>Check Out - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Room Check Out</MudText>
+
+<MudText Typo="Typo.h6" Class="mb-2">Checked In Guests</MudText>
+<MudTable Items="_checkedIn" Dense="true" Hover="true" Elevation="2" Class="mb-4">
+    <HeaderContent>
+        <MudTh>ID</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh><MudTh>Date In</MudTh><MudTh>Date Out</MudTh>
+        <MudTh>Grand Total</MudTh><MudTh>Balance</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.Guest?.GuestName</MudTd>
+        <MudTd>@context.RoomNo</MudTd>
+        <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
+        <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
+        <MudTd>@context.GrandTotal</MudTd>
+        <MudTd>@context.Balance</MudTd>
+        <MudTd>
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(() => DoCheckOut(context.ID))">Check Out</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudText Typo="Typo.h6" Class="mb-2">Checkout Bills</MudText>
+<MudTextField @bind-Value="_search" Label="Search" Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true"
+              OnDebounceIntervalElapsed="LoadCheckouts" DebounceInterval="300" Class="mb-2" />
+<MudTable Items="_checkouts" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Bill No</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh>
+        <MudTh>Checkout Date</MudTh><MudTh>Grand Total</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.BillNo</MudTd>
+        <MudTd>@context.CheckIn?.Guest?.GuestName</MudTd>
+        <MudTd>@context.CheckIn?.RoomNo</MudTd>
+        <MudTd>@context.CheckOutDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.CheckIn?.GrandTotal</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<CheckInRoom> _checkedIn = [];
+    private IReadOnlyList<CheckoutRoom> _checkouts = [];
+    private string? _search;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCheckedIn();
+        await LoadCheckouts();
+    }
+
+    private async Task LoadCheckedIn() =>
+        _checkedIn = await CheckInSvc.GetCheckInsAsync("Checked In");
+
+    private async Task LoadCheckouts() =>
+        _checkouts = await CheckOutSvc.GetCheckoutsAsync(_search);
+
+    private async Task DoCheckOut(int checkInId)
+    {
+        try
+        {
+            var checkIn = await CheckInSvc.GetCheckInAsync(checkInId)
+                ?? throw new InvalidOperationException($"Check-in {checkInId} not found");
+            var bill = BillingCalculator.ComputeStay(
+                checkIn.DateIN!.Value, checkIn.DateOUT!.Value,
+                checkIn.RoomCharges ?? 0, checkIn.OtherCharges ?? 0,
+                checkIn.DiscountPer ?? 0, checkIn.ServiceTaxPer ?? 0,
+                checkIn.LuxuryTaxPer ?? 0, checkIn.TotalPaid ?? 0);
+            await CheckOutSvc.CheckOutAsync(checkInId,
+                new CheckoutRoom { CurrencyID = checkIn.CurrencyID },
+                new TaxRoom
+                {
+                    EducationalTax = bill.EducessTax,
+                    EducationalTaxAmount = bill.EducessTaxAmount,
+                    HEduTax = bill.HEduCessTax,
+                    HEduTaxAmount = bill.HEduCessTaxAmount,
+                });
+            Snackbar.Add("Successfully checked out", Severity.Success);
+            await LoadCheckedIn();
+            await LoadCheckouts();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
