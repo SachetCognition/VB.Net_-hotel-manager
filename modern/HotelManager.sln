@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{41070C0B-152E-48D3-9EEB-1159624CF20E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.Application", "src\HotelManager.Application\HotelManager.Application.csproj", "{D41A964A-4E2A-4C68-B217-EF4278E81ABB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.Domain", "src\HotelManager.Domain\HotelManager.Domain.csproj", "{37C2E3F4-221C-46F1-8763-7493823932E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.Infrastructure", "src\HotelManager.Infrastructure\HotelManager.Infrastructure.csproj", "{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.Web", "src\HotelManager.Web\HotelManager.Web.csproj", "{BFAA285C-1BE7-4635-BF5A-02562FDD1D26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{290DB612-8A94-4674-9420-A2308CF55608}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.IntegrationTests", "tests\HotelManager.IntegrationTests\HotelManager.IntegrationTests.csproj", "{65DCE809-AB11-47D9-A9D6-741A3ADC3A50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManager.UnitTests", "tests\HotelManager.UnitTests\HotelManager.UnitTests.csproj", "{2470EC1C-E1C7-4901-B141-FDACEB20FBEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D41A964A-4E2A-4C68-B217-EF4278E81ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41A964A-4E2A-4C68-B217-EF4278E81ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41A964A-4E2A-4C68-B217-EF4278E81ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41A964A-4E2A-4C68-B217-EF4278E81ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C2E3F4-221C-46F1-8763-7493823932E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C2E3F4-221C-46F1-8763-7493823932E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C2E3F4-221C-46F1-8763-7493823932E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C2E3F4-221C-46F1-8763-7493823932E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFAA285C-1BE7-4635-BF5A-02562FDD1D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFAA285C-1BE7-4635-BF5A-02562FDD1D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFAA285C-1BE7-4635-BF5A-02562FDD1D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFAA285C-1BE7-4635-BF5A-02562FDD1D26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65DCE809-AB11-47D9-A9D6-741A3ADC3A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65DCE809-AB11-47D9-A9D6-741A3ADC3A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65DCE809-AB11-47D9-A9D6-741A3ADC3A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65DCE809-AB11-47D9-A9D6-741A3ADC3A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2470EC1C-E1C7-4901-B141-FDACEB20FBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2470EC1C-E1C7-4901-B141-FDACEB20FBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2470EC1C-E1C7-4901-B141-FDACEB20FBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2470EC1C-E1C7-4901-B141-FDACEB20FBEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D41A964A-4E2A-4C68-B217-EF4278E81ABB} = {41070C0B-152E-48D3-9EEB-1159624CF20E}
+		{37C2E3F4-221C-46F1-8763-7493823932E9} = {41070C0B-152E-48D3-9EEB-1159624CF20E}
+		{DA6E77A9-4EF6-4F27-AC0D-5F354CC5416E} = {41070C0B-152E-48D3-9EEB-1159624CF20E}
+		{BFAA285C-1BE7-4635-BF5A-02562FDD1D26} = {41070C0B-152E-48D3-9EEB-1159624CF20E}
+		{65DCE809-AB11-47D9-A9D6-741A3ADC3A50} = {290DB612-8A94-4674-9420-A2308CF55608}
+		{2470EC1C-E1C7-4901-B141-FDACEB20FBEA} = {290DB612-8A94-4674-9420-A2308CF55608}
+	EndGlobalSection
+EndGlobal
