@@ -1,0 +1,51 @@
+@page "/room-availability"
+@inject IReservationService ReservationSvc
+
+<PageTitle>Room Availability - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Room Availability</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4"><MudDatePicker @bind-Date="_dateIn" Label="Date In" /></MudItem>
+        <MudItem xs="12" sm="4"><MudDatePicker @bind-Date="_dateOut" Label="Date Out" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Check">Check</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_availability" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Room No</MudTh><MudTh>Type</MudTh><MudTh>Charges</MudTh><MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.RoomNo</MudTd>
+        <MudTd>@context.RoomType</MudTd>
+        <MudTd>@context.RoomCharges</MudTd>
+        <MudTd>
+            @if (context.IsAvailable)
+            {
+                <MudChip T="string" Color="Color.Success" Size="Size.Small">Available</MudChip>
+            }
+            else
+            {
+                <MudChip T="string" Color="Color.Error" Size="Size.Small">Reserved/Booked</MudChip>
+            }
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<RoomAvailability> _availability = [];
+    private DateTime? _dateIn = DateTime.Today;
+    private DateTime? _dateOut = DateTime.Today.AddDays(1);
+
+    protected override Task OnInitializedAsync() => Check();
+
+    private async Task Check()
+    {
+        if (_dateIn is null || _dateOut is null) return;
+        _availability = await ReservationSvc.GetRoomAvailabilityAsync(_dateIn.Value, _dateOut.Value);
+    }
+}

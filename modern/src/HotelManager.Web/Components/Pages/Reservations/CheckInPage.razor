@@ -1,0 +1,132 @@
+@page "/check-in"
+@inject ICheckInService CheckInSvc
+@inject HotelDbContext Db
+@inject ISnackbar Snackbar
+
+<PageTitle>Check In - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Room Check In</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3">
+            <MudSelect @bind-Value="_guestId" Label="Guest">
+                @foreach (var g in _guests)
+                {
+                    <MudSelectItem Value="@g.GuestID">@g.GuestName (@g.GuestID)</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect T="string" Value="_roomNo" ValueChanged="RoomChanged" Label="Room No">
+                @foreach (var r in _rooms)
+                {
+                    <MudSelectItem Value="@r.RoomNo">@r.RoomNo</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_roomCharges" Label="Room Charges" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateIn" Label="Date In" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateOut" Label="Date Out" /></MudItem>
+        <MudItem xs="12" sm="1"><MudNumericField @bind-Value="_adults" Label="Adults" /></MudItem>
+        <MudItem xs="12" sm="1"><MudNumericField @bind-Value="_kids" Label="Kids" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_otherCharges" Label="Other Charges" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_discountPer" Label="Discount %" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_serviceTaxPer" Label="Service Tax %" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_luxuryTaxPer" Label="Luxury Tax %" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_totalPaid" Label="Total Paid" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudCheckBox @bind-Value="_extraBed" Label="Extra Bed" />
+        </MudItem>
+        <MudItem xs="12" sm="8"><MudTextField @bind-Value="_notes" Label="Notes" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DoCheckIn">Check In</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudText Typo="Typo.h6" Class="mb-2">Checked In Guests</MudText>
+<MudTable Items="_checkIns" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh><MudTh>Date In</MudTh><MudTh>Date Out</MudTh>
+        <MudTh>Days</MudTh><MudTh>Extra Bed</MudTh><MudTh>Grand Total</MudTh><MudTh>Balance</MudTh><MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.Guest?.GuestName</MudTd>
+        <MudTd>@context.RoomNo</MudTd>
+        <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
+        <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
+        <MudTd>@context.NoOfDays</MudTd>
+        <MudTd>@context.ExtraBed</MudTd>
+        <MudTd>@context.GrandTotal</MudTd>
+        <MudTd>@context.Balance</MudTd>
+        <MudTd>@context.Status</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<CheckInRoom> _checkIns = [];
+    private IReadOnlyList<Guest> _guests = [];
+    private IReadOnlyList<Room> _rooms = [];
+    private string? _guestId;
+    private string? _roomNo;
+    private int _roomCharges;
+    private DateTime? _dateIn = DateTime.Today;
+    private DateTime? _dateOut = DateTime.Today.AddDays(1);
+    private int _adults = 1;
+    private int _kids;
+    private double _otherCharges;
+    private double _discountPer;
+    private double _serviceTaxPer;
+    private double _luxuryTaxPer;
+    private double _totalPaid;
+    private bool _extraBed;
+    private string? _notes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _guests = await Db.Guests.OrderBy(g => g.GuestName).ToListAsync();
+        _rooms = await Db.Rooms.OrderBy(r => r.RoomNo).ToListAsync();
+        await Load();
+    }
+
+    private async Task Load() =>
+        _checkIns = await CheckInSvc.GetCheckInsAsync("Checked In");
+
+    private void RoomChanged(string roomNo)
+    {
+        _roomNo = roomNo;
+        _roomCharges = _rooms.FirstOrDefault(r => r.RoomNo == roomNo)?.RoomCharges ?? 0;
+    }
+
+    private async Task DoCheckIn()
+    {
+        try
+        {
+            await CheckInSvc.CheckInAsync(new CheckInRoom
+            {
+                GuestID = _guestId,
+                RoomNo = _roomNo,
+                RoomCharges = _roomCharges,
+                DateIN = _dateIn,
+                DateOUT = _dateOut,
+                NoOfAdults = _adults,
+                NoOfKids = _kids,
+                OtherCharges = _otherCharges,
+                DiscountPer = _discountPer,
+                ServiceTaxPer = _serviceTaxPer,
+                LuxuryTaxPer = _luxuryTaxPer,
+                TotalPaid = _totalPaid,
+                ExtraBed = _extraBed ? "Yes" : "No",
+                Notes = _notes,
+            });
+            Snackbar.Add("Successfully checked in", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
