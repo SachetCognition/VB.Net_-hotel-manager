@@ -40,7 +40,9 @@ public class ReservationService(HotelDbContext db) : IReservationService
             var id = "R-" + string.Concat(Enumerable.Range(0, 5)
                 .Select(_ => (char)('1' + Random.Shared.Next(9))));
             var exists = await db.Reservations.AnyAsync(r => r.ReservationID == id)
-                || await db.TempReservations.AnyAsync(r => r.ReservationID == id);
+                || await db.TempReservations.AnyAsync(r => r.ReservationID == id)
+                || await db.ReservationsHallAndGarden.AnyAsync(r => r.ID == id)
+                || await db.ReservationsHallOrGarden.AnyAsync(r => r.ID == id);
             if (!exists) return id;
         }
     }

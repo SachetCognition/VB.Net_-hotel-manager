@@ -67,9 +67,10 @@
     {
         try
         {
-            var checkIn = await CheckInSvc.GetCheckInAsync(checkInId);
+            var checkIn = await CheckInSvc.GetCheckInAsync(checkInId)
+                ?? throw new InvalidOperationException($"Check-in {checkInId} not found");
             var bill = BillingCalculator.ComputeStay(
-                checkIn!.DateIN!.Value, checkIn.DateOUT!.Value,
+                checkIn.DateIN!.Value, checkIn.DateOUT!.Value,
                 checkIn.RoomCharges ?? 0, checkIn.OtherCharges ?? 0,
                 checkIn.DiscountPer ?? 0, checkIn.ServiceTaxPer ?? 0,
                 checkIn.LuxuryTaxPer ?? 0, checkIn.TotalPaid ?? 0);
