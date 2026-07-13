@@ -1,0 +1,85 @@
+@page "/inventory/liquor-master"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Liquor Master - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Liquor Master</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_liquorName" Label="Liquor Name" /></MudItem>
+        <MudItem xs="12" sm="6" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">Save</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="@(() => _liquorName = "")">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<MudTextField @bind-Value="_search" Immediate="true"
+              Label="Search by liquor name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+              Class="mb-2" />
+
+<MudTable Items="_filtered" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Liquor Name</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.LiquorName</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.LiquorName))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<LiquorMaster> _masters = [];
+    private string _search = "";
+    private string _liquorName = "";
+    private bool _isAdmin;
+
+    private IEnumerable<LiquorMaster> _filtered =>
+        string.IsNullOrWhiteSpace(_search)
+            ? _masters
+            : _masters.Where(m => m.LiquorName.StartsWith(_search, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        await Load();
+    }
+
+    private async Task Load() => _masters = await Inventory.GetLiquorMastersAsync();
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SaveLiquorMasterAsync(new LiquorMaster { LiquorName = _liquorName });
+            Snackbar.Add("Successfully saved", Severity.Success);
+            _liquorName = "";
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(string name)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeleteLiquorMasterAsync(name);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}

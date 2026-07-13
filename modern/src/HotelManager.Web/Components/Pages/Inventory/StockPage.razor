@@ -1,0 +1,136 @@
+@page "/inventory/stock"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Liquor Stock - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Liquor Stock</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3">
+            <MudSelect @bind-Value="_liquorName" Label="Liquor Name">
+                @foreach (var m in _masters)
+                {
+                    <MudSelectItem Value="@m.LiquorName">@m.LiquorName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_bottles" Label="No. of Bottles" Min="0" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_volume" Label="Volume (ml)" Min="0" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudTextField Value="@((_bottles ?? 0) * (_volume ?? 0))" Label="Added Volume" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12" sm="3" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">
+                @(string.IsNullOrEmpty(_editId) ? "Save" : "Update")
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<div class="d-flex gap-2 mb-2 align-center">
+    <MudTextField Value="_search" ValueChanged="@((string s) => SearchChanged(s))" Immediate="true"
+                  Label="Search by liquor name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+    <MudButton Variant="Variant.Outlined" Color="Color.Warning" OnClick="ShowEmpty">Empty Stock</MudButton>
+    <MudButton Variant="Variant.Outlined" OnClick="@(() => SearchChanged(""))">All</MudButton>
+</div>
+
+<MudTable Items="_stocks" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Stock ID</MudTh><MudTh>Liquor Name</MudTh><MudTh>Bottles</MudTh><MudTh>Volume</MudTh>
+        <MudTh>Total Volume</MudTh><MudTh>Stock Date</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.StockID</MudTd>
+        <MudTd>@context.LiquorName</MudTd>
+        <MudTd>@context.NoOfBottles</MudTd>
+        <MudTd>@context.Volume</MudTd>
+        <MudTd>@context.TotalVolume</MudTd>
+        <MudTd>@context.StockDate?.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.StockID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Stock> _stocks = [];
+    private IReadOnlyList<LiquorMaster> _masters = [];
+    private string _search = "";
+    private string _liquorName = "";
+    private int? _bottles;
+    private int? _volume;
+    private string _editId = "";
+    private bool _isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        _masters = await Inventory.GetLiquorMastersAsync();
+        await Load();
+    }
+
+    private async Task Load() => _stocks = await Inventory.GetStocksAsync(_search);
+
+    private async Task SearchChanged(string value)
+    {
+        _search = value;
+        await Load();
+    }
+
+    private async Task ShowEmpty()
+    {
+        var all = await Inventory.GetStocksAsync();
+        _stocks = all.Where(s => (s.TotalVolume ?? 0) <= 0).ToList();
+    }
+
+    private void Edit(Stock stock)
+    {
+        _editId = stock.StockID;
+        _liquorName = stock.LiquorName ?? "";
+        _bottles = stock.NoOfBottles;
+        _volume = stock.Volume;
+    }
+
+    private void ResetForm()
+    {
+        _editId = "";
+        _liquorName = "";
+        _bottles = _volume = null;
+    }
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SaveStockAsync(new Stock { StockID = _editId, LiquorName = _liquorName, NoOfBottles = _bottles, Volume = _volume });
+            Snackbar.Add(string.IsNullOrEmpty(_editId) ? "Successfully added" : "Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(string stockId)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeleteStockAsync(stockId);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}

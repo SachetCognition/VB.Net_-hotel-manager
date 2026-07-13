@@ -1,0 +1,118 @@
+@page "/inventory/beer-stock"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Beer Stock - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Beer Stock</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect @bind-Value="_beerId" Label="Beer">
+                @foreach (var b in _beers)
+                {
+                    <MudSelectItem Value="@b.ID">@b.BeerName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="3"><MudNumericField @bind-Value="_bottles" Label="No. of Bottles" Min="0" /></MudItem>
+        <MudItem xs="12" sm="5" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">
+                @(string.IsNullOrEmpty(_editId) ? "Save" : "Update")
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@((string s) => SearchChanged(s))" Immediate="true"
+              Label="Search by beer name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+              Class="mb-2" />
+
+<MudTable Items="_stocks" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Stock ID</MudTh><MudTh>Beer Name</MudTh><MudTh>Bottles</MudTh><MudTh>Stock Date</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.StockID</MudTd>
+        <MudTd>@context.Beer?.BeerName</MudTd>
+        <MudTd>@context.NoOfBottles</MudTd>
+        <MudTd>@context.StockDate?.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.StockID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<StockBeer> _stocks = [];
+    private IReadOnlyList<HotelManager.Domain.Entities.Beer> _beers = [];
+    private string _search = "";
+    private string _beerId = "";
+    private int? _bottles;
+    private string _editId = "";
+    private bool _isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        _beers = await Inventory.GetBeersAsync();
+        await Load();
+    }
+
+    private async Task Load() => _stocks = await Inventory.GetBeerStocksAsync(_search);
+
+    private async Task SearchChanged(string value)
+    {
+        _search = value;
+        await Load();
+    }
+
+    private void Edit(StockBeer stock)
+    {
+        _editId = stock.StockID;
+        _beerId = stock.BeerID ?? "";
+        _bottles = stock.NoOfBottles;
+    }
+
+    private void ResetForm()
+    {
+        _editId = "";
+        _beerId = "";
+        _bottles = null;
+    }
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SaveBeerStockAsync(new StockBeer { StockID = _editId, BeerID = _beerId, NoOfBottles = _bottles });
+            Snackbar.Add(string.IsNullOrEmpty(_editId) ? "Successfully added" : "Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(string stockId)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeleteBeerStockAsync(stockId);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}

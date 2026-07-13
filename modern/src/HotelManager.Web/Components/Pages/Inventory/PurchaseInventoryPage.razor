@@ -1,0 +1,166 @@
+@page "/inventory/purchases"
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Purchase Inventory - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Purchase Inventory</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_productName" Label="Product Name" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField @bind-Value="_category" Label="Category" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_transType" Label="Transaction Type">
+                <MudSelectItem Value="@("Cash")">Cash</MudSelectItem>
+                <MudSelectItem Value="@("Credit")">Credit</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudTextField @bind-Value="_partyName" Label="Party Name" /></MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_purchaseDate" Label="Purchase Date" /></MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_quantity" Label="Quantity" Min="0" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_unit" Label="Unit">
+                <MudSelectItem Value="@("Kg")">Kg</MudSelectItem>
+                <MudSelectItem Value="@("Gram")">Gram</MudSelectItem>
+                <MudSelectItem Value="@("Litre")">Litre</MudSelectItem>
+                <MudSelectItem Value="@("Piece")">Piece</MudSelectItem>
+                <MudSelectItem Value="@("Dozen")">Dozen</MudSelectItem>
+                <MudSelectItem Value="@("Packet")">Packet</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_unitPrice" Label="Unit Price" Min="0" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudTextField Value="@((int)Math.Round((_quantity ?? 0) * (double)(_unitPrice ?? 0)))" Label="Total Price" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isAdmin)" OnClick="Save">
+                @(_editId == 0 ? "Save" : "Update")
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+    @if (!_isAdmin)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Warning">Only Admin users can save or delete records.</MudText>
+    }
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@((string s) => SearchChanged(s))" Immediate="true"
+              Label="Search by product / category / party / transaction type"
+              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-2" />
+
+<MudText Typo="Typo.subtitle1" Class="mb-2">Total: @_records.Sum(r => (long)(r.TotalPrice ?? 0))</MudText>
+
+<MudTable Items="_records" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh><MudTh>Product</MudTh><MudTh>Category</MudTh><MudTh>Type</MudTh><MudTh>Party</MudTh>
+        <MudTh>Date</MudTh><MudTh>Qty</MudTh><MudTh>Unit</MudTh><MudTh>Unit Price</MudTh><MudTh>Total</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.ProductName</MudTd>
+        <MudTd>@context.Category</MudTd>
+        <MudTd>@context.TransactionType</MudTd>
+        <MudTd>@context.PartyName</MudTd>
+        <MudTd>@context.PurchaseDate?.ToString("yyyy-MM-dd")</MudTd>
+        <MudTd>@context.Quantity</MudTd>
+        <MudTd>@context.Unit</MudTd>
+        <MudTd>@context.Price</MudTd>
+        <MudTd>@context.TotalPrice</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           Disabled="@(!_isAdmin)" OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<PurchasedInventory> _records = [];
+    private string _search = "";
+    private string _productName = "";
+    private string _category = "";
+    private string _transType = "";
+    private string _partyName = "";
+    private DateTime? _purchaseDate = DateTime.Today;
+    private double? _quantity;
+    private string _unit = "";
+    private int? _unitPrice;
+    private int _editId;
+    private bool _isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        _isAdmin = state.User.IsInRole("Admin");
+        await Load();
+    }
+
+    private async Task Load() => _records = await Inventory.GetPurchasedInventoriesAsync(_search);
+
+    private async Task SearchChanged(string value)
+    {
+        _search = value;
+        await Load();
+    }
+
+    private void Edit(PurchasedInventory record)
+    {
+        _editId = record.ID;
+        _productName = record.ProductName ?? "";
+        _category = record.Category ?? "";
+        _transType = record.TransactionType ?? "";
+        _partyName = record.PartyName ?? "";
+        _purchaseDate = record.PurchaseDate;
+        _quantity = record.Quantity;
+        _unit = record.Unit ?? "";
+        _unitPrice = record.Price;
+    }
+
+    private void ResetForm()
+    {
+        _editId = 0;
+        _productName = _category = _transType = _partyName = _unit = "";
+        _purchaseDate = DateTime.Today;
+        _quantity = null;
+        _unitPrice = null;
+    }
+
+    private async Task Save()
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can save records", Severity.Error); return; }
+        try
+        {
+            await Inventory.SavePurchasedInventoryAsync(new PurchasedInventory
+            {
+                ID = _editId,
+                ProductName = _productName,
+                Category = _category,
+                TransactionType = _transType,
+                PartyName = _partyName,
+                PurchaseDate = _purchaseDate,
+                Quantity = _quantity,
+                Unit = _unit,
+                Price = _unitPrice
+            });
+            Snackbar.Add(_editId == 0 ? "Successfully saved" : "Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+
+    private async Task Delete(int id)
+    {
+        if (!_isAdmin) { Snackbar.Add("Only Admin users can delete records", Severity.Error); return; }
+        try
+        {
+            await Inventory.DeletePurchasedInventoryAsync(id);
+            Snackbar.Add("Successfully deleted", Severity.Success);
+            await Load();
+        }
+        catch (InvalidOperationException ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}
