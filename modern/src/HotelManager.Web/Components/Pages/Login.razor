@@ -14,6 +14,7 @@
             <MudAlert Severity="Severity.Error" Class="mb-4">Invalid username or password.</MudAlert>
         }
         <form method="post" action="/account/login" data-enhance="false">
+            <AntiforgeryToken />
             <input type="hidden" name="returnUrl" value="@ReturnUrl" />
             <div class="mud-input-control mud-input-control-full-width mb-4">
                 <label class="mud-typography mud-typography-body2" for="username">Username</label>

@@ -30,8 +30,8 @@ public static class BillingCalculator
         double otherCharges, double discountPer, double serviceTaxPer,
         double luxuryTaxPer, double totalPaid)
     {
-        int daysHall = (hallTo.Date - hallFrom.Date).Days;
-        int daysGarden = (gardenTo.Date - gardenFrom.Date).Days;
+        int daysHall = Math.Max(1, (hallTo.Date - hallFrom.Date).Days);
+        int daysGarden = Math.Max(1, (gardenTo.Date - gardenFrom.Date).Days);
         double totalHall = CInt(daysHall * hallRate);
         double totalGarden = CInt(daysGarden * gardenRate);
         double discount = CInt((totalHall + totalGarden + otherCharges) * discountPer / 100);
@@ -46,7 +46,7 @@ public static class BillingCalculator
         DateTime dateFrom, DateTime dateTo, double rate, double otherCharges,
         double discountPer, double serviceTaxPer, double luxuryTaxPer, double totalPaid)
     {
-        int days = (dateTo.Date - dateFrom.Date).Days;
+        int days = Math.Max(1, (dateTo.Date - dateFrom.Date).Days);
         double totalCharges = CInt(days * rate);
         double discount = CInt((totalCharges + otherCharges) * discountPer / 100);
         double subTotal = CInt(totalCharges + otherCharges - discount);
