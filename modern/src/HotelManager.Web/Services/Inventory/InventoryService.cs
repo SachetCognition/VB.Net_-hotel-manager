@@ -52,7 +52,8 @@ public class InventoryService : IInventoryService
         if (dish.Rate is null)
             throw new InvalidOperationException("Please enter rate");
 
-        if (dish.ID == 0)
+        var isNew = dish.ID == 0;
+        if (isNew)
         {
             if (await _db.Dishes.AnyAsync(d => d.DishName == dish.DishName))
                 throw new InvalidOperationException("Dish Name Already Exists");
@@ -67,7 +68,7 @@ public class InventoryService : IInventoryService
             existing.Rate = dish.Rate;
         }
         await _db.SaveChangesAsync();
-        return dish.ID == 0 ? dish : (await _db.Dishes.FindAsync(dish.ID))!;
+        return isNew ? dish : (await _db.Dishes.FindAsync(dish.ID))!;
     }
 
     public async Task DeleteDishAsync(int id)
