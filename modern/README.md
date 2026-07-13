@@ -37,12 +37,31 @@ On first start the app migrates and seeds the SQLite database at
 
 Default login: **admin / admin@123** (UserType `Admin`).
 
+## Run with Docker
+
+```bash
+cd modern
+docker compose up --build
+```
+
+The app is served at http://localhost:8080. The SQLite database lives in the
+`hotelmanager-data` volume (`/data/hotelmanager.db` inside the container) and is
+migrated and seeded automatically on first start, so the same default login
+(**admin / admin@123**) works out of the box.
+
 ## Test
 
 ```bash
 cd modern
 dotnet test --collect:"XPlat Code Coverage"
 ```
+
+## CI
+
+`.github/workflows/modern-ci.yml` runs on every PR and push to `main` touching
+`modern/`: it builds the solution, runs `dotnet test --collect:"XPlat Code Coverage"`,
+publishes a ReportGenerator HTML report as the `coverage-report` artifact, and fails
+if combined line coverage (excluding generated EF migrations) is below 80%.
 
 ## Legacy fidelity notes
 
