@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\HotelManager.Infrastructure\HotelManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\HotelManager.Web\HotelManager.Web.csproj" />
   </ItemGroup>
 
 </Project>

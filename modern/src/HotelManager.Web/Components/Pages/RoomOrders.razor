@@ -1,0 +1,260 @@
+@page "/orders/room"
+@using Microsoft.EntityFrameworkCore
+@using HotelManager.Infrastructure
+@inject IRestaurantOrderService OrderSvc
+@inject IDbContextFactory<HotelDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Room Orders - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Room Service Orders</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudText Typo="Typo.h6" Class="mb-2">@(_editingId == 0 ? "New Order" : $"Edit Order #{_editingId}")</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField Value="_orderNo" Label="Order No" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="3">
+            <MudSelect T="int?" @bind-Value="_checkInId" Label="Checked-In Guest">
+                @foreach (var c in _checkIns)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)c.ID)">@($"#{c.ID} — Room {c.RoomNo} — {c.GuestID}")</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_orderDate" Label="Order Date" /></MudItem>
+        <MudItem xs="12" sm="3" Class="d-flex align-center">
+            <MudNumericField @bind-Value="_vatPer" Label="VAT %" Class="mr-2" />
+            <MudNumericField @bind-Value="_stPer" Label="Service Tax %" />
+        </MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">Products</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="string" Value="_productKey" ValueChanged="OnProductSelected" Label="Product">
+                @foreach (var p in _catalog)
+                {
+                    <MudSelectItem T="string" Value="@p.Key">@($"{p.Name} ({p.Category}) — {p.Rate}")</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_rate" Label="Rate" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_quantity" Label="Quantity" Min="1" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="AddProduct">Add Item</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudTable Items="_lines" Dense="true" Elevation="0" Class="mt-2">
+        <HeaderContent>
+            <MudTh>Product</MudTh><MudTh>Rate</MudTh><MudTh>Qty</MudTh><MudTh>Amount</MudTh><MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.ProductName</MudTd>
+            <MudTd>@context.Rate</MudTd>
+            <MudTd>@context.Quantity</MudTd>
+            <MudTd>@context.Amount</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => _lines.Remove(context))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+    <MudGrid Class="mt-2">
+        <MudItem xs="6" sm="2"><MudTextField Value="@SubTotal" Label="Sub Total" ReadOnly="true" /></MudItem>
+        <MudItem xs="6" sm="2"><MudTextField Value="@GrandTotal" Label="Grand Total" ReadOnly="true" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_totalPayment" Label="Payment" /></MudItem>
+        <MudItem xs="6" sm="2"><MudTextField Value="@(GrandTotal - _totalPayment)" Label="Payment Due" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save" Class="mr-2">Save Order</MudButton>
+            <MudButton Variant="Variant.Text" OnClick="ResetForm">Clear</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@(async (string s) => { _search = s; await LoadOrders(); })"
+              Label="Search by order no" Immediate="true" Class="mb-2"
+              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+
+<MudTable Items="_orders" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Order No</MudTh><MudTh>Date</MudTh><MudTh>Check-In</MudTh><MudTh>Sub Total</MudTh>
+        <MudTh>Grand Total</MudTh><MudTh>Paid</MudTh><MudTh>Due</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.OrderNo</MudTd>
+        <MudTd>@context.OrderDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.CheckInID</MudTd>
+        <MudTd>@context.SubTotal</MudTd>
+        <MudTd>@context.GrandTotal</MudTd>
+        <MudTd>@context.TotalPayment</MudTd>
+        <MudTd>@context.PaymentDue</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private record CatalogItem(string Key, string Name, string Category, int Rate);
+
+    private IReadOnlyList<OrderInfo> _orders = [];
+    private List<CheckInRoom> _checkIns = [];
+    private List<CatalogItem> _catalog = [];
+    private readonly List<OrderedProduct> _lines = [];
+
+    private int _editingId;
+    private string _orderNo = "";
+    private int? _checkInId;
+    private DateTime? _orderDate = DateTime.Today;
+    private double _vatPer;
+    private double _stPer;
+    private int _totalPayment;
+    private string? _productKey;
+    private int _rate;
+    private int _quantity = 1;
+    private string _search = "";
+
+    private int SubTotal => _lines.Sum(l => l.Amount ?? 0);
+    private int GrandTotal
+    {
+        get
+        {
+            double vat = Math.Round(SubTotal * _vatPer / 100, 2);
+            double st = Math.Round((SubTotal + vat) * _stPer / 100, 2);
+            return (int)Math.Round(SubTotal + vat + st, MidpointRounding.ToEven);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        _checkIns = await db.CheckIns.AsNoTracking()
+            .Where(c => c.Status == "Checked In").OrderBy(c => c.ID).ToListAsync();
+        var dishes = await db.Dishes.AsNoTracking().ToListAsync();
+        var beers = await db.Beers.AsNoTracking().ToListAsync();
+        var liquors = await db.Liquors.AsNoTracking().ToListAsync();
+        _catalog =
+        [
+            .. dishes.Select(d => new CatalogItem($"D-{d.ID}", d.DishName ?? "", d.Category ?? "Food", d.Rate ?? 0)),
+            .. beers.Select(b => new CatalogItem($"B-{b.ID}", b.BeerName ?? "", "Beer", b.Rate ?? 0)),
+            .. liquors.Select(l => new CatalogItem($"L-{l.ID}", l.LiquorName ?? "", "Liquor", l.Rate ?? 0)),
+        ];
+        _orderNo = await OrderSvc.GenerateRoomOrderNoAsync();
+        await LoadOrders();
+    }
+
+    private async Task LoadOrders() =>
+        _orders = await OrderSvc.GetRoomOrdersAsync(string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    private void OnProductSelected(string key)
+    {
+        _productKey = key;
+        var item = _catalog.FirstOrDefault(c => c.Key == key);
+        if (item is not null) _rate = item.Rate;
+    }
+
+    private void AddProduct()
+    {
+        var item = _catalog.FirstOrDefault(c => c.Key == _productKey);
+        if (item is null)
+        {
+            Snackbar.Add("Select a product first", Severity.Warning);
+            return;
+        }
+        _lines.Add(new OrderedProduct
+        {
+            ProductID = item.Key,
+            ProductName = item.Name,
+            Rate = _rate,
+            Quantity = _quantity,
+            Amount = _rate * _quantity
+        });
+        _productKey = null;
+        _rate = 0;
+        _quantity = 1;
+    }
+
+    private async Task Save()
+    {
+        if (_checkInId is null)
+        {
+            Snackbar.Add("Select a checked-in guest", Severity.Warning);
+            return;
+        }
+        if (_lines.Count == 0)
+        {
+            Snackbar.Add("Add at least one product", Severity.Warning);
+            return;
+        }
+        var order = new OrderInfo
+        {
+            ID = _editingId,
+            OrderNo = _orderNo,
+            OrderDate = _orderDate,
+            CheckInID = _checkInId,
+            VATPer = _vatPer,
+            STPer = _stPer,
+            TotalPayment = _totalPayment
+        };
+        var tax = new TaxOrder
+        {
+            EducationalTax = Math.Round(_stPer * 2 / 100, 2),
+            HEduTax = Math.Round(_stPer * 1 / 100, 2)
+        };
+        double stAmount = Math.Round((SubTotal + Math.Round(SubTotal * _vatPer / 100, 2)) * _stPer / 100, 2);
+        tax.EducationalTaxAmount = Math.Round(stAmount * tax.EducationalTax.Value / 100, 2);
+        tax.HEduTaxAmount = Math.Round(stAmount * tax.HEduTax.Value / 100, 2);
+        await OrderSvc.SaveRoomOrderAsync(order, _lines, tax);
+        Snackbar.Add(_editingId == 0 ? "Order created" : "Order updated", Severity.Success);
+        await ResetForm();
+        await LoadOrders();
+    }
+
+    private async Task Edit(OrderInfo order)
+    {
+        _editingId = order.ID;
+        _orderNo = order.OrderNo ?? "";
+        _checkInId = order.CheckInID;
+        _orderDate = order.OrderDate;
+        _vatPer = order.VATPer ?? 0;
+        _stPer = order.STPer ?? 0;
+        _totalPayment = order.TotalPayment ?? 0;
+        _lines.Clear();
+        var full = await OrderSvc.GetRoomOrderAsync(order.ID);
+        if (full is not null)
+            _lines.AddRange(full.Products.Select(p => new OrderedProduct
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                Rate = p.Rate,
+                Quantity = p.Quantity,
+                Amount = p.Amount
+            }));
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Delete Order", "Delete this order and its items?", yesText: "Delete", cancelText: "Cancel");
+        if (confirmed != true) return;
+        await OrderSvc.DeleteRoomOrderAsync(id);
+        await LoadOrders();
+    }
+
+    private async Task ResetForm()
+    {
+        _editingId = 0;
+        _checkInId = null;
+        _orderDate = DateTime.Today;
+        _vatPer = _stPer = 0;
+        _totalPayment = 0;
+        _lines.Clear();
+        _orderNo = await OrderSvc.GenerateRoomOrderNoAsync();
+    }
+}

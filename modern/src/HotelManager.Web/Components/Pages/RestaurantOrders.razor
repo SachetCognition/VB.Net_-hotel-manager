@@ -1,0 +1,227 @@
+@page "/orders/restaurant"
+@using Microsoft.EntityFrameworkCore
+@using HotelManager.Infrastructure
+@inject IRestaurantOrderService OrderSvc
+@inject IDbContextFactory<HotelDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Restaurant Orders - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Restaurant Orders</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudText Typo="Typo.h6" Class="mb-2">@(_editingId == 0 ? "New Order" : $"Edit Order #{_editingId}")</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudTextField Value="_orderNo" Label="Order No" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_orderDate" Label="Order Date" /></MudItem>
+        <MudItem xs="12" sm="3"><MudNumericField @bind-Value="_vatPer" Label="VAT %" /></MudItem>
+        <MudItem xs="12" sm="3"><MudNumericField @bind-Value="_stPer" Label="Service Tax %" /></MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">Dishes</MudText>
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="int?" Value="_dishId" ValueChanged="OnDishSelected" Label="Dish">
+                @foreach (var d in _dishes)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)d.ID)">@($"{d.DishName} ({d.Category}) — {d.Rate}")</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_rate" Label="Rate" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_quantity" Label="Quantity" Min="1" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="AddProduct">Add Item</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudTable Items="_lines" Dense="true" Elevation="0" Class="mt-2">
+        <HeaderContent>
+            <MudTh>Dish</MudTh><MudTh>Rate</MudTh><MudTh>Qty</MudTh><MudTh>Amount</MudTh><MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.ProductName</MudTd>
+            <MudTd>@context.Rate</MudTd>
+            <MudTd>@context.Quantity</MudTd>
+            <MudTd>@context.Amount</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => _lines.Remove(context))" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+    <MudGrid Class="mt-2">
+        <MudItem xs="6" sm="2"><MudTextField Value="@SubTotal" Label="Sub Total" ReadOnly="true" /></MudItem>
+        <MudItem xs="6" sm="2"><MudTextField Value="@GrandTotal" Label="Grand Total" ReadOnly="true" /></MudItem>
+        <MudItem xs="6" sm="2"><MudNumericField @bind-Value="_totalPayment" Label="Payment" /></MudItem>
+        <MudItem xs="6" sm="2"><MudTextField Value="@(GrandTotal - _totalPayment)" Label="Payment Due" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save" Class="mr-2">Save Order</MudButton>
+            <MudButton Variant="Variant.Text" OnClick="ResetForm">Clear</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTextField Value="_search" ValueChanged="@(async (string s) => { _search = s; await LoadOrders(); })"
+              Label="Search by order no" Immediate="true" Class="mb-2"
+              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+
+<MudTable Items="_orders" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Order No</MudTh><MudTh>Date</MudTh><MudTh>Sub Total</MudTh>
+        <MudTh>Grand Total</MudTh><MudTh>Paid</MudTh><MudTh>Due</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.OrderNo</MudTd>
+        <MudTd>@context.OrderDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.SubTotal</MudTd>
+        <MudTd>@context.GrandTotal</MudTd>
+        <MudTd>@context.TotalPayment</MudTd>
+        <MudTd>@context.PaymentDue</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<RestaurantOrderInfo> _orders = [];
+    private List<Dish> _dishes = [];
+    private readonly List<RestaurantOrderedProduct> _lines = [];
+
+    private int _editingId;
+    private string _orderNo = "";
+    private DateTime? _orderDate = DateTime.Today;
+    private double _vatPer;
+    private double _stPer;
+    private int _totalPayment;
+    private int? _dishId;
+    private int _rate;
+    private int _quantity = 1;
+    private string _search = "";
+
+    private int SubTotal => _lines.Sum(l => l.Amount ?? 0);
+    private int GrandTotal
+    {
+        get
+        {
+            double vat = Math.Round(SubTotal * _vatPer / 100, 2);
+            double st = Math.Round((SubTotal + vat) * _stPer / 100, 2);
+            return (int)Math.Round(SubTotal + vat + st, MidpointRounding.ToEven);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        _dishes = await db.Dishes.AsNoTracking().OrderBy(d => d.DishName).ToListAsync();
+        _orderNo = await OrderSvc.GenerateRestaurantOrderNoAsync();
+        await LoadOrders();
+    }
+
+    private async Task LoadOrders() =>
+        _orders = await OrderSvc.GetRestaurantOrdersAsync(string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    private void OnDishSelected(int? id)
+    {
+        _dishId = id;
+        var dish = _dishes.FirstOrDefault(d => d.ID == id);
+        if (dish is not null) _rate = dish.Rate ?? 0;
+    }
+
+    private void AddProduct()
+    {
+        var dish = _dishes.FirstOrDefault(d => d.ID == _dishId);
+        if (dish is null)
+        {
+            Snackbar.Add("Select a dish first", Severity.Warning);
+            return;
+        }
+        _lines.Add(new RestaurantOrderedProduct
+        {
+            ProductID = dish.ID.ToString(),
+            ProductName = dish.DishName,
+            Rate = _rate,
+            Quantity = _quantity,
+            Amount = _rate * _quantity
+        });
+        _dishId = null;
+        _rate = 0;
+        _quantity = 1;
+    }
+
+    private async Task Save()
+    {
+        if (_lines.Count == 0)
+        {
+            Snackbar.Add("Add at least one dish", Severity.Warning);
+            return;
+        }
+        var order = new RestaurantOrderInfo
+        {
+            ID = _editingId,
+            OrderNo = _orderNo,
+            OrderDate = _orderDate,
+            VATPer = _vatPer,
+            STPer = _stPer,
+            TotalPayment = _totalPayment
+        };
+        var tax = new TaxRestaurantOrder
+        {
+            EducationalTax = Math.Round(_stPer * 2 / 100, 2),
+            HEduTax = Math.Round(_stPer * 1 / 100, 2)
+        };
+        double stAmount = Math.Round((SubTotal + Math.Round(SubTotal * _vatPer / 100, 2)) * _stPer / 100, 2);
+        tax.EducationalTaxAmount = Math.Round(stAmount * tax.EducationalTax.Value / 100, 2);
+        tax.HEduTaxAmount = Math.Round(stAmount * tax.HEduTax.Value / 100, 2);
+        await OrderSvc.SaveRestaurantOrderAsync(order, _lines, tax);
+        Snackbar.Add(_editingId == 0 ? "Order created" : "Order updated", Severity.Success);
+        await ResetForm();
+        await LoadOrders();
+    }
+
+    private async Task Edit(RestaurantOrderInfo order)
+    {
+        _editingId = order.ID;
+        _orderNo = order.OrderNo ?? "";
+        _orderDate = order.OrderDate;
+        _vatPer = order.VATPer ?? 0;
+        _stPer = order.STPer ?? 0;
+        _totalPayment = order.TotalPayment ?? 0;
+        _lines.Clear();
+        var full = await OrderSvc.GetRestaurantOrderAsync(order.ID);
+        if (full is not null)
+            _lines.AddRange(full.Products.Select(p => new RestaurantOrderedProduct
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                Rate = p.Rate,
+                Quantity = p.Quantity,
+                Amount = p.Amount
+            }));
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Delete Order", "Delete this order and its items?", yesText: "Delete", cancelText: "Cancel");
+        if (confirmed != true) return;
+        await OrderSvc.DeleteRestaurantOrderAsync(id);
+        await LoadOrders();
+    }
+
+    private async Task ResetForm()
+    {
+        _editingId = 0;
+        _orderDate = DateTime.Today;
+        _vatPer = _stPer = 0;
+        _totalPayment = 0;
+        _lines.Clear();
+        _orderNo = await OrderSvc.GenerateRestaurantOrderNoAsync();
+    }
+}
