@@ -1,0 +1,105 @@
+@page "/hr/attendance"
+@inject IHrPayrollService Hr
+@inject ISnackbar Snackbar
+
+<PageTitle>Attendance Entry - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Attendance Entry</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3">
+            <MudSelect T="string" Value="_employeeId" ValueChanged="OnEmployeeSelected" Label="Employee">
+                @foreach (var e in _employees)
+                {
+                    <MudSelectItem Value="@e.EmployeeID">@e.EmployeeID — @e.EmployeeName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="_basicWorkingTime" Label="Basic Working Time" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_workingDate" Label="Working Date" /></MudItem>
+        <MudItem xs="12" sm="1">
+            <MudSelect T="string" Value="_status" ValueChanged="OnStatusChanged" Label="Status">
+                <MudSelectItem Value="@("P")">P</MudSelectItem>
+                <MudSelectItem Value="@("A")">A</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2">
+            <MudTextField T="string" Value="_inTime" ValueChanged="OnInTimeChanged" Label="In Time (hh:mm:ss)" Disabled="@(_status != "P")" />
+        </MudItem>
+        <MudItem xs="12" sm="2">
+            <MudTextField T="string" Value="_outTime" ValueChanged="OnOutTimeChanged" Label="Out Time (hh:mm:ss)" Disabled="@(_status != "P")" />
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudTextField @bind-Value="_overtime" Label="Overtime" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private IReadOnlyList<EmployeeRegistration> _employees = [];
+    private string _employeeId = "";
+    private string _basicWorkingTime = "";
+    private DateTime? _workingDate = DateTime.Today;
+    private string _status = "P";
+    private string _inTime = "09:00:00";
+    private string _outTime = "17:00:00";
+    private string _overtime = "";
+
+    protected override async Task OnInitializedAsync() => _employees = await Hr.GetEmployeesAsync();
+
+    private void OnEmployeeSelected(string id)
+    {
+        _employeeId = id;
+        _basicWorkingTime = _employees.FirstOrDefault(e => e.EmployeeID == id)?.BasicWorkingTime ?? "";
+        ComputeOvertime();
+    }
+
+    private void OnStatusChanged(string status)
+    {
+        _status = status;
+        if (status == "A")
+        {
+            _inTime = _outTime = _overtime = "00:00:00";
+        }
+        else
+        {
+            ComputeOvertime();
+        }
+    }
+
+    private void OnInTimeChanged(string value) { _inTime = value; ComputeOvertime(); }
+    private void OnOutTimeChanged(string value) { _outTime = value; ComputeOvertime(); }
+
+    private void ComputeOvertime()
+    {
+        TimeSpan.TryParse(_basicWorkingTime, out var basic);
+        if (TimeSpan.TryParse(_inTime, out var inTs) && TimeSpan.TryParse(_outTime, out var outTs))
+        {
+            _overtime = (outTs - inTs - basic).ToString();
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await Hr.SaveAttendanceAsync(new EmployeeAttendance
+            {
+                EmployeeID = _employeeId,
+                WorkingDate = _workingDate,
+                Status = _status,
+                InTime = _inTime,
+                OutTime = _outTime,
+                Overtime = _overtime,
+                BasicWorkingTime = _basicWorkingTime
+            });
+            Snackbar.Add("Successfully saved", Severity.Success);
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

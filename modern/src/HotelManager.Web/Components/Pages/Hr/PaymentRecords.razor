@@ -1,0 +1,72 @@
+@page "/hr/payment-records"
+@inject IHrPayrollService Hr
+@inject ISnackbar Snackbar
+
+<PageTitle>Payment Records - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Payment Records</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="string" @bind-Value="_employeeId" Label="Employee" Clearable="true">
+                @foreach (var e in _employees)
+                {
+                    <MudSelectItem Value="@e.EmployeeID">@e.EmployeeID — @e.EmployeeName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Load">Search</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_payments" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Payment ID</MudTh><MudTh>Employee</MudTh><MudTh>From</MudTh><MudTh>To</MudTh>
+        <MudTh>Present Days</MudTh><MudTh>Salary</MudTh><MudTh>Advance</MudTh><MudTh>Deduction</MudTh>
+        <MudTh>Overtime</MudTh><MudTh>OT Amount</MudTh><MudTh>Payment Date</MudTh><MudTh>Mode</MudTh>
+        <MudTh>Net Pay</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.PaymentID</MudTd>
+        <MudTd>@context.EmployeeID @(context.Employee is null ? "" : $"— {context.Employee.EmployeeName}")</MudTd>
+        <MudTd>@context.DateFrom?.ToShortDateString()</MudTd>
+        <MudTd>@context.DateTo?.ToShortDateString()</MudTd>
+        <MudTd>@context.PresentDays</MudTd>
+        <MudTd>@context.Salary</MudTd>
+        <MudTd>@context.Advance</MudTd>
+        <MudTd>@context.Deduction</MudTd>
+        <MudTd>@context.Overtime</MudTd>
+        <MudTd>@context.OverTimeAmount</MudTd>
+        <MudTd>@context.PaymentDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.ModeOfPayment</MudTd>
+        <MudTd>@context.NetPay</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.PaymentID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<EmployeeRegistration> _employees = [];
+    private IReadOnlyList<EmployeePayment> _payments = [];
+    private string? _employeeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _employees = await Hr.GetEmployeesAsync();
+        await Load();
+    }
+
+    private async Task Load() => _payments = await Hr.GetPaymentsAsync(_employeeId);
+
+    private async Task Delete(string id)
+    {
+        await Hr.DeletePaymentAsync(id);
+        Snackbar.Add("Successfully deleted", Severity.Success);
+        await Load();
+    }
+}
