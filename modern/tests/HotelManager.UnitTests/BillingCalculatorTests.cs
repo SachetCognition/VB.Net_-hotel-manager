@@ -67,6 +67,26 @@ public class BillingCalculatorStayTests
     }
 
     [Fact]
+    public void HallOrGarden_SameDay_CountsAsOneDay()
+    {
+        var d = new DateTime(2024, 6, 1);
+        var bill = BillingCalculator.ComputeHallOrGarden(d, d, 500, 0, 0, 0, 0, 0);
+        Assert.Equal(1, bill.NoOfDays);
+        Assert.Equal(500, bill.TotalCharges);
+    }
+
+    [Fact]
+    public void HallAndGarden_SameDay_CountsAsOneDayEach()
+    {
+        var d = new DateTime(2024, 6, 1);
+        var b = BillingCalculator.ComputeHallAndGarden(d, d, 500, d, d, 400, 0, 0, 0, 0, 0);
+        Assert.Equal(1, b.DaysHall);
+        Assert.Equal(1, b.DaysGarden);
+        Assert.Equal(500, b.TotalChargesHall);
+        Assert.Equal(400, b.TotalChargesGarden);
+    }
+
+    [Fact]
     public void HallAndGarden_CombinesBothVenues()
     {
         var b = BillingCalculator.ComputeHallAndGarden(

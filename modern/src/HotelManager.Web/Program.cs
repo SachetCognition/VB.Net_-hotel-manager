@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Antiforgery;
 using HotelManager.Application.Interfaces;
 using HotelManager.Infrastructure;
 using HotelManager.Web.Components;
@@ -50,13 +51,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-app.MapPost("/account/login", async (HttpContext http, IAuthService auth) =>
+app.MapPost("/account/login", async (HttpContext http, IAuthService auth, IAntiforgery antiforgery) =>
 {
+    if (!await antiforgery.IsRequestValidAsync(http)) return Results.BadRequest();
     var form = await http.Request.ReadFormAsync();
     var userName = form["username"].ToString();
     var password = form["password"].ToString();
     var returnUrl = form["returnUrl"].ToString();
-    if (string.IsNullOrEmpty(returnUrl) || !returnUrl.StartsWith('/')) returnUrl = "/";
+    if (string.IsNullOrEmpty(returnUrl) || !returnUrl.StartsWith('/') || returnUrl.StartsWith("//")) returnUrl = "/";
 
     var result = await auth.ValidateCredentialsAsync(userName, password);
     if (!result.Succeeded)
@@ -72,8 +74,9 @@ app.MapPost("/account/login", async (HttpContext http, IAuthService auth) =>
     return Results.Redirect(returnUrl);
 });
 
-app.MapGet("/account/logout", async (HttpContext http) =>
+app.MapPost("/account/logout", async (HttpContext http, IAntiforgery antiforgery) =>
 {
+    if (!await antiforgery.IsRequestValidAsync(http)) return Results.BadRequest();
     await http.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Results.Redirect("/login");
 });

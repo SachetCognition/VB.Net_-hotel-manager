@@ -14,7 +14,10 @@
         <AuthorizeView>
             <Authorized>
                 <MudText Class="mr-4">@context.User.Identity?.Name (@(context.User.IsInRole("Admin") ? "Admin" : "User"))</MudText>
-                <MudButton Href="/account/logout" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout">Logout</MudButton>
+                <form method="post" action="/account/logout" data-enhance="false" class="d-inline">
+                    <AntiforgeryToken />
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout">Logout</MudButton>
+                </form>
             </Authorized>
         </AuthorizeView>
     </MudAppBar>
