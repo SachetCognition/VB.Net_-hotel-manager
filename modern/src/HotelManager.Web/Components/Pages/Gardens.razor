@@ -1,0 +1,91 @@
+@page "/gardens"
+@inject IRoomService RoomSvc
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Gardens - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Gardens</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_charges" Label="Charges" Min="0" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_gardens" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Charges</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd>
+        <MudTd>@context.Charges</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<Garden> _gardens = [];
+    private int? _charges;
+    private int? _editId;
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => _gardens = await RoomSvc.GetGardensAsync();
+
+    private void ResetForm()
+    {
+        _charges = null;
+        _editId = null;
+    }
+
+    private void Edit(Garden garden)
+    {
+        _editId = garden.ID;
+        _charges = garden.Charges;
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await RoomSvc.SaveGardenAsync(new Garden { ID = _editId ?? 0, Charges = _charges });
+            Snackbar.Add(_editId is null ? "Garden Charge Successfully saved" : "Record Successfully updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (ArgumentException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox("Confirmation",
+            "Do you really want to delete this record?", yesText: "Yes", noText: "No");
+        if (confirmed != true) return;
+        try
+        {
+            await RoomSvc.DeleteGardenAsync(id);
+            Snackbar.Add("Record Successfully deleted", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+}

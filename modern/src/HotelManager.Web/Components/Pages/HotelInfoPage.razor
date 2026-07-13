@@ -1,0 +1,66 @@
+@page "/hotel-info"
+@inject IHotelInfoService HotelInfoSvc
+@inject ISnackbar Snackbar
+
+<PageTitle>Hotel Info - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Hotel Information</MudText>
+
+<MudPaper Class="pa-4" Elevation="2" Style="max-width: 720px;">
+    <MudGrid>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.HotelName" Label="Hotel Name" Required="true" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.Address" Label="Address" Required="true" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.ContactNo" Label="Contact No" Required="true" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.ContactNo1" Label="Alt Contact No" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.Email" Label="Email" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_info.TIN" Label="TIN" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_info.STNo" Label="Service Tax No" /></MudItem>
+        <MudItem xs="12">
+            <MudFileUpload T="IBrowserFile" FilesChanged="OnLogoSelected" Accept=".png,.bmp,.jpg,.jpeg,.gif,.ico">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Image">
+                        Browse Logo
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+            @if (_info.Logo is { Length: > 0 })
+            {
+                <MudImage Src="@LogoDataUrl" Alt="Hotel logo" Width="120" Class="mt-2 d-block" />
+            }
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private HotelInfo _info = new();
+
+    private string LogoDataUrl => $"data:image/jpeg;base64,{Convert.ToBase64String(_info.Logo!)}";
+
+    protected override async Task OnInitializedAsync() =>
+        _info = await HotelInfoSvc.GetAsync() ?? new HotelInfo();
+
+    private async Task OnLogoSelected(IBrowserFile? file)
+    {
+        if (file is null) return;
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(ms);
+        _info.Logo = ms.ToArray();
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await HotelInfoSvc.SaveAsync(_info);
+            Snackbar.Add("Hotel Information Successfully saved", Severity.Success);
+            _info = await HotelInfoSvc.GetAsync() ?? new HotelInfo();
+        }
+        catch (ArgumentException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+}
