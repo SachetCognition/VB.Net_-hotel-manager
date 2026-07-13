@@ -1,0 +1,64 @@
+@page "/reports/purchased-inventory"
+@using HotelManager.Web.Services.Reports
+@inject ReportDataService Data
+@inject IReportService Reports
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+<PageTitle>Purchased Inventory - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Purchased Inventory Report</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_from" Label="From" /></MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_to" Label="To" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_search" Label="Product or Party" /></MudItem>
+        <MudItem xs="12" sm="3" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Load">Apply</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="Export">Export PDF</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_rows" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>ID</MudTh><MudTh>Product</MudTh><MudTh>Category</MudTh><MudTh>Type</MudTh><MudTh>Party</MudTh>
+        <MudTh>Date</MudTh><MudTh>Qty</MudTh><MudTh>Unit</MudTh><MudTh>Price</MudTh><MudTh>Total</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ID</MudTd><MudTd>@context.ProductName</MudTd><MudTd>@context.Category</MudTd>
+        <MudTd>@context.TransactionType</MudTd><MudTd>@context.PartyName</MudTd>
+        <MudTd>@context.PurchaseDate?.ToString("dd-MMM-yyyy")</MudTd>
+        <MudTd>@context.Quantity</MudTd><MudTd>@context.Unit</MudTd>
+        <MudTd>@context.Price</MudTd><MudTd>@context.TotalPrice</MudTd>
+    </RowTemplate>
+    <NoRecordsContent><MudText>No records found.</MudText></NoRecordsContent>
+</MudTable>
+
+@code {
+    private DateTime? _from;
+    private DateTime? _to;
+    private string? _search;
+    private IReadOnlyList<PurchasedInventoryRow> _rows = Array.Empty<PurchasedInventoryRow>();
+
+    private ReportRequest Request => new(_from, _to, string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => _rows = await Data.GetPurchasedInventoriesAsync(Request);
+
+    private async Task Export()
+    {
+        try
+        {
+            var pdf = await Reports.RenderPurchasedInventoryReportPdfAsync(Request);
+            await PdfDownload.DownloadAsync(JS, "purchased-inventory-report.pdf", pdf);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

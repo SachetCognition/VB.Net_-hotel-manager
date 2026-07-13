@@ -1,0 +1,42 @@
+@using HotelManager.Web.Services.Reports
+
+<MudTable Items="Items" Dense="true" Hover="true" Elevation="2" Filter="Filter">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_search" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Immediate="true" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>@NumberLabel</MudTh>
+        <MudTh>@NameLabel</MudTh>
+        <MudTh>Date</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Number</MudTd>
+        <MudTd>@context.Name</MudTd>
+        <MudTd>@context.Date?.ToString("dd-MMM-yyyy")</MudTd>
+        <MudTd>
+            <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                       OnClick="@(() => OnExport.InvokeAsync(context))">Export PDF</MudButton>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent><MudText>No records found.</MudText></NoRecordsContent>
+</MudTable>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string NumberLabel { get; set; } = "Number";
+    [Parameter] public string NameLabel { get; set; } = "Name";
+    [Parameter] public IReadOnlyList<InvoicePickRow> Items { get; set; } = Array.Empty<InvoicePickRow>();
+    [Parameter] public EventCallback<InvoicePickRow> OnExport { get; set; }
+
+    private string _search = "";
+
+    private bool Filter(InvoicePickRow row) =>
+        string.IsNullOrWhiteSpace(_search)
+        || (row.Number?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+        || (row.Name?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false);
+}

@@ -1,0 +1,65 @@
+@page "/reports/reservations"
+@using HotelManager.Web.Services.Reports
+@inject ReportDataService Data
+@inject IReportService Reports
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+<PageTitle>Reservation Report - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Reservation Report</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_from" Label="From (Date In)" /></MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_to" Label="To (Date In)" /></MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_search" Label="Reservation or Guest ID" /></MudItem>
+        <MudItem xs="12" sm="3" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Load">Apply</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.PictureAsPdf" OnClick="Export">Export PDF</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_rows" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Reservation ID</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh><MudTh>Type</MudTh>
+        <MudTh>Date In</MudTh><MudTh>Date Out</MudTh><MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.ReservationID</MudTd>
+        <MudTd>@context.GuestID @context.GuestName</MudTd>
+        <MudTd>@context.RoomNo</MudTd><MudTd>@context.RoomType</MudTd>
+        <MudTd>@context.DateIN?.ToString("dd-MMM-yyyy")</MudTd>
+        <MudTd>@context.DateOUT?.ToString("dd-MMM-yyyy")</MudTd>
+        <MudTd>@context.Status</MudTd>
+    </RowTemplate>
+    <NoRecordsContent><MudText>No records found.</MudText></NoRecordsContent>
+</MudTable>
+
+@code {
+    private DateTime? _from;
+    private DateTime? _to;
+    private string? _search;
+    private IReadOnlyList<ReservationRow> _rows = Array.Empty<ReservationRow>();
+
+    private ReportRequest Request => new(_from, _to, string.IsNullOrWhiteSpace(_search) ? null : _search);
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => _rows = await Data.GetReservationsAsync(Request);
+
+    private async Task Export()
+    {
+        try
+        {
+            var pdf = await Reports.RenderReservationReportPdfAsync(Request);
+            await PdfDownload.DownloadAsync(JS, "reservation-report.pdf", pdf);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

@@ -1,0 +1,33 @@
+@page "/reports/hall-or-garden-invoices"
+@using HotelManager.Web.Services.Reports
+@inject ReportDataService Data
+@inject IReportService Reports
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+<PageTitle>Hall or Garden Invoices - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Hall or Garden Invoices</MudText>
+
+<InvoicePickList Title="Hall or garden reservations" NumberLabel="Reservation ID" NameLabel="Guest"
+                 Items="_items" OnExport="Export" />
+
+@code {
+    private IReadOnlyList<InvoicePickRow> _items = Array.Empty<InvoicePickRow>();
+
+    protected override async Task OnInitializedAsync() =>
+        _items = await Data.GetHallOrGardenInvoicePicksAsync();
+
+    private async Task Export(InvoicePickRow row)
+    {
+        try
+        {
+            var pdf = await Reports.RenderHallOrGardenInvoicePdfAsync(row.Id);
+            await PdfDownload.DownloadAsync(JS, $"hall-or-garden-invoice-{row.Id}.pdf", pdf);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
