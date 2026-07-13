@@ -1,0 +1,68 @@
+@page "/hr/attendance-records"
+@inject IHrPayrollService Hr
+@inject ISnackbar Snackbar
+
+<PageTitle>Attendance Records - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Attendance Records</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="string" @bind-Value="_employeeId" Label="Employee" Clearable="true">
+                @foreach (var e in _employees)
+                {
+                    <MudSelectItem Value="@e.EmployeeID">@e.EmployeeID — @e.EmployeeName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_from" Label="From" /></MudItem>
+        <MudItem xs="12" sm="3"><MudDatePicker @bind-Date="_to" Label="To" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Load">Search</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_records" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Date</MudTh><MudTh>Employee</MudTh><MudTh>Status</MudTh><MudTh>In</MudTh>
+        <MudTh>Out</MudTh><MudTh>Overtime</MudTh><MudTh>Basic Working Time</MudTh><MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.WorkingDate?.ToShortDateString()</MudTd>
+        <MudTd>@context.EmployeeID @(context.Employee is null ? "" : $"— {context.Employee.EmployeeName}")</MudTd>
+        <MudTd>@context.Status</MudTd>
+        <MudTd>@context.InTime</MudTd>
+        <MudTd>@context.OutTime</MudTd>
+        <MudTd>@context.Overtime</MudTd>
+        <MudTd>@context.BasicWorkingTime</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.AttendanceID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<EmployeeRegistration> _employees = [];
+    private IReadOnlyList<EmployeeAttendance> _records = [];
+    private string? _employeeId;
+    private DateTime? _from;
+    private DateTime? _to;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _employees = await Hr.GetEmployeesAsync();
+        await Load();
+    }
+
+    private async Task Load() => _records = await Hr.GetAttendanceAsync(_employeeId, _from, _to);
+
+    private async Task Delete(int id)
+    {
+        await Hr.DeleteAttendanceAsync(id);
+        Snackbar.Add("Successfully deleted", Severity.Success);
+        await Load();
+    }
+}

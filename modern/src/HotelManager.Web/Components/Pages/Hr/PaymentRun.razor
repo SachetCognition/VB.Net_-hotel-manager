@@ -1,0 +1,121 @@
+@page "/hr/payment-run"
+@inject IHrPayrollService Hr
+@inject ISnackbar Snackbar
+
+<PageTitle>Payment Run - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Employee Payment</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudSelect T="string" Value="_employeeId" ValueChanged="OnEmployeeSelected" Label="Employee">
+                @foreach (var e in _employees)
+                {
+                    <MudSelectItem Value="@e.EmployeeID">@e.EmployeeID — @e.EmployeeName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker Date="_dateFrom" DateChanged="OnDateFromChanged" Label="From" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker Date="_dateTo" DateChanged="OnDateToChanged" Label="To" /></MudItem>
+        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_paymentDate" Label="Payment Date" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@(_employee?.Salary?.ToString() ?? "")" Label="Basic Salary" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_presentDays.ToString()" Label="Present Days" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_salary.ToString()" Label="Salary" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_advance.ToString()" Label="Advance" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_overtime.ToString()" Label="Overtime" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudNumericField T="int" Value="_overtimeRate" ValueChanged="OnOvertimeRateChanged" Label="Overtime Rate" Min="0" />
+        </MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_overtimeAmount.ToString()" Label="Overtime Amount" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2">
+            <MudNumericField T="int" Value="_deduction" ValueChanged="OnDeductionChanged" Label="Deduction" Min="0" />
+        </MudItem>
+        <MudItem xs="12" sm="2">
+            <MudSelect @bind-Value="_paymentMode" Label="Payment Mode">
+                <MudSelectItem Value="@("Cash")">Cash</MudSelectItem>
+                <MudSelectItem Value="@("Cheque")">Cheque</MudSelectItem>
+                <MudSelectItem Value="@("Bank Transfer")">Bank Transfer</MudSelectItem>
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_paymentModeDetails" Label="Payment Mode Details" /></MudItem>
+        <MudItem xs="12" sm="2"><MudTextField Value="@_netPay.ToString()" Label="Net Pay" ReadOnly="true" /></MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save Payment</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private IReadOnlyList<EmployeeRegistration> _employees = [];
+    private EmployeeRegistration? _employee;
+    private string _employeeId = "";
+    private DateTime? _dateFrom = DateTime.Today;
+    private DateTime? _dateTo = DateTime.Today;
+    private DateTime? _paymentDate = DateTime.Today;
+    private int _presentDays;
+    private int _salary;
+    private int _advance;
+    private TimeSpan _overtime;
+    private int _overtimeRate;
+    private int _overtimeAmount;
+    private int _deduction;
+    private int _netPay;
+    private string _paymentMode = "Cash";
+    private string _paymentModeDetails = "";
+
+    protected override async Task OnInitializedAsync() => _employees = await Hr.GetEmployeesAsync();
+
+    private async Task OnEmployeeSelected(string id)
+    {
+        _employeeId = id;
+        _employee = _employees.FirstOrDefault(e => e.EmployeeID == id);
+        await Recompute();
+    }
+
+    private async Task OnDateFromChanged(DateTime? date) { _dateFrom = date; await Recompute(); }
+    private async Task OnDateToChanged(DateTime? date) { _dateTo = date; await Recompute(); }
+    private void OnOvertimeRateChanged(int rate) { _overtimeRate = rate; ComputeLocal(); }
+    private void OnDeductionChanged(int deduction) { _deduction = deduction; ComputeLocal(); }
+
+    private async Task Recompute()
+    {
+        if (_employee is null || _dateFrom is null || _dateTo is null) return;
+        _presentDays = await Hr.GetPresentDaysAsync(_employeeId, _dateFrom.Value, _dateTo.Value);
+        _overtime = await Hr.GetTotalOvertimeAsync(_employeeId, _dateFrom.Value, _dateTo.Value);
+        _advance = await Hr.GetOutstandingAdvanceAsync(_employeeId, DateTime.MinValue, DateTime.MaxValue);
+        ComputeLocal();
+    }
+
+    private void ComputeLocal()
+    {
+        _salary = BillingCalculator.ComputeSalary(_employee?.Salary ?? 0, _presentDays);
+        _overtimeAmount = BillingCalculator.ComputeOvertimeAmount(_overtime, _overtimeRate);
+        _netPay = BillingCalculator.ComputeNetPay(_salary, _overtimeAmount, _deduction);
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            var payment = await Hr.RunPaymentAsync(new EmployeePayment
+            {
+                PaymentID = "",
+                EmployeeID = _employeeId,
+                DateFrom = _dateFrom,
+                DateTo = _dateTo,
+                PaymentDate = _paymentDate,
+                OvertimeRate = _overtimeRate,
+                Deduction = _deduction,
+                ModeOfPayment = _paymentMode,
+                PaymentModeDetails = _paymentModeDetails
+            });
+            Snackbar.Add($"Successfully saved ({payment.PaymentID})", Severity.Success);
+            await Recompute();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
