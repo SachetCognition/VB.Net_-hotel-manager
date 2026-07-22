@@ -1,9 +1,20 @@
 @* Left nav mirroring the legacy frmMainMenu groups. Each group lives in its own
    component so parallel workstreams can add links without merge conflicts. *@
-<MudNavMenu>
+<div class="d-flex align-center pa-4 gap-3">
+    <MudAvatar Color="Color.Secondary" Variant="Variant.Filled">
+        <MudIcon Icon="@Icons.Material.Filled.Hotel" />
+    </MudAvatar>
+    <div>
+        <MudText Typo="Typo.subtitle1">Hotel Manager</MudText>
+        <MudText Typo="Typo.caption" Color="Color.Secondary">Management Console</MudText>
+    </div>
+</div>
+<MudDivider />
+<MudNavMenu Bordered="true" Class="mt-2">
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
     <NavMasterEntry />
     <NavTransactions />
+    <NavScheduling />
     <NavHumanResource />
     <NavReports />
     <NavUserManagement />

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelManager.Infrastructure.Migrations
+namespace HotelManager.Infrastructure.Migrations.Sqlite
 {
     [DbContext(typeof(HotelDbContext))]
     partial class HotelDbContextModelSnapshot : ModelSnapshot
@@ -15,7 +15,7 @@ namespace HotelManager.Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
             modelBuilder.Entity("HotelManager.Domain.Entities.AdvanceEntry", b =>
                 {
@@ -40,6 +40,47 @@ namespace HotelManager.Infrastructure.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("AdvanceEntry", (string)null);
+                });
+
+            modelBuilder.Entity("HotelManager.Domain.Entities.Appointment", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllDay")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Label")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecurrenceInfo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ResourceID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Appointment", (string)null);
                 });
 
             modelBuilder.Entity("HotelManager.Domain.Entities.Beer", b =>

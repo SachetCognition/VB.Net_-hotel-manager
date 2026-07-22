@@ -7,6 +7,7 @@ using HotelManager.Web.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +16,25 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 
-var dbPath = builder.Configuration["HotelManager:DbPath"] ?? DbPaths.DefaultDbPath;
-builder.Services.AddDbContextFactory<HotelDbContext>(o => o.UseSqlite($"Data Source={dbPath}"));
+var dbProvider = builder.Configuration["HotelManager:DbProvider"] ?? "Sqlite";
+if (string.Equals(dbProvider, "Postgres", StringComparison.OrdinalIgnoreCase))
+{
+    var connectionString = builder.Configuration.GetConnectionString("Postgres")
+        ?? builder.Configuration["HotelManager:PostgresConnectionString"]
+        ?? throw new InvalidOperationException(
+            "HotelManager:DbProvider=Postgres requires a 'Postgres' connection string (ConnectionStrings:Postgres).");
+    NpgsqlCompat.EnableLegacyTimestampBehavior();
+    builder.Services.AddDbContextFactory<HotelDbContext>(o => o
+        .UseNpgsql(connectionString)
+        .ReplaceService<IMigrationsAssembly, ProviderFilteredMigrationsAssembly>());
+}
+else
+{
+    var dbPath = builder.Configuration["HotelManager:DbPath"] ?? DbPaths.DefaultDbPath;
+    builder.Services.AddDbContextFactory<HotelDbContext>(o => o
+        .UseSqlite($"Data Source={dbPath}")
+        .ReplaceService<IMigrationsAssembly, ProviderFilteredMigrationsAssembly>());
+}
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(o =>
@@ -38,6 +56,8 @@ builder.Services.AddOrderServices();
 builder.Services.AddInventoryServices();
 builder.Services.AddHrPayrollServices();
 builder.Services.AddReportServices();
+builder.Services.AddSchedulingServices();
+builder.Services.AddDashboardServices();
 
 var app = builder.Build();
 

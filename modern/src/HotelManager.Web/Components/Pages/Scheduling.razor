@@ -1,0 +1,200 @@
+@page "/scheduling"
+@inject IScheduleService ScheduleSvc
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Scheduling - Hotel Manager</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Scheduling</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="_subject" Label="Subject" Required="true" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="_location" Label="Location" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudSelect T="int" @bind-Value="_status" Label="Status">
+                @foreach (var kv in StatusNames)
+                {
+                    <MudSelectItem T="int" Value="kv.Key">@kv.Value</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudDatePicker @bind-Date="_startDate" Label="Start date" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudTimePicker @bind-Time="_startTime" Label="Start time" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudDatePicker @bind-Date="_endDate" Label="End date" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudTimePicker @bind-Time="_endTime" Label="End time" />
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3" Class="d-flex align-center">
+            <MudCheckBox @bind-Value="_allDay" Label="All day" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField @bind-Value="_description" Label="Description" Lines="2" />
+        </MudItem>
+        <MudItem xs="12" Class="d-flex gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudPaper Class="pa-4 mb-4" Elevation="1">
+    <MudGrid>
+        <MudItem xs="12" sm="4"><MudDatePicker @bind-Date="_filterFrom" Label="From" Clearable="true" /></MudItem>
+        <MudItem xs="12" sm="4"><MudDatePicker @bind-Date="_filterTo" Label="To" Clearable="true" /></MudItem>
+        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Filled" OnClick="Load">Filter</MudButton>
+            <MudButton Variant="Variant.Text" OnClick="ClearFilter">Clear</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+<MudTable Items="_appointments" Dense="true" Hover="true" Elevation="2">
+    <HeaderContent>
+        <MudTh>Subject</MudTh>
+        <MudTh>Start</MudTh>
+        <MudTh>End</MudTh>
+        <MudTh>All Day</MudTh>
+        <MudTh>Location</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Subject">@context.Subject</MudTd>
+        <MudTd DataLabel="Start">@context.StartDate.ToString("g")</MudTd>
+        <MudTd DataLabel="End">@context.EndDate.ToString("g")</MudTd>
+        <MudTd DataLabel="All Day">@(context.AllDay ? "Yes" : "No")</MudTd>
+        <MudTd DataLabel="Location">@context.Location</MudTd>
+        <MudTd DataLabel="Status">@StatusText(context.Status)</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                           OnClick="@(() => Edit(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                           OnClick="@(() => Delete(context.ID))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private static readonly Dictionary<int, string> StatusNames = new()
+    {
+        [0] = "Free",
+        [1] = "Tentative",
+        [2] = "Busy",
+        [3] = "Out of Office",
+    };
+
+    private IReadOnlyList<Appointment> _appointments = [];
+
+    private int? _editId;
+    private string? _subject;
+    private string? _location;
+    private string? _description;
+    private int _status = 2;
+    private bool _allDay;
+    private DateTime? _startDate = DateTime.Today;
+    private TimeSpan? _startTime = new(9, 0, 0);
+    private DateTime? _endDate = DateTime.Today;
+    private TimeSpan? _endTime = new(10, 0, 0);
+
+    private DateTime? _filterFrom;
+    private DateTime? _filterTo;
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private static string StatusText(int status) => StatusNames.TryGetValue(status, out var name) ? name : status.ToString();
+
+    private async Task Load() =>
+        _appointments = await ScheduleSvc.GetAppointmentsAsync(_filterFrom, _filterTo?.AddDays(1).AddSeconds(-1));
+
+    private async Task ClearFilter()
+    {
+        _filterFrom = null;
+        _filterTo = null;
+        await Load();
+    }
+
+    private void ResetForm()
+    {
+        _editId = null;
+        _subject = null;
+        _location = null;
+        _description = null;
+        _status = 2;
+        _allDay = false;
+        _startDate = DateTime.Today;
+        _startTime = new(9, 0, 0);
+        _endDate = DateTime.Today;
+        _endTime = new(10, 0, 0);
+    }
+
+    private void Edit(Appointment a)
+    {
+        _editId = a.ID;
+        _subject = a.Subject;
+        _location = a.Location;
+        _description = a.Description;
+        _status = a.Status;
+        _allDay = a.AllDay;
+        _startDate = a.StartDate.Date;
+        _startTime = a.StartDate.TimeOfDay;
+        _endDate = a.EndDate.Date;
+        _endTime = a.EndDate.TimeOfDay;
+    }
+
+    private static DateTime Combine(DateTime? date, TimeSpan? time) =>
+        (date ?? DateTime.Today).Date + (time ?? TimeSpan.Zero);
+
+    private async Task Save()
+    {
+        try
+        {
+            await ScheduleSvc.SaveAppointmentAsync(new Appointment
+            {
+                ID = _editId ?? 0,
+                Subject = _subject,
+                Location = _location,
+                Description = _description,
+                Status = _status,
+                AllDay = _allDay,
+                StartDate = Combine(_startDate, _startTime),
+                EndDate = Combine(_endDate, _endTime),
+            });
+            Snackbar.Add(_editId is null ? "Appointment saved" : "Appointment updated", Severity.Success);
+            ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+
+    private async Task Delete(int id)
+    {
+        var confirmed = await DialogService.ShowMessageBox("Confirmation",
+            "Do you really want to delete this appointment?", yesText: "Yes", noText: "No");
+        if (confirmed != true) return;
+        try
+        {
+            await ScheduleSvc.DeleteAppointmentAsync(id);
+            Snackbar.Add("Appointment deleted", Severity.Success);
+            if (_editId == id) ResetForm();
+            await Load();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+    }
+}

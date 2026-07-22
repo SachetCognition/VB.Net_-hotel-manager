@@ -5,38 +5,45 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HotelManager.Infrastructure.Migrations
+namespace HotelManager.Infrastructure.Migrations.Postgres
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20260713121758_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260722155125_InitialCreatePostgres")]
+    partial class InitialCreatePostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("HotelManager.Domain.Entities.AdvanceEntry", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Amount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Deduction")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("EmployeeID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("WorkingDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("ID");
 
@@ -48,13 +55,13 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Beer", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("BeerName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Rate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -65,79 +72,81 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<double?>("Balance")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DateIN")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateOUT")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<double?>("Discount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("DiscountPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("ExtraBed")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("GrandTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("LuxuryTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("LuxuryTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("NoOfAdults")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("NoOfDays")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("NoOfKids")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("OtherCharges")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("RoomCharges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("RoomNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("ServiceTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("ServiceTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("SubTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalPaid")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalRoomCharges")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -154,25 +163,27 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("BillNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("CheckInID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("CheckOutDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("HotelID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -189,10 +200,12 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("CS_Currency")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -203,16 +216,18 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Category")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("DishName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Rate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -223,28 +238,30 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("AttendanceID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AttendanceID"));
 
                     b.Property<string>("BasicWorkingTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("EmployeeID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("InTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("OutTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Overtime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("WorkingDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("AttendanceID");
 
@@ -256,49 +273,49 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.EmployeePayment", b =>
                 {
                     b.Property<string>("PaymentID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Advance")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DateFrom")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateTo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("Deduction")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("EmployeeID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ModeOfPayment")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("NetPay")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("OverTimeAmount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Overtime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("OvertimeRate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PaymentModeDetails")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("PresentDays")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Salary")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("PaymentID");
 
@@ -310,37 +327,37 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.EmployeeRegistration", b =>
                 {
                     b.Property<string>("EmployeeID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("BasicWorkingTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Bloodgroup")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateOfJoining")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Department")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Designation")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("EmployeeName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("MobileNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Salary")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("EmployeeID");
 
@@ -351,10 +368,12 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Charges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -365,10 +384,12 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Charges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -378,28 +399,28 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Guest", b =>
                 {
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("GuestName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("IDNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("IDType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("GuestID");
 
@@ -410,13 +431,15 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Charges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("HallName")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("Hall Name");
 
                     b.HasKey("ID");
@@ -428,31 +451,33 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Address")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactNo1")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("HotelName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<byte[]>("Logo")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("bytea");
 
                     b.Property<string>("STNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("TIN")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -463,16 +488,18 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("LiquorName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Rate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Volume")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -484,7 +511,7 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.LiquorMaster", b =>
                 {
                     b.Property<string>("LiquorName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("LiquorName");
 
@@ -495,46 +522,48 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("CheckInID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("GrandTotal")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("HotelID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("OrderNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("PaymentDue")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("STAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("STPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("SubTotal")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("TotalPayment")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("VATAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("VATPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -551,28 +580,30 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Amount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("OrderID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ProductID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Quantity")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Rate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Volume")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -585,34 +616,36 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Category")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PartyName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Price")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<double?>("Quantity")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("TotalPrice")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("TransactionType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Unit")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -622,25 +655,25 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Registration", b =>
                 {
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("JoiningDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("NameOfuser")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("User_Password")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("UserName");
 
@@ -650,25 +683,25 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Reservation", b =>
                 {
                     b.Property<string>("ReservationID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateIN")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateOUT")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoomNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ReservationID");
 
@@ -682,88 +715,88 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.ReservationHallAndGarden", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("Balance")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DateFrom_Garden")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateFrom_Hall")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateTo_Garden")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateTo_Hall")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("Days_Garden")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("Days_Hall")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("Discount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("DiscountPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Garden")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("GrandTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Hall")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("HotelID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("LuxuryTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("LuxuryTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("OtherCharges")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("Rate_Garden")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("Rate_Hall")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("ServiceTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("ServiceTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("SubTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalCharges_Garden")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalCharges_Hall")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalPaid")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -779,70 +812,70 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.ReservationHallOrGarden", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("Balance")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DateFrom")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateTo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("Days")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("Discount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("DiscountPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("GrandTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("HotelID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("LuxuryTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("LuxuryTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<double?>("OtherCharges")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("Rate")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("ServiceTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("ServiceTaxPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("SubTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalCharges")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("TotalPaid")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Type")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -859,43 +892,45 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("CurrencyID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("GrandTotal")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("HotelID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("OrderNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("PaymentDue")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("STAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("STPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("SubTotal")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("TotalPayment")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("VATAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("VATPer")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -910,25 +945,27 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("Amount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("OrderID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ProductID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("Quantity")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Rate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -940,13 +977,13 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Room", b =>
                 {
                     b.Property<string>("RoomNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("RoomCharges")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("RoomType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("RoomNo");
 
@@ -956,22 +993,22 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.Stock", b =>
                 {
                     b.Property<string>("StockID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("LiquorName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("NoOfBottles")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("StockDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("TotalVolume")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("Volume")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("StockID");
 
@@ -983,16 +1020,16 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.StockBeer", b =>
                 {
                     b.Property<string>("StockID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("BeerID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("NoOfBottles")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("StockDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("StockID");
 
@@ -1004,10 +1041,10 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.TaxInfo", b =>
                 {
                     b.Property<string>("Salray")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("TaxinP")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("taxinP");
 
                     b.HasKey("Salray");
@@ -1019,22 +1056,24 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<double?>("EducationalTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("EducationalTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("OrderID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -1047,22 +1086,24 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<double?>("EducationalTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("EducationalTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("ReservationID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -1075,22 +1116,24 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<double?>("EducationalTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("EducationalTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("ReservationID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -1103,22 +1146,24 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<double?>("EducationalTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("EducationalTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<int?>("OrderID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -1131,22 +1176,24 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("BillID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double?>("EducationalTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("EducationalTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTax")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double?>("HEduTaxAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -1158,25 +1205,25 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.TempReservation", b =>
                 {
                     b.Property<string>("ReservationID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateIN")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DateOUT")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("GuestID")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoomNo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ReservationID");
 
@@ -1191,31 +1238,33 @@ namespace HotelManager.Infrastructure.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("AmountReceived")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("DueAmount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Employee_Party_Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("TransactionAmount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("TransactionDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("TransactionDetails")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("TransactionMonth")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("TransactionType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -1225,7 +1274,7 @@ namespace HotelManager.Infrastructure.Migrations
             modelBuilder.Entity("HotelManager.Domain.Entities.User", b =>
                 {
                     b.Property<string>("Username")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Username");
 

@@ -44,6 +44,7 @@ public class HotelDbContext : DbContext
     public DbSet<EmployeeAttendance> Attendances => Set<EmployeeAttendance>();
     public DbSet<EmployeePayment> EmployeePayments => Set<EmployeePayment>();
     public DbSet<AdvanceEntry> AdvanceEntries => Set<AdvanceEntry>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -221,5 +222,7 @@ public class HotelDbContext : DbContext
             e.HasKey(x => x.ID);
             e.HasOne(x => x.Employee).WithMany(r => r.Advances).HasForeignKey(x => x.EmployeeID);
         });
+
+        b.Entity<Appointment>(e => { e.ToTable("Appointment"); e.HasKey(x => x.ID); });
     }
 }

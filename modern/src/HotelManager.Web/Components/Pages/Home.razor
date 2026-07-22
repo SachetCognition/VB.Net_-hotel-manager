@@ -1,94 +1,167 @@
 @page "/"
+@using HotelManager.Web.Services
 @inject IDbContextFactory<HotelDbContext> DbFactory
+@inject IDashboardService Dashboard
 
 <PageTitle>Dashboard - Hotel Manager</PageTitle>
 
-<MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+<div class="d-flex align-center mb-4">
+    <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="mr-2" Size="Size.Large" />
+    <MudText Typo="Typo.h4">Dashboard</MudText>
+</div>
 
-<MudGrid>
-    <MudItem xs="12" sm="4">
-        <MudPaper Class="pa-4" Elevation="2">
-            <MudText Typo="Typo.subtitle2">Checked-In Guests</MudText>
-            <MudText Typo="Typo.h3">@_checkedInCount</MudText>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12" sm="4">
-        <MudPaper Class="pa-4" Elevation="2">
-            <MudText Typo="Typo.subtitle2">Current Reservations</MudText>
-            <MudText Typo="Typo.h3">@_reservationCount</MudText>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12" sm="4">
-        <MudPaper Class="pa-4" Elevation="2">
-            <MudText Typo="Typo.subtitle2">Rooms</MudText>
-            <MudText Typo="Typo.h3">@_roomCount</MudText>
-        </MudPaper>
-    </MudItem>
+@if (_data is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-4" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2" Class="pa-2">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Occupancy</MudText>
+                            <MudText Typo="Typo.h4">@_data.OccupancyPercent%</MudText>
+                            <MudText Typo="Typo.caption">@_data.OccupiedRooms / @_data.TotalRooms rooms</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.Hotel" Color="Color.Primary" Size="Size.Large" />
+                    </div>
+                    <MudProgressLinear Value="_data.OccupancyPercent" Color="Color.Primary" Class="mt-2" Rounded="true" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2" Class="pa-2">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Total Revenue</MudText>
+                            <MudText Typo="Typo.h4">@_data.TotalRevenue.ToString("N0")</MudText>
+                            <MudText Typo="Typo.caption">Stays + orders</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.Payments" Color="Color.Success" Size="Size.Large" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2" Class="pa-2">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Pending Payments</MudText>
+                            <MudText Typo="Typo.h4">@_data.PendingPayments.ToString("N0")</MudText>
+                            <MudText Typo="Typo.caption">Outstanding balances</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.RequestQuote" Color="Color.Warning" Size="Size.Large" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="2" Class="pa-2">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Reservations</MudText>
+                            <MudText Typo="Typo.h4">@_data.CurrentReservations</MudText>
+                            <MudText Typo="Typo.caption">Active / upcoming</MudText>
+                        </div>
+                        <MudIcon Icon="@Icons.Material.Filled.EventNote" Color="Color.Info" Size="Size.Large" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
 
-    <MudItem xs="12" md="6">
-        <MudPaper Class="pa-4" Elevation="2">
-            <MudText Typo="Typo.h6" Class="mb-2">Checked-In Guests</MudText>
-            <MudTable Items="_checkedIn" Dense="true" Hover="true">
-                <HeaderContent>
-                    <MudTh>Guest</MudTh>
-                    <MudTh>Room</MudTh>
-                    <MudTh>Date In</MudTh>
-                    <MudTh>Date Out</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>@(context.Guest?.GuestName ?? context.GuestID)</MudTd>
-                    <MudTd>@context.RoomNo</MudTd>
-                    <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
-                    <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
-                </RowTemplate>
-            </MudTable>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12" md="6">
-        <MudPaper Class="pa-4" Elevation="2">
-            <MudText Typo="Typo.h6" Class="mb-2">Current Reservations</MudText>
-            <MudTable Items="_reservations" Dense="true" Hover="true">
-                <HeaderContent>
-                    <MudTh>Reservation</MudTh>
-                    <MudTh>Guest</MudTh>
-                    <MudTh>Room</MudTh>
-                    <MudTh>Date In</MudTh>
-                    <MudTh>Date Out</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>@context.ReservationID</MudTd>
-                    <MudTd>@(context.Guest?.GuestName ?? context.GuestID)</MudTd>
-                    <MudTd>@context.RoomNo</MudTd>
-                    <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
-                    <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
-                </RowTemplate>
-            </MudTable>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+        <MudItem xs="12" md="7">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-2">Revenue (last 6 months)</MudText>
+                <MudChart ChartType="ChartType.Bar" ChartSeries="_revenueSeries" XAxisLabels="_months"
+                          Width="100%" Height="300px" />
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="5">
+            <MudPaper Class="pa-4 d-flex flex-column align-center" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-2 align-self-start">Revenue by source</MudText>
+                @if (_revenueBySource.Sum() > 0)
+                {
+                    <MudChart ChartType="ChartType.Donut" InputData="_revenueBySource" InputLabels="_sourceLabels"
+                              Width="260px" Height="260px" />
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2" Class="my-8">No revenue recorded yet.</MudText>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-2">Checked-In Guests</MudText>
+                <MudDataGrid Items="_checkedIn" Dense="true" Hover="true" Height="320px" FixedHeader="true">
+                    <Columns>
+                        <PropertyColumn Property="c => c.Guest != null ? c.Guest.GuestName : c.GuestID" Title="Guest" />
+                        <PropertyColumn Property="c => c.RoomNo" Title="Room" />
+                        <PropertyColumn Property="c => c.DateIN" Title="Date In" Format="d" />
+                        <PropertyColumn Property="c => c.DateOUT" Title="Date Out" Format="d" />
+                        <PropertyColumn Property="c => c.Balance" Title="Balance" />
+                    </Columns>
+                    <NoRecordsContent><MudText>No guests checked in.</MudText></NoRecordsContent>
+                </MudDataGrid>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-2">Current Reservations</MudText>
+                <MudDataGrid Items="_reservations" Dense="true" Hover="true" Height="320px" FixedHeader="true">
+                    <Columns>
+                        <PropertyColumn Property="r => r.ReservationID" Title="Reservation" />
+                        <PropertyColumn Property="r => r.Guest != null ? r.Guest.GuestName : r.GuestID" Title="Guest" />
+                        <PropertyColumn Property="r => r.RoomNo" Title="Room" />
+                        <PropertyColumn Property="r => r.DateIN" Title="Date In" Format="d" />
+                        <PropertyColumn Property="r => r.DateOUT" Title="Date Out" Format="d" />
+                    </Columns>
+                    <NoRecordsContent><MudText>No active reservations.</MudText></NoRecordsContent>
+                </MudDataGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
 
 @code {
+    private DashboardData? _data;
     private List<CheckInRoom> _checkedIn = [];
     private List<Reservation> _reservations = [];
-    private int _checkedInCount;
-    private int _reservationCount;
-    private int _roomCount;
+
+    private List<ChartSeries> _revenueSeries = [];
+    private string[] _months = [];
+    private double[] _revenueBySource = [];
+    private readonly string[] _sourceLabels = ["Room Stays", "Room Orders", "Restaurant"];
 
     protected override async Task OnInitializedAsync()
     {
+        _data = await Dashboard.GetDashboardAsync();
+
+        _months = _data.MonthlyRevenue.Select(m => m.Label).ToArray();
+        _revenueSeries =
+        [
+            new ChartSeries { Name = "Room Orders", Data = _data.MonthlyRevenue.Select(m => m.Room).ToArray() },
+            new ChartSeries { Name = "Restaurant", Data = _data.MonthlyRevenue.Select(m => m.Restaurant).ToArray() },
+        ];
+        _revenueBySource = [_data.RoomStayRevenue, _data.RoomRevenue, _data.RestaurantRevenue];
+
         await using var db = await DbFactory.CreateDbContextAsync();
         _checkedIn = await db.CheckIns.AsNoTracking()
             .Include(c => c.Guest)
             .Where(c => c.Status == "Checked In")
             .OrderBy(c => c.RoomNo)
             .ToListAsync();
-        _checkedInCount = _checkedIn.Count;
         _reservations = await db.Reservations.AsNoTracking()
             .Include(r => r.Guest)
             .Where(r => r.Status != "Cancelled" && r.DateOUT >= DateTime.Today)
             .OrderBy(r => r.DateIN)
             .ToListAsync();
-        _reservationCount = _reservations.Count;
-        _roomCount = await db.Rooms.CountAsync();
     }
 }
