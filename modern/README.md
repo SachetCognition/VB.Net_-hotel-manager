@@ -6,12 +6,14 @@ the new application.
 
 ## Stack
 
-- ASP.NET Core 8 (LTS) + Blazor Server (interactive server rendering)
-- MudBlazor UI
-- EF Core 8 + SQLite
+- ASP.NET Core 10 + Blazor Server (interactive server rendering)
+- MudBlazor 8 UI
+- EF Core 10 with a configurable provider: SQLite (default) or PostgreSQL
 - Cookie authentication with ASP.NET Core Identity password hashing
   (replaces the legacy Base64 `ModFunc.Encrypt/Decrypt`)
 - xUnit + Coverlet
+
+The .NET 10 SDK is pinned via `global.json`.
 
 ## Solution layout
 
@@ -37,6 +39,35 @@ On first start the app migrates and seeds the SQLite database at
 
 Default login: **admin / admin@123** (UserType `Admin`).
 
+### Database provider
+
+The provider is selected with the `HotelManager:DbProvider` configuration key
+(`Sqlite`, the default, or `Postgres`). For PostgreSQL, also supply a connection
+string named `Postgres`:
+
+```bash
+export HotelManager__DbProvider=Postgres
+export ConnectionStrings__Postgres="Host=localhost;Port=5432;Database=hotelmanager;Username=hotel;Password=hotel"
+dotnet run --project src/HotelManager.Web
+```
+
+Migrations are applied automatically on startup (`DbSeeder.SeedAsync` runs
+`Database.Migrate`), and each provider has its own migration set
+(`Migrations/Sqlite` and `Migrations/Postgres`). A custom
+`ProviderFilteredMigrationsAssembly` ensures only the active provider's
+migrations are applied. To add a migration for a specific provider:
+
+```bash
+# SQLite (default)
+dotnet ef migrations add <Name> --project src/HotelManager.Infrastructure \
+  --output-dir Migrations/Sqlite --namespace HotelManager.Infrastructure.Migrations.Sqlite
+
+# PostgreSQL
+HotelManager_DbProvider=Postgres dotnet ef migrations add <Name> \
+  --project src/HotelManager.Infrastructure \
+  --output-dir Migrations/Postgres --namespace HotelManager.Infrastructure.Migrations.Postgres
+```
+
 ## Run with Docker
 
 ```bash
@@ -44,10 +75,12 @@ cd modern
 docker compose up --build
 ```
 
-The app is served at http://localhost:8080. The SQLite database lives in the
-`hotelmanager-data` volume (`/data/hotelmanager.db` inside the container) and is
-migrated and seeded automatically on first start, so the same default login
-(**admin / admin@123**) works out of the box.
+The app is served at http://localhost:8080 and is backed by a PostgreSQL
+container (`HotelManager__DbProvider=Postgres`). PostgreSQL data is persisted in
+the `hotelmanager-postgres` volume, and the `web` service waits for the database
+healthcheck before starting. The schema is migrated and seeded automatically on
+first start, so the same default login (**admin / admin@123**) works out of the
+box.
 
 ## Test
 
