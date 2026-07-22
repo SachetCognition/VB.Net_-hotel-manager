@@ -33,11 +33,21 @@ public sealed class HotelFlowTests : IAsyncLifetime
         {
             Headless = Environment.GetEnvironmentVariable("E2E_HEADED") != "1"
         });
-        _context = await _browser.NewContextAsync(new BrowserNewContextOptions
+        var contextOptions = new BrowserNewContextOptions
         {
             AcceptDownloads = true,
             IgnoreHTTPSErrors = true
-        });
+        };
+        // Opt-in video capture of the full journey (Playwright's built-in
+        // RecordVideoDir). Set E2E_VIDEO_DIR to a writable directory to enable.
+        var videoDir = Environment.GetEnvironmentVariable("E2E_VIDEO_DIR");
+        if (!string.IsNullOrWhiteSpace(videoDir))
+        {
+            Directory.CreateDirectory(videoDir);
+            contextOptions.RecordVideoDir = videoDir;
+            contextOptions.RecordVideoSize = new RecordVideoSize { Width = 1280, Height = 720 };
+        }
+        _context = await _browser.NewContextAsync(contextOptions);
         _page = await _context.NewPageAsync();
         _page.SetDefaultTimeout(20_000);
     }
@@ -152,7 +162,12 @@ public sealed class HotelFlowTests : IAsyncLifetime
     private async Task<double> CheckOutAsync()
     {
         await GotoAsync("/check-out");
+        // The row action opens a confirmation dialog whose confirm button is also
+        // labelled "Check Out"; click the row button, then confirm in the dialog.
         await _page.GetByRole(AriaRole.Button, new() { Name = "Check Out", Exact = true }).First.ClickAsync();
+        var dialog = _page.Locator(".mud-dialog").First;
+        await dialog.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10_000 });
+        await dialog.GetByRole(AriaRole.Button, new() { Name = "Check Out", Exact = true }).ClickAsync();
         await ExpectSnackbarAsync("Successfully checked out");
         // "Checkout Bills" table is the one carrying a Bill No column.
         return await FirstPositiveNumberInTableAsync("Bill No");

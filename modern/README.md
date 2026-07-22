@@ -24,7 +24,9 @@ The .NET 10 SDK is pinned via `global.json`.
 | `src/HotelManager.Application` | **Frozen contracts** (`IAuthService` … `IReportService`), DTOs, and the shared `BillingCalculator` reproducing the legacy billing/payroll math exactly |
 | `src/HotelManager.Web` | Blazor Server host: login, role gating (Admin/User), dashboard, nav mirroring the legacy main menu groups |
 | `tests/HotelManager.UnitTests` | BillingCalculator tests |
-| `tests/HotelManager.IntegrationTests` | SQLite in-memory fixture + AuthService tests |
+| `tests/HotelManager.IntegrationTests` | SQLite in-memory fixture + service tests (auth, reservations, orders, HR/payroll, scheduling, reports) |
+| `tests/HotelManager.ComponentTests` | **bUnit** component tests rendering every Blazor page (markup, form validation, event callbacks) so `.razor` UI is covered |
+| `tests/HotelManager.E2ETests` | **Playwright for .NET** end-to-end journey against a running instance |
 
 ## Run locally
 
@@ -84,18 +86,60 @@ box.
 
 ## Test
 
+Unit, integration, and bUnit component tests (these feed the coverage gate):
+
 ```bash
 cd modern
-dotnet test --collect:"XPlat Code Coverage"
+dotnet test tests/HotelManager.UnitTests --collect:"XPlat Code Coverage"
+dotnet test tests/HotelManager.IntegrationTests --collect:"XPlat Code Coverage"
+dotnet test tests/HotelManager.ComponentTests --collect:"XPlat Code Coverage"
 ```
+
+Combined line coverage (including `.razor` markup, excluding generated EF
+migrations) is **>= 80%**.
+
+### End-to-end (Playwright)
+
+The E2E suite drives the full journey (login -> dashboard -> reservation ->
+check-in with billing -> room/restaurant order -> check-out with final bill ->
+HR payroll run -> report PDF) against a running app. It auto-skips when the app
+is unreachable, so it never breaks a plain `dotnet test`.
+
+```bash
+# start the stack first (see "Run with Docker"), then:
+cd modern
+export E2E_BASE_URL=http://localhost:8080       # default
+export E2E_VIDEO_DIR=artifacts/e2e-video        # optional: capture a video of the run
+dotnet test tests/HotelManager.E2ETests
+```
+
+Setting `E2E_VIDEO_DIR` enables Playwright's built-in `RecordVideoDir` capture.
 
 ## CI
 
 `.github/workflows/modern-ci.yml` runs on every PR and push to `main` touching
-`modern/`: it builds the solution, runs `dotnet test --collect:"XPlat Code Coverage"`,
-publishes a ReportGenerator HTML report as the `coverage-report` artifact, and fails
-if combined line coverage (excluding generated EF migrations and `.razor` UI markup,
-which is exercised manually/e2e rather than by unit tests) is below 80%.
+`modern/`:
+
+- **`build-test`** builds the solution and runs the unit, integration, and bUnit
+  component tests with `--collect:"XPlat Code Coverage"`, merges the results with
+  ReportGenerator (published as the `coverage-report` artifact), and **fails if
+  combined line coverage is below 80%**. Coverage now **includes `.razor` UI
+  markup** (the previous `.razor` exclusion was removed); only generated EF
+  migrations are excluded from the gate.
+- **`e2e`** spins up the app and runs the Playwright journey. It is
+  non-blocking (`continue-on-error`) so the coverage gate is never affected by
+  environment-specific E2E flakiness.
+
+## Validation artifacts
+
+Artifacts from a local end-to-end validation run (net10 solution on the
+PostgreSQL-backed docker-compose stack) are checked in under `artifacts/`:
+
+- [`artifacts/e2e-video/hotel-journey.webm`](artifacts/e2e-video/hotel-journey.webm)
+  — Playwright video recording of the full validated journey.
+- [`artifacts/coverage/Summary.txt`](artifacts/coverage/Summary.txt) — merged
+  ReportGenerator coverage summary (combined line coverage **82.5%**, including
+  `.razor`). CI publishes the full HTML report as the `coverage-report` artifact.
 
 ## Legacy fidelity notes
 
