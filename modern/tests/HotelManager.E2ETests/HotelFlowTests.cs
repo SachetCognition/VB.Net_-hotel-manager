@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 
 namespace HotelManager.E2ETests;
@@ -8,7 +9,7 @@ namespace HotelManager.E2ETests;
 /// modern Hotel Manager app:
 ///   login → dashboard → create reservation → check-in (verify billing)
 ///   → place room order → place restaurant order → check-out (verify final bill)
-///   → HR payroll run → generate a report PDF.
+///   → HR employee + payroll run → generate a report PDF.
 ///
 /// The whole flow is skipped automatically when <c>E2E_BASE_URL</c>
 /// (default <c>http://localhost:8080</c>) is unreachable, so ordinary
@@ -38,7 +39,7 @@ public sealed class HotelFlowTests : IAsyncLifetime
             IgnoreHTTPSErrors = true
         });
         _page = await _context.NewPageAsync();
-        _page.SetDefaultTimeout(15_000);
+        _page.SetDefaultTimeout(20_000);
     }
 
     public async Task DisposeAsync()
@@ -58,125 +59,203 @@ public sealed class HotelFlowTests : IAsyncLifetime
         await AssertDashboardAsync();
         await CreateReservationAsync();
         var checkInBill = await CheckInAsync();
+        Assert.True(checkInBill > 0, "Check-in billing (grand total) should be greater than zero.");
         await PlaceRoomOrderAsync();
         await PlaceRestaurantOrderAsync();
         var finalBill = await CheckOutAsync();
         Assert.True(finalBill >= checkInBill,
             $"Final bill ({finalBill}) should be at least the room charges at check-in ({checkInBill}).");
+        await CreateEmployeeAsync();
         await RunPayrollAsync();
         await GenerateReportPdfAsync();
     }
 
     private async Task LoginAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/login");
-        await _page.FillAsync("#username", E2EEnvironment.UserName);
-        await _page.FillAsync("#password", E2EEnvironment.Password);
-        await _page.ClickAsync("button[type=submit]");
-        await _page.WaitForURLAsync(u => !u.Contains("/login"), new() { Timeout = 15_000 });
+        // The login form is a plain static POST to /account/login. On a freshly
+        // started (cold) server, the client-side Blazor script that governs enhanced
+        // navigation can still be initializing when the submit is clicked, causing the
+        // click to be swallowed and the form to never post. Wait for the page to be
+        // fully loaded/interactive before submitting, and retry a few times.
+        const int maxAttempts = 3;
+        for (var attempt = 1; ; attempt++)
+        {
+            await _page.GotoAsync(Url("/login"), new() { WaitUntil = WaitUntilState.Load });
+            await _page.WaitForSelectorAsync("#username", new() { State = WaitForSelectorState.Visible });
+            // give blazor.web.js time to attach so data-enhance="false" is honoured
+            await _page.WaitForTimeoutAsync(1_500);
+            await _page.FillAsync("#username", E2EEnvironment.UserName);
+            await _page.FillAsync("#password", E2EEnvironment.Password);
+            await _page.ClickAsync("button[type=submit]");
+            try
+            {
+                // Poll the location instead of waiting on navigation events (Blazor Server
+                // keeps a persistent websocket open, so "load"/"networkidle" waits are unreliable).
+                await _page.WaitForFunctionAsync(
+                    "() => !location.pathname.startsWith('/login')", null, new() { Timeout = 20_000 });
+                return;
+            }
+            catch (TimeoutException) when (attempt < maxAttempts)
+            {
+                // fall through and retry
+            }
+        }
     }
 
     private async Task AssertDashboardAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/");
-        await Assertions.Expect(_page.GetByText("Dashboard")).ToBeVisibleAsync();
+        await GotoAsync("/");
+        await Assertions.Expect(
+            _page.GetByRole(AriaRole.Heading, new() { Name = "Dashboard" })).ToBeVisibleAsync();
     }
 
     private async Task CreateReservationAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/reservations");
+        await GotoAsync("/reservations");
         await SelectFirstOptionAsync("Guest");
-        await SelectFirstOptionAsync("Room");
+        await SelectFirstOptionAsync("Room No");
         await ClickButtonAsync("Save");
-        await Assertions.Expect(_page.Locator(".mud-snackbar")).ToBeVisibleAsync();
+        await ExpectSnackbarAsync("Reservation saved");
     }
 
     private async Task<double> CheckInAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/check-in");
+        await GotoAsync("/check-in");
         await SelectFirstOptionAsync("Guest");
-        await SelectFirstOptionAsync("Room");
-        var charges = await ReadNumericFieldAsync("Room Charges");
+        // Check into a different room than the one just reserved to avoid a booking conflict.
+        await SelectOptionByIndexAsync("Room No", 1); // auto-fills Room Charges
         await ClickButtonAsync("Check In");
-        await Assertions.Expect(_page.GetByText("Successfully checked in")).ToBeVisibleAsync();
-        return charges;
+        await ExpectSnackbarAsync("Successfully checked in");
+        // The "Checked In Guests" table carries a Grand Total column.
+        return await FirstPositiveNumberInTableAsync("Status");
     }
 
     private async Task PlaceRoomOrderAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/room-orders");
-        await SelectFirstOptionAsync("Guest");
+        await GotoAsync("/orders/room");
+        await SelectFirstOptionAsync("Checked-In Guest");
         await SelectFirstOptionAsync("Product");
         await ClickButtonAsync("Add Item");
         await ClickButtonAsync("Save Order");
-        await Assertions.Expect(_page.GetByText("Order created")).ToBeVisibleAsync();
+        await ExpectSnackbarAsync("Order created");
     }
 
     private async Task PlaceRestaurantOrderAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/restaurant-orders");
+        await GotoAsync("/orders/restaurant");
         await SelectFirstOptionAsync("Dish");
         await ClickButtonAsync("Add Item");
         await ClickButtonAsync("Save Order");
-        await Assertions.Expect(_page.GetByText("Order created")).ToBeVisibleAsync();
+        await ExpectSnackbarAsync("Order created");
     }
 
     private async Task<double> CheckOutAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/check-out");
-        await _page.Locator("button", new() { HasTextString = "Check Out" }).First.ClickAsync();
-        await Assertions.Expect(_page.GetByText("Successfully checked out")).ToBeVisibleAsync();
-        return await ReadFirstGrandTotalAsync();
+        await GotoAsync("/check-out");
+        await _page.GetByRole(AriaRole.Button, new() { Name = "Check Out", Exact = true }).First.ClickAsync();
+        await ExpectSnackbarAsync("Successfully checked out");
+        // "Checkout Bills" table is the one carrying a Bill No column.
+        return await FirstPositiveNumberInTableAsync("Bill No");
+    }
+
+    private async Task CreateEmployeeAsync()
+    {
+        await GotoAsync("/hr/employees");
+        await FillByLabelAsync("Full Name", "E2E Tester");
+        await FillByLabelAsync("Address", "123 Test Street");
+        await FillByLabelAsync("Mobile No", "9990001111");
+        await FillByLabelAsync("Department", "QA");
+        await FillByLabelAsync("Designation", "Tester");
+        await FillByLabelAsync("Basic Salary", "3000");
+        await FillByLabelAsync("Basic Working Time (hh:mm:ss)", "08:00:00");
+        await ClickButtonAsync("Save");
+        await ExpectSnackbarAsync("Employee Profile Successfully saved");
     }
 
     private async Task RunPayrollAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/hr/payment-run");
+        await GotoAsync("/hr/payment-run");
         await SelectFirstOptionAsync("Employee");
         await ClickButtonAsync("Save Payment");
-        await Assertions.Expect(_page.GetByText("Successfully saved")).ToBeVisibleAsync();
+        await ExpectSnackbarAsync("Successfully saved");
     }
 
     private async Task GenerateReportPdfAsync()
     {
-        await _page.GotoAsync(E2EEnvironment.BaseUrl + "/reports/guests");
+        await GotoAsync("/reports/guests");
         var download = await _page.RunAndWaitForDownloadAsync(async () =>
         {
-            await _page.Locator("button", new() { HasTextString = "Export PDF" }).First.ClickAsync();
+            await _page.GetByRole(AriaRole.Button, new() { Name = "Export PDF" }).First.ClickAsync();
         });
         var path = await download.PathAsync();
         Assert.False(string.IsNullOrEmpty(path));
         Assert.EndsWith(".pdf", download.SuggestedFilename);
     }
 
-    // --- MudBlazor helpers -------------------------------------------------
+    // --- helpers -----------------------------------------------------------
 
-    private async Task ClickButtonAsync(string text) =>
-        await _page.Locator("button", new() { HasTextString = text }).First.ClickAsync();
+    private static string Url(string path) => E2EEnvironment.BaseUrl + path;
+
+    private async Task GotoAsync(string path)
+    {
+        // Blazor Server holds a persistent websocket, so do not wait for "networkidle".
+        await _page.GotoAsync(Url(path), new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        // Allow the interactive Blazor circuit to connect and re-render; the initial
+        // static-rendered DOM is replaced once the circuit is established, which would
+        // otherwise detach elements mid-interaction.
+        await _page.WaitForTimeoutAsync(1_200);
+    }
+
+    private async Task ClickButtonAsync(string name) =>
+        await _page.GetByRole(AriaRole.Button, new() { Name = name, Exact = true }).First.ClickAsync();
+
+    private async Task ExpectSnackbarAsync(string text)
+    {
+        var snackbar = _page.Locator(".mud-snackbar").First;
+        try
+        {
+            await snackbar.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 20_000 });
+        }
+        catch (TimeoutException)
+        {
+            throw new Xunit.Sdk.XunitException($"No snackbar appeared while expecting '{text}'.");
+        }
+        var actual = await snackbar.InnerTextAsync();
+        Assert.Contains(text, actual);
+    }
 
     /// <summary>Opens a MudSelect identified by its label and picks the first item.</summary>
-    private async Task SelectFirstOptionAsync(string label)
+    private Task SelectFirstOptionAsync(string label) => SelectOptionByIndexAsync(label, 0);
+
+    /// <summary>Opens a MudSelect identified by its label and picks the item at the given index.</summary>
+    private async Task SelectOptionByIndexAsync(string label, int index)
     {
-        var control = _page.Locator($".mud-input-control:has(label:has-text(\"{label}\"))").First;
+        var control = _page.Locator($".mud-input-control:has(label:text-is(\"{label}\"))").First;
+        await control.ScrollIntoViewIfNeededAsync();
         await control.ClickAsync();
-        var item = _page.Locator(".mud-list-item").First;
-        await item.WaitForAsync(new() { Timeout = 5_000 });
-        await item.ClickAsync();
+        var items = _page.Locator(".mud-list-item");
+        await items.First.WaitForAsync(new() { State = WaitForSelectorState.Visible, Timeout = 10_000 });
+        await items.Nth(index).ClickAsync();
+        // let the popover close before the next interaction
+        await _page.WaitForTimeoutAsync(200);
     }
 
-    private async Task<double> ReadNumericFieldAsync(string label)
+    private async Task FillByLabelAsync(string label, string value)
     {
-        var input = _page.Locator($".mud-input-control:has(label:has-text(\"{label}\")) input").First;
-        var value = await input.InputValueAsync();
-        return double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var n) ? n : 0;
+        var input = _page.Locator($".mud-input-control:has(label:text-is(\"{label}\")) input").First;
+        await input.ScrollIntoViewIfNeededAsync();
+        await input.FillAsync(value);
     }
 
-    private async Task<double> ReadFirstGrandTotalAsync()
+    /// <summary>Returns the first positive number found in the table that contains the given column header.</summary>
+    private async Task<double> FirstPositiveNumberInTableAsync(string headerText)
     {
-        var cells = await _page.Locator("td").AllInnerTextsAsync();
+        var table = _page.Locator($".mud-table:has(th:has-text(\"{headerText}\"))").First;
+        await table.Locator("tbody tr").First.WaitForAsync(new() { Timeout = 10_000 });
+        var cells = await table.Locator("tbody tr").First.Locator("td").AllInnerTextsAsync();
         foreach (var cell in cells)
         {
-            var cleaned = cell.Replace(",", "").Trim();
+            var cleaned = Regex.Replace(cell, "[^0-9.]", "");
             if (double.TryParse(cleaned, NumberStyles.Any, CultureInfo.InvariantCulture, out var n) && n > 0)
                 return n;
         }
