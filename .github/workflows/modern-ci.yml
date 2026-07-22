@@ -28,12 +28,25 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
+      # Unit + integration + component tests contribute to the coverage gate.
+      # The E2E project is intentionally excluded here (it needs a running app)
+      # and runs in the separate, non-blocking `e2e` job below.
       - name: Test with coverage
-        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults
+        run: |
+          for proj in \
+            tests/HotelManager.UnitTests/HotelManager.UnitTests.csproj \
+            tests/HotelManager.IntegrationTests/HotelManager.IntegrationTests.csproj \
+            tests/HotelManager.ComponentTests/HotelManager.ComponentTests.csproj; do
+            dotnet test "$proj" --configuration Release --no-build \
+              --collect:"XPlat Code Coverage" --results-directory ./TestResults
+          done
 
       - name: Install ReportGenerator
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
+      # Combined coverage now INCLUDES .razor UI markup (the previous
+      # -filefilters:"-**/*.razor" exclusion has been removed). EF migrations
+      # remain excluded from the gate.
       - name: Generate coverage report
         run: >
           reportgenerator
@@ -41,7 +54,6 @@ jobs:
           -targetdir:CoverageReport
           -reporttypes:"Html;TextSummary;Cobertura"
           -classfilters:"-HotelManager.Infrastructure.Migrations.*"
-          -filefilters:"-**/*.razor"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -57,3 +69,51 @@ jobs:
           echo "Combined line coverage: ${line}% (threshold: ${COVERAGE_THRESHOLD}%)"
           awk -v cov="$line" -v thr="$COVERAGE_THRESHOLD" 'BEGIN { exit (cov+0 >= thr+0) ? 0 : 1 }' \
             || { echo "::error::Combined line coverage ${line}% is below the required ${COVERAGE_THRESHOLD}%"; exit 1; }
+
+  # Playwright end-to-end journey against a live instance of the app. Runs in a
+  # separate job that spins up the app; it is non-blocking (continue-on-error)
+  # so it can never fail the coverage gate above.
+  e2e:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: modern
+    env:
+      E2E_BASE_URL: http://localhost:8080
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Install Playwright browsers
+        run: pwsh tests/HotelManager.E2ETests/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+
+      - name: Start app
+        run: |
+          nohup dotnet run --configuration Release --no-build \
+            --project src/HotelManager.Web \
+            --urls "$E2E_BASE_URL" > app.log 2>&1 &
+          echo "APP_PID=$!" >> "$GITHUB_ENV"
+
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS "$E2E_BASE_URL/login" >/dev/null 2>&1; then
+              echo "App is up"; exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not start in time"; cat app.log; exit 1
+
+      - name: Run E2E tests
+        run: dotnet test tests/HotelManager.E2ETests/HotelManager.E2ETests.csproj --configuration Release --no-build
+
+      - name: Stop app
+        if: always()
+        run: kill "${APP_PID}" || true
