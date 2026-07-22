@@ -65,4 +65,69 @@ public class AuthServiceTests : IClassFixture<SqliteDbFixture>
         Assert.False((await auth.ValidateCredentialsAsync("dave", "old")).Succeeded);
         Assert.True((await auth.ValidateCredentialsAsync("dave", "new")).Succeeded);
     }
+
+    [Fact]
+    public async Task GetUsers_ReturnsAllOrderedByName()
+    {
+        await using var db = _fixture.CreateContext();
+        var auth = new AuthService(db);
+        await auth.CreateUserAsync(new Registration { UserName = "zeb", UserType = "User" }, "p");
+        await auth.CreateUserAsync(new Registration { UserName = "amy", UserType = "Admin" }, "p");
+
+        var users = await auth.GetUsersAsync();
+        var names = users.Select(u => u.UserName).ToList();
+
+        Assert.Contains("amy", names);
+        Assert.Contains("zeb", names);
+        Assert.True(names.IndexOf("amy") < names.IndexOf("zeb"));
+    }
+
+    [Fact]
+    public async Task DeleteUser_RemovesRegistrationAndLogin()
+    {
+        await using var db = _fixture.CreateContext();
+        var auth = new AuthService(db);
+        await auth.CreateUserAsync(new Registration { UserName = "erin", UserType = "User" }, "p");
+
+        await auth.DeleteUserAsync("erin");
+
+        Assert.Null(await auth.GetUserAsync("erin"));
+    }
+
+    [Fact]
+    public async Task DeleteUser_UnknownUser_NoThrow()
+    {
+        await using var db = _fixture.CreateContext();
+        var auth = new AuthService(db);
+
+        await auth.DeleteUserAsync("ghost");
+
+        Assert.Null(await auth.GetUserAsync("ghost"));
+    }
+
+    [Fact]
+    public async Task Validate_UserWithNullPassword_Fails()
+    {
+        await using var db = _fixture.CreateContext();
+        db.Registrations.Add(new Registration { UserName = "frank", UserType = "User", User_Password = null });
+        await db.SaveChangesAsync();
+        var auth = new AuthService(db);
+
+        var result = await auth.ValidateCredentialsAsync("frank", "anything");
+
+        Assert.False(result.Succeeded);
+        Assert.Equal("Invalid username or password", result.Error);
+    }
+
+    [Fact]
+    public void HashPassword_ProducesVerifiableNonPlaintextHash()
+    {
+        using var db = _fixture.CreateContext();
+        var auth = new AuthService(db);
+
+        var hash = auth.HashPassword("secret");
+
+        Assert.NotEqual("secret", hash);
+        Assert.NotEmpty(hash);
+    }
 }
