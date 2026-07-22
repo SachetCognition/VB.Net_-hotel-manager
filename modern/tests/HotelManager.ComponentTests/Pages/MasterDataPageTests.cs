@@ -10,6 +10,7 @@ public class MasterDataPageTests : ComponentTestBase
     {
         var cut = RenderPage<Currencies>();
         Assert.Contains("USD", cut.Markup);
+        SetText(cut, "Currency", "EUR");
         ClickPrimary(cut);
         CurrencySvc.Verify(s => s.CreateAsync(It.IsAny<CurrencySet>()), Times.Once);
     }
@@ -36,6 +37,8 @@ public class MasterDataPageTests : ComponentTestBase
     {
         var cut = RenderPage<Rooms>();
         Assert.Contains("101", cut.Markup);
+        SetText(cut, "Room No", "201");
+        SetSelect(cut, "Room Type", "Deluxe");
         ClickPrimary(cut);
         RoomSvc.Verify(s => s.CreateRoomAsync(It.IsAny<Room>()), Times.Once);
         ClickIcon(cut, Icons.Material.Filled.Delete);
@@ -56,6 +59,7 @@ public class MasterDataPageTests : ComponentTestBase
     {
         var cut = RenderPage<Halls>();
         Assert.Contains("Grand", cut.Markup);
+        SetText(cut, "Hall Name", "Ballroom");
         ClickPrimary(cut);
         RoomSvc.Verify(s => s.SaveHallAsync(It.IsAny<Hall>()), Times.Once);
         ClickIcon(cut, Icons.Material.Filled.Delete);

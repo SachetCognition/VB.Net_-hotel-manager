@@ -73,6 +73,9 @@ public abstract class ComponentTestBase : Bunit.TestContext
         Services.AddSingleton(sp => new ReportDataService(
             sp.GetRequiredService<IDbContextFactory<HotelDbContext>>()));
 
+        // Dashboard aggregation service (Workstream B) reads the real HotelDbContext.
+        Services.AddScoped<HotelManager.Web.Services.IDashboardService, HotelManager.Web.Services.DashboardService>();
+
         Auth = this.AddTestAuthorization();
         Auth.SetAuthorized("admin");
         Auth.SetRoles("Admin");
@@ -227,6 +230,26 @@ public abstract class ComponentTestBase : Bunit.TestContext
         cut.FindComponents<MudIconButton>()
             .First(b => b.Instance.Icon == icon)
             .Find("button").Click();
+
+    /// <summary>Sets a <see cref="MudTextField{T}"/> value by its label (fires bound ValueChanged).</summary>
+    protected static void SetText(IRenderedFragment cut, string label, string value) =>
+        cut.FindComponents<MudTextField<string>>()
+            .First(c => c.Instance.Label == label)
+            .Find("input").Change(value);
+
+    /// <summary>Selects a value on a <see cref="MudSelect{T}"/> by its label (fires bound ValueChanged).</summary>
+    protected static void SetSelect(IRenderedFragment cut, string label, string value)
+    {
+        var sel = cut.FindComponents<MudSelect<string>>().First(c => c.Instance.Label == label);
+        sel.InvokeAsync(() => sel.Instance.ValueChanged.InvokeAsync(value)).GetAwaiter().GetResult();
+    }
+
+    /// <summary>Sets a <see cref="MudDatePicker"/> value by its label (fires bound DateChanged).</summary>
+    protected static void SetDate(IRenderedFragment cut, string label, DateTime value)
+    {
+        var dp = cut.FindComponents<MudDatePicker>().First(c => c.Instance.Label == label);
+        dp.InvokeAsync(() => dp.Instance.DateChanged.InvokeAsync(value)).GetAwaiter().GetResult();
+    }
 
     protected override void Dispose(bool disposing)
     {

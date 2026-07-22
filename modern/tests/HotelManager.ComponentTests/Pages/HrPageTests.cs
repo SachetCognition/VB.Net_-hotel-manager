@@ -62,6 +62,7 @@ public class HrPageTests : ComponentTestBase
     public void PaymentRun_renders_and_runs_payment()
     {
         var cut = RenderPage<PaymentRun>();
+        SetSelect(cut, "Employee", "E-000001");
         ClickButton(cut, "Save Payment");
         HrSvc.Verify(s => s.RunPaymentAsync(It.IsAny<EmployeePayment>()), Times.Once);
     }

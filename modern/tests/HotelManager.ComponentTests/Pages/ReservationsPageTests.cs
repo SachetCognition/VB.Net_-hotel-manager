@@ -19,6 +19,10 @@ public class ReservationsPageTests : ComponentTestBase
     public void Reservations_save_creates_temp()
     {
         var cut = RenderPage<Reservations>();
+        SetSelect(cut, "Guest", "G-00001");
+        SetSelect(cut, "Room No", "101");
+        SetDate(cut, "Date In", DateTime.Today);
+        SetDate(cut, "Date Out", DateTime.Today.AddDays(2));
         ClickButton(cut, "Save");
         ReservationSvc.Verify(s => s.SaveTempReservationAsync(It.IsAny<TempReservation>()), Times.Once);
     }
@@ -55,6 +59,10 @@ public class ReservationsPageTests : ComponentTestBase
     {
         var cut = RenderPage<CheckInPage>();
         Assert.Contains("Room Check In", cut.Markup);
+        SetSelect(cut, "Guest", "G-00001");
+        SetSelect(cut, "Room No", "101");
+        SetDate(cut, "Date In", DateTime.Today);
+        SetDate(cut, "Date Out", DateTime.Today.AddDays(1));
         ClickButton(cut, "Check In");
         CheckInSvc.Verify(s => s.CheckInAsync(It.IsAny<CheckInRoom>()), Times.Once);
     }

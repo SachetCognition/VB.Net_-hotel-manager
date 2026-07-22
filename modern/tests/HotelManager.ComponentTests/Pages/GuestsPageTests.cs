@@ -25,6 +25,12 @@ public class GuestsPageTests : ComponentTestBase
     {
         var cut = RenderPage<Guests>();
 
+        SetText(cut, "Guest Name", "Alice");
+        SetText(cut, "Address", "1 St");
+        SetText(cut, "City", "Town");
+        SetText(cut, "Contact No", "555");
+        SetSelect(cut, "ID Type", "Passport");
+        SetText(cut, "ID Number", "P1");
         cut.FindAll("button").First(b => b.TextContent.Trim() == "Add").Click();
 
         GuestSvc.Verify(s => s.CreateAsync(It.IsAny<Guest>()), Times.Once);
