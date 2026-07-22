@@ -8,37 +8,37 @@
 <MudText Typo="Typo.h4" Class="mb-4">Halls</MudText>
 
 <MudPaper Class="pa-4 mb-4" Elevation="2">
-    <MudGrid>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_hallName" Label="Hall Name" /></MudItem>
-        <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_charges" Label="Charges" Min="0" /></MudItem>
-        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
-            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
-        </MudItem>
-    </MudGrid>
+    <MudForm @ref="_form">
+        <MudGrid>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_hallName" Label="Hall Name" Required="true" RequiredError="Hall name is required" /></MudItem>
+            <MudItem xs="12" sm="2"><MudNumericField @bind-Value="_charges" Label="Charges" Min="0" /></MudItem>
+            <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
+                <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
 </MudPaper>
 
-<MudTable Items="_halls" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Hall Name</MudTh>
-        <MudTh>Charges</MudTh>
-        <MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ID</MudTd>
-        <MudTd>@context.HallName</MudTd>
-        <MudTd>@context.Charges</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Delete(context.ID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_halls" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="h => h.ID" Title="ID" />
+        <PropertyColumn Property="h => h.HallName" Title="Hall Name" />
+        <PropertyColumn Property="h => h.Charges" Title="Charges" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Delete(context.Item.ID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent><MudText>No halls found.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
+    private MudForm _form = null!;
     private IReadOnlyList<Hall> _halls = [];
     private string _hallName = "";
     private int? _charges;
@@ -64,6 +64,8 @@
 
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             await RoomSvc.SaveHallAsync(new Hall { ID = _editId ?? 0, HallName = _hallName, Charges = _charges });

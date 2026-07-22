@@ -2,6 +2,7 @@
 @inject IReservationService ReservationSvc
 @inject HotelDbContext Db
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
 <PageTitle>Reservations - Hotel Manager</PageTitle>
 
@@ -9,80 +10,86 @@
 
 <MudPaper Class="pa-4 mb-4" Elevation="2">
     <MudText Typo="Typo.h6" Class="mb-2">@(_editingId is null ? "New Reservation" : $"Edit Reservation {_editingId}")</MudText>
-    <MudGrid>
-        <MudItem xs="12" sm="3">
-            <MudSelect @bind-Value="_guestId" Label="Guest">
-                @foreach (var g in _guests)
+    <MudForm @ref="_form">
+        <MudGrid>
+            <MudItem xs="12" sm="3">
+                <MudSelect @bind-Value="_guestId" Label="Guest" Required="true" RequiredError="Guest is required">
+                    @foreach (var g in _guests)
+                    {
+                        <MudSelectItem Value="@g.GuestID">@g.GuestName (@g.GuestID)</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="2">
+                <MudSelect @bind-Value="_roomNo" Label="Room No" Required="true" RequiredError="Room is required">
+                    @foreach (var r in _rooms)
+                    {
+                        <MudSelectItem Value="@r.RoomNo">@r.RoomNo</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateIn" Label="Date In" Required="true" RequiredError="Date In is required" /></MudItem>
+            <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateOut" Label="Date Out" Required="true" RequiredError="Date Out is required" /></MudItem>
+            <MudItem xs="12" sm="2"><MudTextField @bind-Value="_notes" Label="Notes" /></MudItem>
+            <MudItem xs="12" sm="1" Class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save</MudButton>
+                @if (_editingId is not null)
                 {
-                    <MudSelectItem Value="@g.GuestID">@g.GuestName (@g.GuestID)</MudSelectItem>
+                    <MudButton Variant="Variant.Text" OnClick="ResetForm">Cancel</MudButton>
                 }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12" sm="2">
-            <MudSelect @bind-Value="_roomNo" Label="Room No">
-                @foreach (var r in _rooms)
-                {
-                    <MudSelectItem Value="@r.RoomNo">@r.RoomNo</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateIn" Label="Date In" /></MudItem>
-        <MudItem xs="12" sm="2"><MudDatePicker @bind-Date="_dateOut" Label="Date Out" /></MudItem>
-        <MudItem xs="12" sm="2"><MudTextField @bind-Value="_notes" Label="Notes" /></MudItem>
-        <MudItem xs="12" sm="1" Class="d-flex align-center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save</MudButton>
-        </MudItem>
-    </MudGrid>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
 </MudPaper>
 
 <MudText Typo="Typo.h6" Class="mb-2">Pending (Temp) Reservations</MudText>
-<MudTable Items="_tempReservations" Dense="true" Hover="true" Elevation="2" Class="mb-4">
-    <HeaderContent>
-        <MudTh>Reservation No</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh>
-        <MudTh>Date In</MudTh><MudTh>Date Out</MudTh><MudTh>Status</MudTh><MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ReservationID</MudTd>
-        <MudTd>@context.Guest?.GuestName</MudTd>
-        <MudTd>@context.RoomNo</MudTd>
-        <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
-        <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
-        <MudTd>@context.Status</MudTd>
-        <MudTd>
-            <MudButton Size="Size.Small" Color="Color.Success"
-                       OnClick="@(() => Confirm(context.ReservationID))">Confirm</MudButton>
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => DeleteTemp(context.ReservationID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_tempReservations" Dense="true" Hover="true" Elevation="2" Class="mb-4" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="r => r.ReservationID" Title="Reservation No" />
+        <PropertyColumn Property="r => r.Guest != null ? r.Guest.GuestName : r.GuestID" Title="Guest" />
+        <PropertyColumn Property="r => r.RoomNo" Title="Room" />
+        <PropertyColumn Property="r => r.DateIN" Title="Date In" Format="d" />
+        <PropertyColumn Property="r => r.DateOUT" Title="Date Out" Format="d" />
+        <PropertyColumn Property="r => r.Status" Title="Status" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudButton Size="Size.Small" Color="Color.Success" StartIcon="@Icons.Material.Filled.Check"
+                           OnClick="@(() => Confirm(context.Item.ReservationID))">Confirm</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => DeleteTemp(context.Item.ReservationID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent><MudText>No pending reservations.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 <MudText Typo="Typo.h6" Class="mb-2">Confirmed Reservations</MudText>
 <MudTextField @bind-Value="_search" Label="Search" Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true"
               OnDebounceIntervalElapsed="LoadReservations" DebounceInterval="300" Class="mb-2" />
-<MudTable Items="_reservations" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>Reservation No</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh>
-        <MudTh>Date In</MudTh><MudTh>Date Out</MudTh><MudTh>Status</MudTh><MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ReservationID</MudTd>
-        <MudTd>@context.Guest?.GuestName</MudTd>
-        <MudTd>@context.RoomNo</MudTd>
-        <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
-        <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
-        <MudTd>@context.Status</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Cancel(context.ReservationID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_reservations" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="r => r.ReservationID" Title="Reservation No" />
+        <PropertyColumn Property="r => r.Guest != null ? r.Guest.GuestName : r.GuestID" Title="Guest" />
+        <PropertyColumn Property="r => r.RoomNo" Title="Room" />
+        <PropertyColumn Property="r => r.DateIN" Title="Date In" Format="d" />
+        <PropertyColumn Property="r => r.DateOUT" Title="Date Out" Format="d" />
+        <PropertyColumn Property="r => r.Status" Title="Status" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Cancel(context.Item.ReservationID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent><MudDataGridPager /></PagerContent>
+    <NoRecordsContent><MudText>No confirmed reservations.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
+    private MudForm _form = null!;
     private IReadOnlyList<Reservation> _reservations = [];
     private IReadOnlyList<TempReservation> _tempReservations = [];
     private IReadOnlyList<Guest> _guests = [];
@@ -118,8 +125,18 @@
         _notes = r.Notes;
     }
 
+    private void ResetForm()
+    {
+        _editingId = null;
+        _guestId = _roomNo = _notes = null;
+        _dateIn = DateTime.Today;
+        _dateOut = DateTime.Today.AddDays(1);
+    }
+
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             if (_editingId is null)
@@ -176,12 +193,19 @@
 
     private async Task DeleteTemp(string id)
     {
+        var confirmed = await DialogService.ShowMessageBox("Delete Reservation",
+            "Delete this pending reservation?", yesText: "Delete", cancelText: "Cancel");
+        if (confirmed != true) return;
         await ReservationSvc.DeleteTempReservationAsync(id);
+        Snackbar.Add("Reservation deleted", Severity.Info);
         await LoadReservations();
     }
 
     private async Task Cancel(string id)
     {
+        var confirmed = await DialogService.ShowMessageBox("Cancel Reservation",
+            "Cancel this confirmed reservation?", yesText: "Yes", cancelText: "No");
+        if (confirmed != true) return;
         await ReservationSvc.CancelReservationAsync(id);
         Snackbar.Add("Reservation cancelled", Severity.Info);
         await LoadReservations();

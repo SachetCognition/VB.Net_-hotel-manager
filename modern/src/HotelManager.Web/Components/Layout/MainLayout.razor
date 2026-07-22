@@ -1,6 +1,8 @@
 @inherits LayoutComponentBase
+@using HotelManager.Web.Theming
+@inject IJSRuntime JS
 
-<MudThemeProvider />
+<MudThemeProvider @ref="_themeProvider" Theme="HotelTheme.Default" @bind-IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -8,12 +10,17 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-                       OnClick="@(() => _drawerOpen = !_drawerOpen)" />
+                       OnClick="ToggleDrawer" />
+        <MudIcon Icon="@Icons.Material.Filled.Hotel" Class="mr-2" />
         <MudText Typo="Typo.h6">Hotel Manager</MudText>
         <MudSpacer />
+        <MudTooltip Text="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")">
+            <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                           Color="Color.Inherit" OnClick="ToggleDarkMode" />
+        </MudTooltip>
         <AuthorizeView>
             <Authorized>
-                <MudText Class="mr-4">@context.User.Identity?.Name (@(context.User.IsInRole("Admin") ? "Admin" : "User"))</MudText>
+                <MudText Class="mx-4 d-none d-sm-flex">@context.User.Identity?.Name (@(context.User.IsInRole("Admin") ? "Admin" : "User"))</MudText>
                 <form method="post" action="/account/logout" data-enhance="false" class="d-inline">
                     <AntiforgeryToken />
                     <MudButton ButtonType="ButtonType.Submit" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout">Logout</MudButton>
@@ -21,11 +28,14 @@
             </Authorized>
         </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2"
+               Breakpoint="Breakpoint.Md" Variant="@DrawerVariant.Responsive">
         <NavMenu />
     </MudDrawer>
     <MudMainContent Class="pa-4">
-        @Body
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="px-0">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 
@@ -36,5 +46,31 @@
 </div>
 
 @code {
+    private MudThemeProvider _themeProvider = null!;
     private bool _drawerOpen = true;
+    private bool _isDarkMode;
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+
+    private async Task ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        await JS.InvokeVoidAsync("hotelTheme.set", _isDarkMode);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var stored = await JS.InvokeAsync<string?>("hotelTheme.get");
+        if (stored is not null)
+        {
+            _isDarkMode = stored == "true";
+        }
+        else
+        {
+            _isDarkMode = await _themeProvider.GetSystemDarkModeAsync();
+        }
+        StateHasChanged();
+    }
 }

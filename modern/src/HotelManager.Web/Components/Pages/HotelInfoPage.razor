@@ -7,10 +7,11 @@
 <MudText Typo="Typo.h4" Class="mb-4">Hotel Information</MudText>
 
 <MudPaper Class="pa-4" Elevation="2" Style="max-width: 720px;">
+    <MudForm @ref="_form">
     <MudGrid>
-        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.HotelName" Label="Hotel Name" Required="true" /></MudItem>
-        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.Address" Label="Address" Required="true" /></MudItem>
-        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.ContactNo" Label="Contact No" Required="true" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.HotelName" Label="Hotel Name" Required="true" RequiredError="Hotel name is required" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.Address" Label="Address" Required="true" RequiredError="Address is required" /></MudItem>
+        <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.ContactNo" Label="Contact No" Required="true" RequiredError="Contact no is required" /></MudItem>
         <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.ContactNo1" Label="Alt Contact No" /></MudItem>
         <MudItem xs="12" sm="6"><MudTextField @bind-Value="_info.Email" Label="Email" /></MudItem>
         <MudItem xs="12" sm="3"><MudTextField @bind-Value="_info.TIN" Label="TIN" /></MudItem>
@@ -29,12 +30,14 @@
             }
         </MudItem>
         <MudItem xs="12">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="Save">Save</MudButton>
         </MudItem>
     </MudGrid>
+    </MudForm>
 </MudPaper>
 
 @code {
+    private MudForm _form = null!;
     private HotelInfo _info = new();
 
     private string LogoDataUrl => $"data:image/jpeg;base64,{Convert.ToBase64String(_info.Logo!)}";
@@ -52,6 +55,8 @@
 
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             await HotelInfoSvc.SaveAsync(_info);

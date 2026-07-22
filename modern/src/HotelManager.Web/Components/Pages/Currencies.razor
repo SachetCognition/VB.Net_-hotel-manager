@@ -8,34 +8,35 @@
 <MudText Typo="Typo.h4" Class="mb-4">Currencies</MudText>
 
 <MudPaper Class="pa-4 mb-4" Elevation="2">
-    <MudGrid>
-        <MudItem xs="12" sm="4"><MudTextField @bind-Value="_currencyName" Label="Currency" Required="true" /></MudItem>
-        <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
-            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
-        </MudItem>
-    </MudGrid>
+    <MudForm @ref="_form">
+        <MudGrid>
+            <MudItem xs="12" sm="4"><MudTextField @bind-Value="_currencyName" Label="Currency" Required="true" RequiredError="Currency is required" /></MudItem>
+            <MudItem xs="12" sm="4" Class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editId is null ? "Add" : "Update")</MudButton>
+                <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
 </MudPaper>
 
-<MudTable Items="_currencies" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Currency</MudTh>
-        <MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ID</MudTd>
-        <MudTd>@context.CS_Currency</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Delete(context.ID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_currencies" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="c => c.ID" Title="ID" />
+        <PropertyColumn Property="c => c.CS_Currency" Title="Currency" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Delete(context.Item.ID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent><MudText>No currencies found.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
+    private MudForm _form = null!;
     private IReadOnlyList<CurrencySet> _currencies = [];
     private string _currencyName = "";
     private int? _editId;
@@ -58,6 +59,8 @@
 
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             if (_editId is null)
