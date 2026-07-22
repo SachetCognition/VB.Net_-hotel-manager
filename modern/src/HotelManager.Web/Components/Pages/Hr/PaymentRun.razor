@@ -7,9 +7,11 @@
 <MudText Typo="Typo.h4" Class="mb-4">Employee Payment</MudText>
 
 <MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudForm @ref="_form">
     <MudGrid>
         <MudItem xs="12" sm="4">
-            <MudSelect T="string" Value="_employeeId" ValueChanged="OnEmployeeSelected" Label="Employee">
+            <MudSelect T="string" Value="_employeeId" ValueChanged="OnEmployeeSelected" Label="Employee"
+                       Required="true" RequiredError="Employee is required">
                 @foreach (var e in _employees)
                 {
                     <MudSelectItem Value="@e.EmployeeID">@e.EmployeeID — @e.EmployeeName</MudSelectItem>
@@ -41,12 +43,14 @@
         <MudItem xs="12" sm="3"><MudTextField @bind-Value="_paymentModeDetails" Label="Payment Mode Details" /></MudItem>
         <MudItem xs="12" sm="2"><MudTextField Value="@_netPay.ToString()" Label="Net Pay" ReadOnly="true" /></MudItem>
         <MudItem xs="12" sm="2" Class="d-flex align-center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">Save Payment</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="Save">Save Payment</MudButton>
         </MudItem>
     </MudGrid>
+    </MudForm>
 </MudPaper>
 
 @code {
+    private MudForm _form = null!;
     private IReadOnlyList<EmployeeRegistration> _employees = [];
     private EmployeeRegistration? _employee;
     private string _employeeId = "";
@@ -96,6 +100,8 @@
 
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             var payment = await Hr.RunPaymentAsync(new EmployeePayment

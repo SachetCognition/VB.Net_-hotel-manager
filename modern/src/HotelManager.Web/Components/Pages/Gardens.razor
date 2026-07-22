@@ -17,23 +17,21 @@
     </MudGrid>
 </MudPaper>
 
-<MudTable Items="_gardens" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Charges</MudTh>
-        <MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ID</MudTd>
-        <MudTd>@context.Charges</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Delete(context.ID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_gardens" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="g => g.ID" Title="ID" />
+        <PropertyColumn Property="g => g.Charges" Title="Charges" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Delete(context.Item.ID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent><MudText>No gardens found.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
     private IReadOnlyList<Garden> _gardens = [];

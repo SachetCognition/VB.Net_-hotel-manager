@@ -68,26 +68,26 @@
               Label="Search by order no" Immediate="true" Class="mb-2"
               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
 
-<MudTable Items="_orders" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>Order No</MudTh><MudTh>Date</MudTh><MudTh>Sub Total</MudTh>
-        <MudTh>Grand Total</MudTh><MudTh>Paid</MudTh><MudTh>Due</MudTh><MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.OrderNo</MudTd>
-        <MudTd>@context.OrderDate?.ToShortDateString()</MudTd>
-        <MudTd>@context.SubTotal</MudTd>
-        <MudTd>@context.GrandTotal</MudTd>
-        <MudTd>@context.TotalPayment</MudTd>
-        <MudTd>@context.PaymentDue</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Delete(context.ID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_orders" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="o => o.OrderNo" Title="Order No" />
+        <PropertyColumn Property="o => o.OrderDate" Title="Date" Format="d" />
+        <PropertyColumn Property="o => o.SubTotal" Title="Sub Total" />
+        <PropertyColumn Property="o => o.GrandTotal" Title="Grand Total" />
+        <PropertyColumn Property="o => o.TotalPayment" Title="Paid" />
+        <PropertyColumn Property="o => o.PaymentDue" Title="Due" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Delete(context.Item.ID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent><MudDataGridPager /></PagerContent>
+    <NoRecordsContent><MudText>No orders found.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
     private IReadOnlyList<RestaurantOrderInfo> _orders = [];
