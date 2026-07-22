@@ -1,16 +1,37 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HotelManager.Infrastructure;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<HotelDbContext>
 {
+    /// <summary>
+    /// Design-time factory used by <c>dotnet ef</c>. Select the provider with the
+    /// <c>HotelManager_DbProvider</c> environment variable (<c>Sqlite</c> default or
+    /// <c>Postgres</c>) so migrations can be generated for either provider, e.g.:
+    /// <c>HotelManager_DbProvider=Postgres dotnet ef migrations add Name \
+    ///   --output-dir Migrations/Postgres --namespace HotelManager.Infrastructure.Migrations.Postgres</c>.
+    /// </summary>
     public HotelDbContext CreateDbContext(string[] args)
     {
-        var options = new DbContextOptionsBuilder<HotelDbContext>()
-            .UseSqlite($"Data Source={DbPaths.DefaultDbPath}")
-            .Options;
-        return new HotelDbContext(options);
+        var provider = Environment.GetEnvironmentVariable("HotelManager_DbProvider") ?? "Sqlite";
+        var builder = new DbContextOptionsBuilder<HotelDbContext>();
+
+        if (string.Equals(provider, "Postgres", StringComparison.OrdinalIgnoreCase))
+        {
+            NpgsqlCompat.EnableLegacyTimestampBehavior();
+            var connectionString = Environment.GetEnvironmentVariable("HotelManager_PostgresConnectionString")
+                ?? "Host=localhost;Port=5432;Database=hotelmanager;Username=postgres;Password=postgres";
+            builder.UseNpgsql(connectionString);
+        }
+        else
+        {
+            builder.UseSqlite($"Data Source={DbPaths.DefaultDbPath}");
+        }
+
+        builder.ReplaceService<IMigrationsAssembly, ProviderFilteredMigrationsAssembly>();
+        return new HotelDbContext(builder.Options);
     }
 }
 
