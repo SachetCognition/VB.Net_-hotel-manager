@@ -2,49 +2,49 @@
 @inject ICheckInService CheckInSvc
 @inject ICheckOutService CheckOutSvc
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
 <PageTitle>Check Out - Hotel Manager</PageTitle>
 
 <MudText Typo="Typo.h4" Class="mb-4">Room Check Out</MudText>
 
 <MudText Typo="Typo.h6" Class="mb-2">Checked In Guests</MudText>
-<MudTable Items="_checkedIn" Dense="true" Hover="true" Elevation="2" Class="mb-4">
-    <HeaderContent>
-        <MudTh>ID</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh><MudTh>Date In</MudTh><MudTh>Date Out</MudTh>
-        <MudTh>Grand Total</MudTh><MudTh>Balance</MudTh><MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.ID</MudTd>
-        <MudTd>@context.Guest?.GuestName</MudTd>
-        <MudTd>@context.RoomNo</MudTd>
-        <MudTd>@context.DateIN?.ToShortDateString()</MudTd>
-        <MudTd>@context.DateOUT?.ToShortDateString()</MudTd>
-        <MudTd>@context.GrandTotal</MudTd>
-        <MudTd>@context.Balance</MudTd>
-        <MudTd>
-            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick="@(() => DoCheckOut(context.ID))">Check Out</MudButton>
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_checkedIn" Dense="true" Hover="true" Elevation="2" Class="mb-4"
+             Filterable="true" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="c => c.ID" Title="ID" />
+        <PropertyColumn Property="c => c.Guest != null ? c.Guest.GuestName : c.GuestID" Title="Guest" />
+        <PropertyColumn Property="c => c.RoomNo" Title="Room" />
+        <PropertyColumn Property="c => c.DateIN" Title="Date In" Format="d" />
+        <PropertyColumn Property="c => c.DateOUT" Title="Date Out" Format="d" />
+        <PropertyColumn Property="c => c.GrandTotal" Title="Grand Total" />
+        <PropertyColumn Property="c => c.Balance" Title="Balance" />
+        <TemplateColumn Title="" Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Logout"
+                           OnClick="@(() => DoCheckOut(context.Item.ID))">Check Out</MudButton>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <NoRecordsContent><MudText>No guests to check out.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 <MudText Typo="Typo.h6" Class="mb-2">Checkout Bills</MudText>
 <MudTextField @bind-Value="_search" Label="Search" Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true"
               OnDebounceIntervalElapsed="LoadCheckouts" DebounceInterval="300" Class="mb-2" />
-<MudTable Items="_checkouts" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>Bill No</MudTh><MudTh>Guest</MudTh><MudTh>Room</MudTh>
-        <MudTh>Checkout Date</MudTh><MudTh>Grand Total</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.BillNo</MudTd>
-        <MudTd>@context.CheckIn?.Guest?.GuestName</MudTd>
-        <MudTd>@context.CheckIn?.RoomNo</MudTd>
-        <MudTd>@context.CheckOutDate?.ToShortDateString()</MudTd>
-        <MudTd>@context.CheckIn?.GrandTotal</MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_checkouts" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="c => c.BillNo" Title="Bill No" />
+        <PropertyColumn Property="c => c.CheckIn != null && c.CheckIn.Guest != null ? c.CheckIn.Guest.GuestName : null" Title="Guest" />
+        <PropertyColumn Property="c => c.CheckIn != null ? c.CheckIn.RoomNo : null" Title="Room" />
+        <PropertyColumn Property="c => c.CheckOutDate" Title="Checkout Date" Format="d" />
+        <PropertyColumn Property="c => c.CheckIn != null ? c.CheckIn.GrandTotal : null" Title="Grand Total" />
+    </Columns>
+    <PagerContent><MudDataGridPager /></PagerContent>
+    <NoRecordsContent><MudText>No checkout bills.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
     private IReadOnlyList<CheckInRoom> _checkedIn = [];
@@ -65,6 +65,9 @@
 
     private async Task DoCheckOut(int checkInId)
     {
+        var confirmed = await DialogService.ShowMessageBox("Confirm Checkout",
+            "Check out this guest and generate the bill?", yesText: "Check Out", cancelText: "Cancel");
+        if (confirmed != true) return;
         try
         {
             var checkIn = await CheckInSvc.GetCheckInAsync(checkInId)

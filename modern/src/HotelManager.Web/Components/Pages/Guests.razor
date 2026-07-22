@@ -9,62 +9,59 @@
 <MudText Typo="Typo.h4" Class="mb-4">Guests</MudText>
 
 <MudPaper Class="pa-4 mb-4" Elevation="2">
-    <MudGrid>
-        <MudItem xs="12" sm="3"><MudTextField Value="_guest.GuestID" Label="Guest ID" ReadOnly="true" /></MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.GuestName" Label="Guest Name" Required="true" /></MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.Address" Label="Address" Required="true" /></MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.City" Label="City" Required="true" /></MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.ContactNo" Label="Contact No" Required="true" /></MudItem>
-        <MudItem xs="12" sm="3">
-            <MudSelect @bind-Value="_guest.IDType" Label="ID Type" Required="true">
-                @foreach (var type in GuestService.IdTypes)
-                {
-                    <MudSelectItem Value="@type">@type</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.IDNumber" Label="ID Number" Required="true" /></MudItem>
-        <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.Notes" Label="Notes" /></MudItem>
-        <MudItem xs="12" Class="d-flex align-center gap-2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editing ? "Update" : "Add")</MudButton>
-            <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
-        </MudItem>
-    </MudGrid>
+    <MudForm @ref="_form">
+        <MudGrid>
+            <MudItem xs="12" sm="3"><MudTextField Value="_guest.GuestID" Label="Guest ID" ReadOnly="true" /></MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.GuestName" Label="Guest Name" Required="true" RequiredError="Guest name is required" /></MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.Address" Label="Address" Required="true" RequiredError="Address is required" /></MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.City" Label="City" Required="true" RequiredError="City is required" /></MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.ContactNo" Label="Contact No" Required="true" RequiredError="Contact no is required" /></MudItem>
+            <MudItem xs="12" sm="3">
+                <MudSelect @bind-Value="_guest.IDType" Label="ID Type" Required="true" RequiredError="ID type is required">
+                    @foreach (var type in GuestService.IdTypes)
+                    {
+                        <MudSelectItem Value="@type">@type</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.IDNumber" Label="ID Number" Required="true" RequiredError="ID number is required" /></MudItem>
+            <MudItem xs="12" sm="3"><MudTextField @bind-Value="_guest.Notes" Label="Notes" /></MudItem>
+            <MudItem xs="12" Class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Save">@(_editing ? "Update" : "Add")</MudButton>
+                <MudButton Variant="Variant.Outlined" OnClick="ResetForm">New</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
 </MudPaper>
 
 <MudTextField Value="_search" ValueChanged="@(async (string s) => { _search = s; await Load(); })"
               Label="Search by Guest Name" Immediate="true" Class="mb-2"
               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
 
-<MudTable Items="_guests" Dense="true" Hover="true" Elevation="2">
-    <HeaderContent>
-        <MudTh>Guest ID</MudTh>
-        <MudTh>Guest Name</MudTh>
-        <MudTh>Address</MudTh>
-        <MudTh>City</MudTh>
-        <MudTh>Contact No</MudTh>
-        <MudTh>ID Type</MudTh>
-        <MudTh>ID Number</MudTh>
-        <MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@context.GuestID</MudTd>
-        <MudTd>@context.GuestName</MudTd>
-        <MudTd>@context.Address</MudTd>
-        <MudTd>@context.City</MudTd>
-        <MudTd>@context.ContactNo</MudTd>
-        <MudTd>@context.IDType</MudTd>
-        <MudTd>@context.IDNumber</MudTd>
-        <MudTd>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
-                           OnClick="@(() => Edit(context))" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
-                           OnClick="@(() => Delete(context.GuestID))" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+<MudDataGrid Items="_guests" Dense="true" Hover="true" Elevation="2" SortMode="SortMode.Multiple">
+    <Columns>
+        <PropertyColumn Property="g => g.GuestID" Title="Guest ID" />
+        <PropertyColumn Property="g => g.GuestName" Title="Guest Name" />
+        <PropertyColumn Property="g => g.Address" Title="Address" />
+        <PropertyColumn Property="g => g.City" Title="City" />
+        <PropertyColumn Property="g => g.ContactNo" Title="Contact No" />
+        <PropertyColumn Property="g => g.IDType" Title="ID Type" />
+        <PropertyColumn Property="g => g.IDNumber" Title="ID Number" />
+        <TemplateColumn Title="" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               OnClick="@(() => Delete(context.Item.GuestID))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent><MudDataGridPager /></PagerContent>
+    <NoRecordsContent><MudText>No guests found.</MudText></NoRecordsContent>
+</MudDataGrid>
 
 @code {
+    private MudForm _form = null!;
     private IReadOnlyList<Guest> _guests = [];
     private Guest _guest = new() { GuestID = "" };
     private string _search = "";
@@ -99,6 +96,8 @@
 
     private async Task Save()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
         try
         {
             if (_editing)
