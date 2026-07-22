@@ -56,6 +56,7 @@ builder.Services.AddOrderServices();
 builder.Services.AddInventoryServices();
 builder.Services.AddHrPayrollServices();
 builder.Services.AddReportServices();
+builder.Services.AddSchedulingServices();
 
 var app = builder.Build();
 

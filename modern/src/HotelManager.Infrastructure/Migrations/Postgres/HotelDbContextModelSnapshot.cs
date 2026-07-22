@@ -49,6 +49,49 @@ namespace HotelManager.Infrastructure.Migrations.Postgres
                     b.ToTable("AdvanceEntry", (string)null);
                 });
 
+            modelBuilder.Entity("HotelManager.Domain.Entities.Appointment", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("AllDay")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Label")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecurrenceInfo")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ResourceID")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Appointment", (string)null);
+                });
+
             modelBuilder.Entity("HotelManager.Domain.Entities.Beer", b =>
                 {
                     b.Property<string>("ID")

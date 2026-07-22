@@ -111,6 +111,29 @@ which is exercised manually/e2e rather than by unit tests) is below 80%.
 - The hardware-locked activation/splash (`frmSplash`/`frmActivation`) is intentionally
   not carried over.
 
+## Ported / Out-of-scope features
+
+- **Scheduling (ported).** The legacy DevExpress scheduler (`FrmSchedule.vb` /
+  `CustomAppointmentForm.vb`) is reimplemented as the `/scheduling` Blazor page
+  backed by an `Appointment` entity, `IScheduleService`, and per-provider
+  `AddAppointment` migrations. Appointments carry the standard DevExpress fields
+  (subject, start/end, all-day, location, description, status, label, resource,
+  recurrence info) and are persisted to the database instead of the legacy
+  in-memory `SchedulerStorage`. The WinForms DevExpress-specific chrome (ribbon,
+  print preview, drag-drop recurrence editor) is not reproduced; the modern page
+  offers create/edit/delete with a date-range filter.
+- **Chat (out-of-scope).** The legacy `Chat/frmClient.vb` and `Chat/frmServer.vb`
+  are a WinForms LAN chat built on raw `System.Net.Sockets` TCP listeners with a
+  desktop client that connects to a server process on the local network. It has
+  no persistence and no dependency on the hotel domain, and a peer-to-peer TCP
+  socket server has no analogue in the request/response Blazor Server host (it
+  would require a separate long-lived listener, connection management, and a
+  real-time transport such as SignalR). It is therefore intentionally **not**
+  ported. If in-app messaging is ever required, the modern replacement would be
+  a SignalR hub rather than a direct port of the socket code.
+- The hardware-locked activation/splash screens (`frmSplash`/`frmActivation`)
+  remain out of scope (see the fidelity note above).
+
 ## Coordination rules (parallel workstreams)
 
 - Do **not** modify `HotelManager.Domain`, `HotelManager.Infrastructure`, or the

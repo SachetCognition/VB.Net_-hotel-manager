@@ -179,6 +179,14 @@ public interface IHrPayrollService
     Task DeletePaymentAsync(string paymentId);
 }
 
+public interface IScheduleService
+{
+    Task<IReadOnlyList<Appointment>> GetAppointmentsAsync(DateTime? from = null, DateTime? to = null, string? search = null);
+    Task<Appointment?> GetAppointmentAsync(int id);
+    Task<Appointment> SaveAppointmentAsync(Appointment appointment);
+    Task DeleteAppointmentAsync(int id);
+}
+
 public record ReportRequest(DateTime? From = null, DateTime? To = null, string? Key = null);
 
 public interface IReportService
