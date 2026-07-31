@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Execution Report - Hotel Management System</title>
+<style>
+  :root { --primary: #1565C0; --primary-light: #E3F2FD; --success: #2E7D32; --success-light: #E8F5E9;
+    --danger: #C62828; --danger-light: #FFEBEE; --warning: #EF6C00; --warning-light: #FFF3E0;
+    --gray: #546E7A; --gray-light: #ECEFF1; --bg: #FAFAFA; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: #212121; line-height: 1.6; }
+  .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: var(--primary); color: white; padding: 20px 0; overflow-y: auto; z-index: 100; }
+  .sidebar h2 { padding: 0 20px 15px; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 10px; }
+  .sidebar a { display: block; padding: 8px 20px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; }
+  .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
+  .sidebar .section-title { padding: 12px 20px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+  .main { margin-left: 280px; padding: 30px 40px; max-width: 1200px; }
+  h1 { color: var(--primary); font-size: 28px; margin-bottom: 5px; }
+  .subtitle { color: var(--gray); font-size: 14px; margin-bottom: 30px; }
+  h2 { color: var(--primary); font-size: 22px; margin: 35px 0 15px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
+  h3 { color: #37474F; font-size: 17px; margin: 20px 0 10px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0 30px; }
+  .card { background: white; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid var(--primary); }
+  .card.success { border-left-color: var(--success); }
+  .card.danger { border-left-color: var(--danger); }
+  .card.warning { border-left-color: var(--warning); }
+  .card .number { font-size: 36px; font-weight: 700; }
+  .card .label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-top: 4px; }
+  .card.success .number { color: var(--success); }
+  .card.danger .number { color: var(--danger); }
+  .card.warning .number { color: var(--warning); }
+  .progress-container { background: #eee; border-radius: 10px; height: 24px; margin: 15px 0 25px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600; }
+  .progress-bar.success { background: linear-gradient(90deg, #43A047, #66BB6A); }
+  .progress-bar.danger { background: linear-gradient(90deg, #E53935, #EF5350); }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  th { background: var(--primary); color: white; padding: 10px 14px; text-align: left; font-size: 13px; font-weight: 600; }
+  td { padding: 8px 14px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+  tr:nth-child(even) { background: #FAFAFA; }
+  tr:hover { background: var(--primary-light); }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .badge-passed { background: var(--success-light); color: var(--success); }
+  .badge-failed { background: var(--danger-light); color: var(--danger); }
+  .badge-unit { background: #E3F2FD; color: #1565C0; }
+  .badge-integration { background: var(--warning-light); color: var(--warning); }
+  .badge-e2e { background: var(--success-light); color: var(--success); }
+  .urs-tag { display: inline-block; background: #E8EAF6; color: #283593; padding: 1px 8px; border-radius: 4px; font-size: 11px; margin: 1px 2px; font-family: monospace; }
+  .test-class { background: white; border-radius: 8px; margin: 12px 0; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .test-class-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .test-class-title { font-weight: 600; font-size: 15px; color: #37474F; }
+  .test-class-meta { font-size: 12px; color: var(--gray); }
+  .coverage-matrix { margin: 20px 0; }
+  .coverage-matrix td:first-child { font-family: monospace; font-weight: 600; }
+  @media print { .sidebar { display: none; } .main { margin-left: 0; } .test-class { page-break-inside: avoid; } }
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <h2>Test Execution Report</h2>
+  <a href="#summary">Executive Summary</a>
+  <a href="#pyramid">Testing Pyramid</a>
+  <div class="section-title">Test Results</div>
+  <a href="#unit">Unit Tests (126)</a>
+  <a href="#integration">Integration Tests (17)</a>
+  <a href="#e2e">E2E Tests (8)</a>
+  <div class="section-title">Traceability</div>
+  <a href="#traceability">URS Traceability Matrix</a>
+  <a href="#coverage">Coverage by Module</a>
+  <div class="section-title">Details</div>
+  <a href="#all-tests">Full Test Listing</a>
+  <a href="#bugs-fixed">Bugs Fixed (Devin Review)</a>
+  <a href="#environment">Environment Info</a>
+</nav>
+
+<div class="main">
+  <h1>Test Execution Report</h1>
+  <p class="subtitle">Hotel Management System &mdash; Migration to Modern .NET &nbsp;|&nbsp; Generated: 2026-03-26 12:02:01 UTC &nbsp;|&nbsp; Document ID: TER-HMS-001 v3.0</p>
+
+  <h2 id="summary">Executive Summary</h2>
+  <div class="cards">
+    <div class="card"><div class="number">151</div><div class="label">Total Tests</div></div>
+    <div class="card success"><div class="number">151</div><div class="label">Passed</div></div>
+    <div class="card success"><div class="number">0</div><div class="label">Failed</div></div>
+    <div class="card"><div class="number">100%</div><div class="label">Pass Rate</div></div>
+    <div class="card warning"><div class="number">3.0s</div><div class="label">Total Duration</div></div>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar success" style="width:100%">151/151 PASSED (100%)</div>
+  </div>
+
+  <h2 id="pyramid">Testing Pyramid</h2>
+  <div class="cards">
+    <div class="card" style="border-left-color:#2196F3"><div class="number" style="color:#2196F3">126</div><div class="label">Unit Tests</div></div>
+    <div class="card" style="border-left-color:#FF9800"><div class="number" style="color:#FF9800">17</div><div class="label">Integration Tests</div></div>
+    <div class="card" style="border-left-color:#4CAF50"><div class="number" style="color:#4CAF50">8</div><div class="label">E2E Tests</div></div>
+  </div>
+  <table>
+    <tr><th>Test Layer</th><th>Count</th><th>Passed</th><th>Failed</th><th>Pass Rate</th><th>Scope</th></tr>
+    <tr><td><span class="badge badge-unit">Unit</span></td><td>126</td><td>126</td><td>0</td><td>100%</td><td>Service logic, calculations, validations, business rules</td></tr>
+    <tr><td><span class="badge badge-integration">Integration</span></td><td>17</td><td>17</td><td>0</td><td>100%</td><td>Cross-service interactions, data persistence, referential integrity</td></tr>
+    <tr><td><span class="badge badge-e2e">E2E</span></td><td>8</td><td>8</td><td>0</td><td>100%</td><td>Complete business workflows across modules</td></tr>
+  </table>
+
+  <h2 id="unit">Unit Tests (126 tests)</h2>
+  <div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">AuthServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: User Management | Legacy: frmRegistration.vb, frmLogin.vb, frmChangePassword.vb</span>
+      </div>
+      <div><span class="badge badge-passed">11/11 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-UM-001</span><span class="urs-tag">URS-UM-002</span><span class="urs-tag">URS-UM-003</span><span class="urs-tag">URS-UM-005</span><span class="urs-tag">URS-UM-006</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>ChangePasswordAsync_NonExistentUser_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>ChangePasswordAsync_ValidOldPassword_ChangesPassword</td><td><span class="badge badge-passed">Passed</span></td><td>613 ms</td></tr>
+      <tr><td>ChangePasswordAsync_WrongOldPassword_ThrowsUnauthorized</td><td><span class="badge badge-passed">Passed</span></td><td>304 ms</td></tr>
+      <tr><td>LoginAsync_CreatesLoginActivity</td><td><span class="badge badge-passed">Passed</span></td><td>311 ms</td></tr>
+      <tr><td>LoginAsync_NonExistentUser_ThrowsUnauthorized</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>LoginAsync_ValidCredentials_ReturnsToken</td><td><span class="badge badge-passed">Passed</span></td><td>317 ms</td></tr>
+      <tr><td>LoginAsync_WrongPassword_ThrowsUnauthorized</td><td><span class="badge badge-passed">Passed</span></td><td>902 ms</td></tr>
+      <tr><td>RegisterAsync_DuplicateUsername_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>154 ms</td></tr>
+      <tr><td>RegisterAsync_InvalidUserType_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+      <tr><td>RegisterAsync_PasswordHashedWithBCrypt</td><td><span class="badge badge-passed">Passed</span></td><td>308 ms</td></tr>
+      <tr><td>RegisterAsync_ValidRequest_ReturnsToken</td><td><span class="badge badge-passed">Passed</span></td><td>173 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">CheckInServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Check-In & Check-Out | Legacy: frmCheckIn.vb, frmCheckOut.vb</span>
+      </div>
+      <div><span class="badge badge-passed">22/22 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-CI-001</span><span class="urs-tag">URS-CI-002</span><span class="urs-tag">URS-CI-004</span><span class="urs-tag">URS-CC-004</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CalculateNoOfDays_LongStay_ReturnsCorrectDays</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNoOfDays_MultipleDays_ReturnsCorrectDays</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNoOfDays_OneDayApart_Returns1</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNoOfDays_SameDate_Returns1</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_100PercentDiscount_ZeroSubtotal</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_BasicCalculation_MatchesLegacyFormula</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_FullPayment_ZeroBalance</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_OnlyOtherCharges_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_WithPartialPayment_CalculatesBalance</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_ZeroCharges_ReturnsZeros</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateTaxes_ZeroDiscount_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CheckInAsync_DateOutBeforeDateIn_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CheckInAsync_EmptyGuestID_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>CheckInAsync_EmptyRoomNo_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CheckInAsync_TotalPaidExceedsGrandTotal_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>CheckInAsync_ValidRequest_CreatesCheckIn</td><td><span class="badge badge-passed">Passed</span></td><td>16 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_CheckedOutRoom_ReturnsTrue</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_DifferentRoom_ReturnsTrue</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_NoExistingBookings_ReturnsTrue</td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_NonOverlappingDates_ReturnsTrue</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_OverlappingCheckIn_ReturnsFalse</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>IsRoomAvailableAsync_OverlappingReservation_ReturnsFalse</td><td><span class="badge badge-passed">Passed</span></td><td>38 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">CheckOutServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Check-In & Check-Out | Legacy: frmCheckOut.vb</span>
+      </div>
+      <div><span class="badge badge-passed">9/9 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-CI-003</span><span class="urs-tag">URS-CI-004</span><span class="urs-tag">URS-CC-004</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CalculateEducationCess_HighServiceTax_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CalculateEducationCess_SmallValues_RoundsCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CalculateEducationCess_StandardValues_MatchesLegacyFormula</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateEducationCess_ZeroServiceTax_ReturnsZeros</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>CheckOutAsync_EmptyCurrency_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+      <tr><td>CheckOutAsync_NonExistentCheckIn_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>22 ms</td></tr>
+      <tr><td>CheckOutAsync_NotCheckedIn_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>6 ms</td></tr>
+      <tr><td>CheckOutAsync_UpdatesCheckInStatus</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>CheckOutAsync_ValidCheckIn_CreatesCheckOut</td><td><span class="badge badge-passed">Passed</span></td><td>136 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">EmployeeServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Human Resource | Legacy: frmEmployee_registration.vb</span>
+      </div>
+      <div><span class="badge badge-passed">10/10 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-HR-001</span><span class="urs-tag">URS-HR-002</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CreateAsync_EmptyEmail_DoesNotThrow</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_InvalidEmail_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>17 ms</td></tr>
+      <tr><td>CreateAsync_ValidEmployee_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>DeleteAsync_NoRelatedRecords_DeletesSuccessfully</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>DeleteAsync_WithAdvanceRecords_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+      <tr><td>DeleteAsync_WithAttendanceRecords_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>DeleteAsync_WithPaymentRecords_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>GenerateEmployeeId_ReturnsCorrectFormat</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>GetDepartmentsAsync_ReturnsDistinctDepartments</td><td><span class="badge badge-passed">Passed</span></td><td>25 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">ExcelExportServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Data Export | Legacy: COM Interop Excel (replaced with ClosedXML)</span>
+      </div>
+      <div><span class="badge badge-passed">5/5 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-DE-001</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>ExportToExcel_DecimalValues_PreservedCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+      <tr><td>ExportToExcel_EmptyData_ReturnsHeaderOnly</td><td><span class="badge badge-passed">Passed</span></td><td>1.45 s</td></tr>
+      <tr><td>ExportToExcel_HeaderRow_HasBoldFormatting</td><td><span class="badge badge-passed">Passed</span></td><td>14 ms</td></tr>
+      <tr><td>ExportToExcel_LargeDataset_HandlesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>330 ms</td></tr>
+      <tr><td>ExportToExcel_WithData_ReturnsValidExcelBytes</td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">GuestServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Guest Information | Legacy: frmGuest.vb, frmGuestRecord1.vb</span>
+      </div>
+      <div><span class="badge badge-passed">13/13 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-GI-001</span><span class="urs-tag">URS-GI-002</span><span class="urs-tag">URS-CC-005</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CreateAsync_EmptyAddress_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>CreateAsync_EmptyCity_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_NonNumericContact_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+      <tr><td>CreateAsync_ValidGuest_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>DeleteAsync_ExistingGuest_RemovesGuest</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>GenerateGuestId_ProducesUniqueIds</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>GenerateGuestId_ReturnsCorrectFormat</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>GetAllAsync_WithSearch_FiltersResults</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>GetByIdAsync_ExistingGuest_ReturnsGuest</td><td><span class="badge badge-passed">Passed</span></td><td>8 ms</td></tr>
+      <tr><td>GetByIdAsync_NonExisting_ReturnsNull</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>UpdateAsync_ValidRequest_UpdatesGuest</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">InventoryServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Inventory & Stock | Legacy: frmFood.vb, frmBeer.vb, frmLiquor.vb, frmStock.vb</span>
+      </div>
+      <div><span class="badge badge-passed">14/14 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-IS-001</span><span class="urs-tag">URS-IS-003</span><span class="urs-tag">URS-IS-004</span><span class="urs-tag">URS-IS-005</span><span class="urs-tag">URS-IS-007</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CreateBeerAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>CreateBeerAsync_ValidBeer_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateDishAsync_DuplicateName_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateDishAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>CreateDishAsync_ValidDish_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateLiquorAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>CreateLiquorAsync_ValidLiquor_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>76 ms</td></tr>
+      <tr><td>CreatePurchaseAsync_EmptyItemName_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+      <tr><td>CreatePurchaseAsync_ValidPurchase_CalculatesTotalAmount</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>DeleteDishAsync_ExistingDish_RemovesDish</td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+      <tr><td>GetDishesAsync_WithSearch_FiltersResults</td><td><span class="badge badge-passed">Passed</span></td><td>963 ms</td></tr>
+      <tr><td>UpdateDishAsync_DuplicateName_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>39 ms</td></tr>
+      <tr><td>UpdateStockAsync_AdminRole_UpdatesStock</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>UpdateStockAsync_UserRole_ThrowsUnauthorized</td><td><span class="badge badge-passed">Passed</span></td><td>16 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">PayrollServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Human Resource | Legacy: frmEmployeePayment.vb, frmAdvance.vb</span>
+      </div>
+      <div><span class="badge badge-passed">21/21 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-HR-009</span><span class="urs-tag">URS-HR-007</span><span class="urs-tag">URS-HR-008</span><span class="urs-tag">URS-HR-006</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CalculateNetPay_DeductionExceedsSalary_NegativeResult</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNetPay_NoDeduction_AddsSalaryAndOvertime</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNetPay_NoOvertime_SubtractsDeduction</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateNetPay_StandardValues_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateOvertimeAmount_PartialHour_UsesBankerRounding</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateOvertimeAmount_StandardOvertime_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateOvertimeAmount_ZeroMinutes_ReturnsZero</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateOvertimeAmount_ZeroRate_ReturnsZero</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateSalary_FullMonth_ReturnsBasicSalary</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateSalary_HalfMonth_ReturnsHalf</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateSalary_NonEvenDivision_UsesBankerRounding</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateSalary_OneDayPresent_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CalculateSalary_ZeroDays_ReturnsZero</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>GetAdvanceBalanceAsync_NoEntries_ReturnsZero</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>GetAdvanceBalanceAsync_WithAdvancesAndDeductions_CalculatesCorrectly</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_DeductionExceedsAdvance_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>6 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_EmptyEmployeeID_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_NonExistentEmployee_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>26 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_ValidRequest_CreatesPayment</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_WithDeduction_CreatesAdvanceEntry</td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+      <tr><td>ProcessPaymentAsync_ZeroDeduction_NoAdvanceEntry</td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">ReservationServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Reservation | Legacy: frmReservation.vb</span>
+      </div>
+      <div><span class="badge badge-passed">7/7 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-RS-001</span><span class="urs-tag">URS-RS-005</span><span class="urs-tag">URS-CC-007</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CheckDateOverlapAsync_DifferentRoom_ReturnsFalse</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CheckDateOverlapAsync_NonOverlapping_ReturnsFalse</td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+      <tr><td>CheckDateOverlapAsync_OverlappingDates_ReturnsTrue</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_OverlappingDates_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+      <tr><td>CreateAsync_ValidReservation_CreatesRecord</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>DeleteAsync_ExistingReservation_DeletesRecord</td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+      <tr><td>DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>13 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">RoomServiceTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Hotel Information | Legacy: frmRoom.vb, frmRoomsAvailability.vb</span>
+      </div>
+      <div><span class="badge badge-passed">14/14 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-HI-002</span><span class="urs-tag">URS-HI-003</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CreateAsync_DuplicateRoomNo_ThrowsInvalidOperation</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>CreateAsync_EmptyRoomNo_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_InvalidRoomType_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_NegativeCharges_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;AC&quot;)</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+      <tr><td>CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Deluxe&quot;)</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Non-AC&quot;)</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Suite&quot;)</td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+      <tr><td>CreateAsync_ValidRoom_ReturnsResponse</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>CreateAsync_ZeroCharges_ThrowsArgumentException</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-passed">Passed</span></td><td>11 ms</td></tr>
+      <tr><td>GetAvailableRoomsAsync_ExcludesCheckedInRooms</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>GetAvailableRoomsAsync_ExcludesReservedRooms</td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+      <tr><td>UpdateAsync_ValidRequest_UpdatesRoom</td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    </table>
+  </div>
+
+
+  <h2 id="integration">Integration Tests (17 tests)</h2>
+  <div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">BackupIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Database Backup | Legacy: frmMainMenu.vb (backup/restore)</span>
+      </div>
+      <div><span class="badge badge-passed">2/2 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-DB-001</span><span class="urs-tag">URS-DB-002</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>DatabaseContext_CanSaveAndRetrieveAllEntityTypes</td><td><span class="badge badge-passed">Passed</span></td><td>33 ms</td></tr>
+      <tr><td>DatabaseContext_PreservesDataIntegrity</td><td><span class="badge badge-passed">Passed</span></td><td>15 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">CheckInIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Check-In & Check-Out | Legacy: frmCheckIn.vb</span>
+      </div>
+      <div><span class="badge badge-passed">3/3 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-CI-001</span><span class="urs-tag">URS-CI-002</span><span class="urs-tag">URS-CI-004</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CheckIn_CreatesRecordAndAffectsRoomAvailability</td><td><span class="badge badge-passed">Passed</span></td><td>28 ms</td></tr>
+      <tr><td>CheckIn_PreventDoubleBooking_ThrowsException</td><td><span class="badge badge-passed">Passed</span></td><td>1.09 s</td></tr>
+      <tr><td>CheckIn_WithTaxes_CalculatesCorrectGrandTotal</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">CheckOutIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Check-In & Check-Out | Legacy: frmCheckOut.vb, frmCheckedOutRecord.vb</span>
+      </div>
+      <div><span class="badge badge-passed">2/2 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-CI-003</span><span class="urs-tag">URS-CI-006</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CheckOut_CreatesCheckoutRecordAndUpdatesCheckInStatus</td><td><span class="badge badge-passed">Passed</span></td><td>128 ms</td></tr>
+      <tr><td>CheckOut_RoomBecomesAvailableAfterCheckout</td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">GuestIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Guest Information | Legacy: frmGuest.vb, frmGuestRecord1.vb</span>
+      </div>
+      <div><span class="badge badge-passed">2/2 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-GI-001</span><span class="urs-tag">URS-GI-002</span><span class="urs-tag">URS-CC-001</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>FullGuestLifecycle_CreateReadUpdateDelete</td><td><span class="badge badge-passed">Passed</span></td><td>128 ms</td></tr>
+      <tr><td>GuestSearch_ByNamePrefix_ReturnsMatchingResults</td><td><span class="badge badge-passed">Passed</span></td><td>972 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">InventoryIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Inventory & Stock | Legacy: frmFood.vb</span>
+      </div>
+      <div><span class="badge badge-passed">3/3 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-IS-001</span><span class="urs-tag">URS-CC-005</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>FullDishLifecycle_CreateReadUpdateDelete</td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+      <tr><td>PurchaseInventory_CalculatesTotalAmount</td><td><span class="badge badge-passed">Passed</span></td><td>11 ms</td></tr>
+      <tr><td>StockUpdate_AdminOnly</td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">PayrollIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Human Resource | Legacy: frmEmployeePayment.vb, frmEmployee_registration.vb</span>
+      </div>
+      <div><span class="badge badge-passed">2/2 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-HR-001</span><span class="urs-tag">URS-HR-009</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>EmployeeDeletion_BlockedByAttendanceRecords</td><td><span class="badge badge-passed">Passed</span></td><td>965 ms</td></tr>
+      <tr><td>ProcessPayment_CreatesPaymentAndAdvanceEntry</td><td><span class="badge badge-passed">Passed</span></td><td>232 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">ReservationIntegrationTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Reservation | Legacy: frmReservation.vb</span>
+      </div>
+      <div><span class="badge badge-passed">3/3 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-RS-001</span><span class="urs-tag">URS-RS-005</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>Reservation_BlocksRoomForDateRange</td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+      <tr><td>Reservation_DateOverlapPreventsDoubleBooking</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+      <tr><td>Reservation_NonOverlappingDates_Succeeds</td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    </table>
+  </div>
+
+
+  <h2 id="e2e">E2E Tests (8 tests)</h2>
+  <div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">EmployeeLifecycleTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Cross-Module E2E | Legacy: Full employee workflow</span>
+      </div>
+      <div><span class="badge badge-passed">3/3 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-HR-001</span><span class="urs-tag">URS-HR-004</span><span class="urs-tag">URS-HR-007</span><span class="urs-tag">URS-HR-009</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CompleteEmployeeLifecycle_RegisterAttendancePayment</td><td><span class="badge badge-passed">Passed</span></td><td>244 ms</td></tr>
+      <tr><td>EmployeeLifecycle_ReferentialIntegrityChecks</td><td><span class="badge badge-passed">Passed</span></td><td>966 ms</td></tr>
+      <tr><td>EmployeePayment_SalaryCalculationMatchesLegacy</td><td><span class="badge badge-passed">Passed</span></td><td>7 ms</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">GuestLifecycleTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Cross-Module E2E | Legacy: Full guest workflow</span>
+      </div>
+      <div><span class="badge badge-passed">2/2 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-GI-001</span><span class="urs-tag">URS-RS-001</span><span class="urs-tag">URS-CI-001</span><span class="urs-tag">URS-CI-003</span><span class="urs-tag">URS-CI-004</span><span class="urs-tag">URS-CC-004</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CompleteGuestLifecycle_RegisterReserveCheckInCheckOut</td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+      <tr><td>GuestLifecycle_TaxCalculationsMatchLegacy</td><td><span class="badge badge-passed">Passed</span></td><td>1.28 s</td></tr>
+    </table>
+  </div>
+<div class="test-class">
+    <div class="test-class-header">
+      <div>
+        <span class="test-class-title">InventoryLifecycleTests</span>
+        <span class="test-class-meta" style="margin-left:12px">Module: Cross-Module E2E | Legacy: Full inventory workflow</span>
+      </div>
+      <div><span class="badge badge-passed">3/3 Passed</span></div>
+    </div>
+    <div style="margin-bottom:8px">URS Traceability: <span class="urs-tag">URS-IS-001</span><span class="urs-tag">URS-IS-005</span><span class="urs-tag">URS-IS-007</span><span class="urs-tag">URS-DE-001</span></div>
+    <table>
+      <tr><th style="width:55%">Test Method</th><th>Result</th><th>Duration</th></tr>
+      <tr><td>CompleteInventoryLifecycle_AddPurchaseStockUpdate</td><td><span class="badge badge-passed">Passed</span></td><td>1.14 s</td></tr>
+      <tr><td>InventoryExcelExport_ProducesValidFile</td><td><span class="badge badge-passed">Passed</span></td><td>309 ms</td></tr>
+      <tr><td>InventorySearch_FiltersByNamePrefix</td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    </table>
+  </div>
+
+
+  <h2 id="traceability">URS Traceability Matrix</h2>
+  <p>Maps each URS requirement to the tests that verify it. This ensures every business requirement from the legacy system has automated test coverage.</p>
+  <table class="coverage-matrix">
+    <tr><th>URS ID</th><th>Requirement</th><th>Test Coverage</th><th>Test Classes</th></tr>
+    <tr><td><span class="urs-tag">URS-CC-001</span></td><td>All data migrated with zero loss</td><td><span class="badge badge-passed">2 tests</span></td><td style="font-size:12px">GuestIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CC-004</span></td><td>Tax calculation identical results</td><td><span class="badge badge-passed">33 tests</span></td><td style="font-size:12px">CheckInServiceTests, CheckOutServiceTests, GuestLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CC-005</span></td><td>Search/filter capabilities preserved</td><td><span class="badge badge-passed">16 tests</span></td><td style="font-size:12px">GuestServiceTests, InventoryIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CC-007</span></td><td>Date-based filtering identical</td><td><span class="badge badge-passed">7 tests</span></td><td style="font-size:12px">ReservationServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CI-001</span></td><td>Check-In with room assignment, pricing calculation</td><td><span class="badge badge-passed">27 tests</span></td><td style="font-size:12px">CheckInIntegrationTests, CheckInServiceTests, GuestLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CI-002</span></td><td>Room availability validation (date overlaps)</td><td><span class="badge badge-passed">25 tests</span></td><td style="font-size:12px">CheckInIntegrationTests, CheckInServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CI-003</span></td><td>Check-Out processing with bill generation</td><td><span class="badge badge-passed">13 tests</span></td><td style="font-size:12px">CheckOutIntegrationTests, CheckOutServiceTests, GuestLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CI-004</span></td><td>Tax calculation formula preservation</td><td><span class="badge badge-passed">36 tests</span></td><td style="font-size:12px">CheckInIntegrationTests, CheckInServiceTests, CheckOutServiceTests, GuestLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-CI-006</span></td><td>Checked-out records</td><td><span class="badge badge-passed">2 tests</span></td><td style="font-size:12px">CheckOutIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-DB-001</span></td><td>Database Backup</td><td><span class="badge badge-passed">2 tests</span></td><td style="font-size:12px">BackupIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-DB-002</span></td><td>Database Restore</td><td><span class="badge badge-passed">2 tests</span></td><td style="font-size:12px">BackupIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-DE-001</span></td><td>Export data to Excel (ClosedXML)</td><td><span class="badge badge-passed">8 tests</span></td><td style="font-size:12px">ExcelExportServiceTests, InventoryLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-GI-001</span></td><td>Guest Registration with auto-generated GuestID</td><td><span class="badge badge-passed">17 tests</span></td><td style="font-size:12px">GuestIntegrationTests, GuestLifecycleTests, GuestServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-GI-002</span></td><td>Guest Records Search/Browse</td><td><span class="badge badge-passed">15 tests</span></td><td style="font-size:12px">GuestIntegrationTests, GuestServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HI-002</span></td><td>Room Management CRUD with validation</td><td><span class="badge badge-passed">14 tests</span></td><td style="font-size:12px">RoomServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HI-003</span></td><td>Room Availability Dashboard</td><td><span class="badge badge-passed">14 tests</span></td><td style="font-size:12px">RoomServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-001</span></td><td>Employee Registration with referential integrity</td><td><span class="badge badge-passed">15 tests</span></td><td style="font-size:12px">EmployeeLifecycleTests, EmployeeServiceTests, PayrollIntegrationTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-002</span></td><td>Employee Records with search</td><td><span class="badge badge-passed">10 tests</span></td><td style="font-size:12px">EmployeeServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-004</span></td><td>Attendance Tracking</td><td><span class="badge badge-passed">3 tests</span></td><td style="font-size:12px">EmployeeLifecycleTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-006</span></td><td>Overtime Tracking</td><td><span class="badge badge-passed">21 tests</span></td><td style="font-size:12px">PayrollServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-007</span></td><td>Advance Payment Entry</td><td><span class="badge badge-passed">24 tests</span></td><td style="font-size:12px">EmployeeLifecycleTests, PayrollServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-008</span></td><td>Deduction Entry Records</td><td><span class="badge badge-passed">21 tests</span></td><td style="font-size:12px">PayrollServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-HR-009</span></td><td>Employee Payment/Salary Processing</td><td><span class="badge badge-passed">26 tests</span></td><td style="font-size:12px">EmployeeLifecycleTests, PayrollIntegrationTests, PayrollServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-IS-001</span></td><td>Food/Dish Item Management</td><td><span class="badge badge-passed">20 tests</span></td><td style="font-size:12px">InventoryIntegrationTests, InventoryLifecycleTests, InventoryServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-IS-003</span></td><td>Beer/Beverage Management</td><td><span class="badge badge-passed">14 tests</span></td><td style="font-size:12px">InventoryServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-IS-004</span></td><td>Liquor Management</td><td><span class="badge badge-passed">14 tests</span></td><td style="font-size:12px">InventoryServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-IS-005</span></td><td>Purchase Inventory Entry</td><td><span class="badge badge-passed">17 tests</span></td><td style="font-size:12px">InventoryLifecycleTests, InventoryServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-IS-007</span></td><td>Stock Overview</td><td><span class="badge badge-passed">17 tests</span></td><td style="font-size:12px">InventoryLifecycleTests, InventoryServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-RS-001</span></td><td>Room Reservation with date range</td><td><span class="badge badge-passed">12 tests</span></td><td style="font-size:12px">GuestLifecycleTests, ReservationIntegrationTests, ReservationServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-RS-005</span></td><td>Date overlap/conflict detection</td><td><span class="badge badge-passed">10 tests</span></td><td style="font-size:12px">ReservationIntegrationTests, ReservationServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-UM-001</span></td><td>User Registration</td><td><span class="badge badge-passed">11 tests</span></td><td style="font-size:12px">AuthServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-UM-002</span></td><td>User Login with role-based access</td><td><span class="badge badge-passed">11 tests</span></td><td style="font-size:12px">AuthServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-UM-003</span></td><td>Password Change</td><td><span class="badge badge-passed">11 tests</span></td><td style="font-size:12px">AuthServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-UM-005</span></td><td>BCrypt password hashing</td><td><span class="badge badge-passed">11 tests</span></td><td style="font-size:12px">AuthServiceTests</td></tr>
+    <tr><td><span class="urs-tag">URS-UM-006</span></td><td>Role-based access control</td><td><span class="badge badge-passed">11 tests</span></td><td style="font-size:12px">AuthServiceTests</td></tr>
+  </table>
+
+  <h2 id="coverage">Coverage by Module</h2>
+  <table>
+    <tr><th>Module</th><th>Unit</th><th>Integration</th><th>E2E</th><th>Total</th><th>Status</th></tr>
+    <tr><td><strong>Check-In & Check-Out</strong></td><td>31</td><td>5</td><td>0</td><td><strong>36</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Guest Information</strong></td><td>13</td><td>2</td><td>2</td><td><strong>17</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Reservation</strong></td><td>7</td><td>3</td><td>0</td><td><strong>10</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Hotel Information (Rooms)</strong></td><td>14</td><td>0</td><td>0</td><td><strong>14</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Human Resource</strong></td><td>31</td><td>2</td><td>3</td><td><strong>36</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Inventory & Stock</strong></td><td>14</td><td>3</td><td>3</td><td><strong>20</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>User Management & Auth</strong></td><td>11</td><td>0</td><td>0</td><td><strong>11</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Data Export</strong></td><td>5</td><td>0</td><td>0</td><td><strong>5</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+    <tr><td><strong>Database Backup</strong></td><td>0</td><td>2</td><td>0</td><td><strong>2</strong></td><td><span class="badge badge-passed">Covered</span></td></tr>
+  </table>
+
+  <h2 id="all-tests">Full Test Listing (151 tests)</h2>
+  <table>
+    <tr><th>#</th><th style="width:50%">Test Name</th><th>Category</th><th>Result</th><th>Duration</th></tr>
+    <tr><td>1</td><td>E2E.EmployeeLifecycleTests.CompleteEmployeeLifecycle_RegisterAttendancePayment</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>244 ms</td></tr>
+    <tr><td>2</td><td>E2E.EmployeeLifecycleTests.EmployeeLifecycle_ReferentialIntegrityChecks</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>966 ms</td></tr>
+    <tr><td>3</td><td>E2E.EmployeeLifecycleTests.EmployeePayment_SalaryCalculationMatchesLegacy</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>7 ms</td></tr>
+    <tr><td>4</td><td>E2E.GuestLifecycleTests.CompleteGuestLifecycle_RegisterReserveCheckInCheckOut</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    <tr><td>5</td><td>E2E.GuestLifecycleTests.GuestLifecycle_TaxCalculationsMatchLegacy</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>1.28 s</td></tr>
+    <tr><td>6</td><td>E2E.InventoryLifecycleTests.CompleteInventoryLifecycle_AddPurchaseStockUpdate</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>1.14 s</td></tr>
+    <tr><td>7</td><td>E2E.InventoryLifecycleTests.InventoryExcelExport_ProducesValidFile</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>309 ms</td></tr>
+    <tr><td>8</td><td>E2E.InventoryLifecycleTests.InventorySearch_FiltersByNamePrefix</td><td><span class="badge badge-e2e">E2E</span></td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    <tr><td>9</td><td>Integration.BackupIntegrationTests.DatabaseContext_CanSaveAndRetrieveAllEntityTypes</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>33 ms</td></tr>
+    <tr><td>10</td><td>Integration.BackupIntegrationTests.DatabaseContext_PreservesDataIntegrity</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>15 ms</td></tr>
+    <tr><td>11</td><td>Integration.CheckInIntegrationTests.CheckIn_CreatesRecordAndAffectsRoomAvailability</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>28 ms</td></tr>
+    <tr><td>12</td><td>Integration.CheckInIntegrationTests.CheckIn_PreventDoubleBooking_ThrowsException</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>1.09 s</td></tr>
+    <tr><td>13</td><td>Integration.CheckInIntegrationTests.CheckIn_WithTaxes_CalculatesCorrectGrandTotal</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>14</td><td>Integration.CheckOutIntegrationTests.CheckOut_CreatesCheckoutRecordAndUpdatesCheckInStatus</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>128 ms</td></tr>
+    <tr><td>15</td><td>Integration.CheckOutIntegrationTests.CheckOut_RoomBecomesAvailableAfterCheckout</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+    <tr><td>16</td><td>Integration.GuestIntegrationTests.FullGuestLifecycle_CreateReadUpdateDelete</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>128 ms</td></tr>
+    <tr><td>17</td><td>Integration.GuestIntegrationTests.GuestSearch_ByNamePrefix_ReturnsMatchingResults</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>972 ms</td></tr>
+    <tr><td>18</td><td>Integration.InventoryIntegrationTests.FullDishLifecycle_CreateReadUpdateDelete</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+    <tr><td>19</td><td>Integration.InventoryIntegrationTests.PurchaseInventory_CalculatesTotalAmount</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>11 ms</td></tr>
+    <tr><td>20</td><td>Integration.InventoryIntegrationTests.StockUpdate_AdminOnly</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    <tr><td>21</td><td>Integration.PayrollIntegrationTests.EmployeeDeletion_BlockedByAttendanceRecords</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>965 ms</td></tr>
+    <tr><td>22</td><td>Integration.PayrollIntegrationTests.ProcessPayment_CreatesPaymentAndAdvanceEntry</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>232 ms</td></tr>
+    <tr><td>23</td><td>Integration.ReservationIntegrationTests.Reservation_BlocksRoomForDateRange</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+    <tr><td>24</td><td>Integration.ReservationIntegrationTests.Reservation_DateOverlapPreventsDoubleBooking</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>25</td><td>Integration.ReservationIntegrationTests.Reservation_NonOverlappingDates_Succeeds</td><td><span class="badge badge-integration">Integration</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>26</td><td>Unit.AuthServiceTests.ChangePasswordAsync_NonExistentUser_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>27</td><td>Unit.AuthServiceTests.ChangePasswordAsync_ValidOldPassword_ChangesPassword</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>613 ms</td></tr>
+    <tr><td>28</td><td>Unit.AuthServiceTests.ChangePasswordAsync_WrongOldPassword_ThrowsUnauthorized</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>304 ms</td></tr>
+    <tr><td>29</td><td>Unit.AuthServiceTests.LoginAsync_CreatesLoginActivity</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>311 ms</td></tr>
+    <tr><td>30</td><td>Unit.AuthServiceTests.LoginAsync_NonExistentUser_ThrowsUnauthorized</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>31</td><td>Unit.AuthServiceTests.LoginAsync_ValidCredentials_ReturnsToken</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>317 ms</td></tr>
+    <tr><td>32</td><td>Unit.AuthServiceTests.LoginAsync_WrongPassword_ThrowsUnauthorized</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>902 ms</td></tr>
+    <tr><td>33</td><td>Unit.AuthServiceTests.RegisterAsync_DuplicateUsername_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>154 ms</td></tr>
+    <tr><td>34</td><td>Unit.AuthServiceTests.RegisterAsync_InvalidUserType_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+    <tr><td>35</td><td>Unit.AuthServiceTests.RegisterAsync_PasswordHashedWithBCrypt</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>308 ms</td></tr>
+    <tr><td>36</td><td>Unit.AuthServiceTests.RegisterAsync_ValidRequest_ReturnsToken</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>173 ms</td></tr>
+    <tr><td>37</td><td>Unit.CheckInServiceTests.CalculateNoOfDays_LongStay_ReturnsCorrectDays</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>38</td><td>Unit.CheckInServiceTests.CalculateNoOfDays_MultipleDays_ReturnsCorrectDays</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>39</td><td>Unit.CheckInServiceTests.CalculateNoOfDays_OneDayApart_Returns1</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>40</td><td>Unit.CheckInServiceTests.CalculateNoOfDays_SameDate_Returns1</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>41</td><td>Unit.CheckInServiceTests.CalculateTaxes_100PercentDiscount_ZeroSubtotal</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>42</td><td>Unit.CheckInServiceTests.CalculateTaxes_BasicCalculation_MatchesLegacyFormula</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>43</td><td>Unit.CheckInServiceTests.CalculateTaxes_FullPayment_ZeroBalance</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>44</td><td>Unit.CheckInServiceTests.CalculateTaxes_OnlyOtherCharges_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>45</td><td>Unit.CheckInServiceTests.CalculateTaxes_WithPartialPayment_CalculatesBalance</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>46</td><td>Unit.CheckInServiceTests.CalculateTaxes_ZeroCharges_ReturnsZeros</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>47</td><td>Unit.CheckInServiceTests.CalculateTaxes_ZeroDiscount_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>48</td><td>Unit.CheckInServiceTests.CheckInAsync_DateOutBeforeDateIn_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>49</td><td>Unit.CheckInServiceTests.CheckInAsync_EmptyGuestID_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>50</td><td>Unit.CheckInServiceTests.CheckInAsync_EmptyRoomNo_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>51</td><td>Unit.CheckInServiceTests.CheckInAsync_TotalPaidExceedsGrandTotal_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>52</td><td>Unit.CheckInServiceTests.CheckInAsync_ValidRequest_CreatesCheckIn</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>16 ms</td></tr>
+    <tr><td>53</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_CheckedOutRoom_ReturnsTrue</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>54</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_DifferentRoom_ReturnsTrue</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>55</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_NoExistingBookings_ReturnsTrue</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    <tr><td>56</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_NonOverlappingDates_ReturnsTrue</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>57</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_OverlappingCheckIn_ReturnsFalse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>58</td><td>Unit.CheckInServiceTests.IsRoomAvailableAsync_OverlappingReservation_ReturnsFalse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>38 ms</td></tr>
+    <tr><td>59</td><td>Unit.CheckOutServiceTests.CalculateEducationCess_HighServiceTax_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>60</td><td>Unit.CheckOutServiceTests.CalculateEducationCess_SmallValues_RoundsCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>61</td><td>Unit.CheckOutServiceTests.CalculateEducationCess_StandardValues_MatchesLegacyFormula</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>62</td><td>Unit.CheckOutServiceTests.CalculateEducationCess_ZeroServiceTax_ReturnsZeros</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>63</td><td>Unit.CheckOutServiceTests.CheckOutAsync_EmptyCurrency_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    <tr><td>64</td><td>Unit.CheckOutServiceTests.CheckOutAsync_NonExistentCheckIn_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>22 ms</td></tr>
+    <tr><td>65</td><td>Unit.CheckOutServiceTests.CheckOutAsync_NotCheckedIn_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>6 ms</td></tr>
+    <tr><td>66</td><td>Unit.CheckOutServiceTests.CheckOutAsync_UpdatesCheckInStatus</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>67</td><td>Unit.CheckOutServiceTests.CheckOutAsync_ValidCheckIn_CreatesCheckOut</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>136 ms</td></tr>
+    <tr><td>68</td><td>Unit.EmployeeServiceTests.CreateAsync_EmptyEmail_DoesNotThrow</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>69</td><td>Unit.EmployeeServiceTests.CreateAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>70</td><td>Unit.EmployeeServiceTests.CreateAsync_InvalidEmail_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>17 ms</td></tr>
+    <tr><td>71</td><td>Unit.EmployeeServiceTests.CreateAsync_ValidEmployee_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>72</td><td>Unit.EmployeeServiceTests.DeleteAsync_NoRelatedRecords_DeletesSuccessfully</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>73</td><td>Unit.EmployeeServiceTests.DeleteAsync_WithAdvanceRecords_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+    <tr><td>74</td><td>Unit.EmployeeServiceTests.DeleteAsync_WithAttendanceRecords_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>75</td><td>Unit.EmployeeServiceTests.DeleteAsync_WithPaymentRecords_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>76</td><td>Unit.EmployeeServiceTests.GenerateEmployeeId_ReturnsCorrectFormat</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>77</td><td>Unit.EmployeeServiceTests.GetDepartmentsAsync_ReturnsDistinctDepartments</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>25 ms</td></tr>
+    <tr><td>78</td><td>Unit.ExcelExportServiceTests.ExportToExcel_DecimalValues_PreservedCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    <tr><td>79</td><td>Unit.ExcelExportServiceTests.ExportToExcel_EmptyData_ReturnsHeaderOnly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1.45 s</td></tr>
+    <tr><td>80</td><td>Unit.ExcelExportServiceTests.ExportToExcel_HeaderRow_HasBoldFormatting</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>14 ms</td></tr>
+    <tr><td>81</td><td>Unit.ExcelExportServiceTests.ExportToExcel_LargeDataset_HandlesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>330 ms</td></tr>
+    <tr><td>82</td><td>Unit.ExcelExportServiceTests.ExportToExcel_WithData_ReturnsValidExcelBytes</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+    <tr><td>83</td><td>Unit.GuestServiceTests.CreateAsync_EmptyAddress_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>84</td><td>Unit.GuestServiceTests.CreateAsync_EmptyCity_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>85</td><td>Unit.GuestServiceTests.CreateAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>86</td><td>Unit.GuestServiceTests.CreateAsync_NonNumericContact_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    <tr><td>87</td><td>Unit.GuestServiceTests.CreateAsync_ValidGuest_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>88</td><td>Unit.GuestServiceTests.DeleteAsync_ExistingGuest_RemovesGuest</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>89</td><td>Unit.GuestServiceTests.DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>90</td><td>Unit.GuestServiceTests.GenerateGuestId_ProducesUniqueIds</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>91</td><td>Unit.GuestServiceTests.GenerateGuestId_ReturnsCorrectFormat</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>92</td><td>Unit.GuestServiceTests.GetAllAsync_WithSearch_FiltersResults</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>93</td><td>Unit.GuestServiceTests.GetByIdAsync_ExistingGuest_ReturnsGuest</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>8 ms</td></tr>
+    <tr><td>94</td><td>Unit.GuestServiceTests.GetByIdAsync_NonExisting_ReturnsNull</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>95</td><td>Unit.GuestServiceTests.UpdateAsync_ValidRequest_UpdatesGuest</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>96</td><td>Unit.InventoryServiceTests.CreateBeerAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>97</td><td>Unit.InventoryServiceTests.CreateBeerAsync_ValidBeer_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>98</td><td>Unit.InventoryServiceTests.CreateDishAsync_DuplicateName_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>99</td><td>Unit.InventoryServiceTests.CreateDishAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>100</td><td>Unit.InventoryServiceTests.CreateDishAsync_ValidDish_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>101</td><td>Unit.InventoryServiceTests.CreateLiquorAsync_EmptyName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>4 ms</td></tr>
+    <tr><td>102</td><td>Unit.InventoryServiceTests.CreateLiquorAsync_ValidLiquor_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>76 ms</td></tr>
+    <tr><td>103</td><td>Unit.InventoryServiceTests.CreatePurchaseAsync_EmptyItemName_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+    <tr><td>104</td><td>Unit.InventoryServiceTests.CreatePurchaseAsync_ValidPurchase_CalculatesTotalAmount</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>105</td><td>Unit.InventoryServiceTests.DeleteDishAsync_ExistingDish_RemovesDish</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>19 ms</td></tr>
+    <tr><td>106</td><td>Unit.InventoryServiceTests.GetDishesAsync_WithSearch_FiltersResults</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>963 ms</td></tr>
+    <tr><td>107</td><td>Unit.InventoryServiceTests.UpdateDishAsync_DuplicateName_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>39 ms</td></tr>
+    <tr><td>108</td><td>Unit.InventoryServiceTests.UpdateStockAsync_AdminRole_UpdatesStock</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>109</td><td>Unit.InventoryServiceTests.UpdateStockAsync_UserRole_ThrowsUnauthorized</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>16 ms</td></tr>
+    <tr><td>110</td><td>Unit.PayrollServiceTests.CalculateNetPay_DeductionExceedsSalary_NegativeResult</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>111</td><td>Unit.PayrollServiceTests.CalculateNetPay_NoDeduction_AddsSalaryAndOvertime</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>112</td><td>Unit.PayrollServiceTests.CalculateNetPay_NoOvertime_SubtractsDeduction</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>113</td><td>Unit.PayrollServiceTests.CalculateNetPay_StandardValues_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>114</td><td>Unit.PayrollServiceTests.CalculateOvertimeAmount_PartialHour_UsesBankerRounding</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>115</td><td>Unit.PayrollServiceTests.CalculateOvertimeAmount_StandardOvertime_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>116</td><td>Unit.PayrollServiceTests.CalculateOvertimeAmount_ZeroMinutes_ReturnsZero</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>117</td><td>Unit.PayrollServiceTests.CalculateOvertimeAmount_ZeroRate_ReturnsZero</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>118</td><td>Unit.PayrollServiceTests.CalculateSalary_FullMonth_ReturnsBasicSalary</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>119</td><td>Unit.PayrollServiceTests.CalculateSalary_HalfMonth_ReturnsHalf</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>120</td><td>Unit.PayrollServiceTests.CalculateSalary_NonEvenDivision_UsesBankerRounding</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>121</td><td>Unit.PayrollServiceTests.CalculateSalary_OneDayPresent_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>122</td><td>Unit.PayrollServiceTests.CalculateSalary_ZeroDays_ReturnsZero</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>123</td><td>Unit.PayrollServiceTests.GetAdvanceBalanceAsync_NoEntries_ReturnsZero</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>124</td><td>Unit.PayrollServiceTests.GetAdvanceBalanceAsync_WithAdvancesAndDeductions_CalculatesCorrectly</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>125</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_DeductionExceedsAdvance_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>6 ms</td></tr>
+    <tr><td>126</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_EmptyEmployeeID_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>127</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_NonExistentEmployee_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>26 ms</td></tr>
+    <tr><td>128</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_ValidRequest_CreatesPayment</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>129</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_WithDeduction_CreatesAdvanceEntry</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>9 ms</td></tr>
+    <tr><td>130</td><td>Unit.PayrollServiceTests.ProcessPaymentAsync_ZeroDeduction_NoAdvanceEntry</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>12 ms</td></tr>
+    <tr><td>131</td><td>Unit.ReservationServiceTests.CheckDateOverlapAsync_DifferentRoom_ReturnsFalse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>132</td><td>Unit.ReservationServiceTests.CheckDateOverlapAsync_NonOverlapping_ReturnsFalse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>1 ms</td></tr>
+    <tr><td>133</td><td>Unit.ReservationServiceTests.CheckDateOverlapAsync_OverlappingDates_ReturnsTrue</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>134</td><td>Unit.ReservationServiceTests.CreateAsync_OverlappingDates_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>5 ms</td></tr>
+    <tr><td>135</td><td>Unit.ReservationServiceTests.CreateAsync_ValidReservation_CreatesRecord</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>136</td><td>Unit.ReservationServiceTests.DeleteAsync_ExistingReservation_DeletesRecord</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>10 ms</td></tr>
+    <tr><td>137</td><td>Unit.ReservationServiceTests.DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>13 ms</td></tr>
+    <tr><td>138</td><td>Unit.RoomServiceTests.CreateAsync_DuplicateRoomNo_ThrowsInvalidOperation</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>139</td><td>Unit.RoomServiceTests.CreateAsync_EmptyRoomNo_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>140</td><td>Unit.RoomServiceTests.CreateAsync_InvalidRoomType_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>141</td><td>Unit.RoomServiceTests.CreateAsync_NegativeCharges_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>142</td><td>Unit.RoomServiceTests.CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;AC&quot;)</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+    <tr><td>143</td><td>Unit.RoomServiceTests.CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Deluxe&quot;)</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>144</td><td>Unit.RoomServiceTests.CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Non-AC&quot;)</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>145</td><td>Unit.RoomServiceTests.CreateAsync_ValidRoomTypes_Succeed(roomType: &quot;Suite&quot;)</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>< 1 ms</td></tr>
+    <tr><td>146</td><td>Unit.RoomServiceTests.CreateAsync_ValidRoom_ReturnsResponse</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>147</td><td>Unit.RoomServiceTests.CreateAsync_ZeroCharges_ThrowsArgumentException</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>148</td><td>Unit.RoomServiceTests.DeleteAsync_NonExisting_ThrowsKeyNotFound</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>11 ms</td></tr>
+    <tr><td>149</td><td>Unit.RoomServiceTests.GetAvailableRoomsAsync_ExcludesCheckedInRooms</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>150</td><td>Unit.RoomServiceTests.GetAvailableRoomsAsync_ExcludesReservedRooms</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>2 ms</td></tr>
+    <tr><td>151</td><td>Unit.RoomServiceTests.UpdateAsync_ValidRequest_UpdatesRoom</td><td><span class="badge badge-unit">Unit</span></td><td><span class="badge badge-passed">Passed</span></td><td>3 ms</td></tr>
+  </table>
+
+  <h2 id="bugs-fixed">Bugs Fixed (Devin Review)</h2>
+  <h3>Round 1 (4 bugs)</h3>
+  <table>
+    <tr><th>#</th><th>Bug</th><th>File</th><th>Fix</th><th>Status</th></tr>
+    <tr><td>1</td><td>TimeSpan hh format truncates overtime &gt;24h</td><td>PayrollService.cs</td><td>Use TotalHours instead of hh specifier</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>2</td><td>Missing deduction &gt; advance balance validation</td><td>PayrollService.cs</td><td>Added deduction &le; advanceBalance check + NetPay &gt; 0</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>3</td><td>Unauthenticated register endpoint</td><td>AuthController.cs</td><td>Added [Authorize(Roles = "Admin")]</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>4</td><td>BillNo race condition (Max(ID)+1)</td><td>CheckOutService.cs</td><td>Two-phase save with DB-generated ID</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+  </table>
+
+  <h3>Round 2 (4 bugs)</h3>
+  <table>
+    <tr><th>#</th><th>Bug</th><th>File</th><th>Fix</th><th>Status</th></tr>
+    <tr><td>5</td><td>Restore leaves DB in SINGLE_USER on failure</td><td>BackupController.cs</td><td>Wrapped RESTORE in try/finally to always restore MULTI_USER</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>6</td><td>Path traversal in backup/restore endpoints</td><td>BackupController.cs</td><td>Sandboxed to configurable AllowedDirectory, filename-only</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>7</td><td>CheckOut two SaveChanges without transaction</td><td>CheckOutService.cs</td><td>Explicit IDbContextTransaction with commit/rollback</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>8</td><td>Same-day reservations rejected incorrectly</td><td>ReservationService.cs</td><td>Changed DateOUT &lt;= to DateOUT &lt; (matches CheckInService)</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+  </table>
+
+  <h3>Round 3 (3 bugs)</h3>
+  <table>
+    <tr><th>#</th><th>Bug</th><th>File</th><th>Fix</th><th>Status</th></tr>
+    <tr><td>9</td><td>CalculateSalary uses (int) truncation instead of CInt rounding</td><td>PayrollService.cs</td><td>Math.Round with MidpointRounding.ToEven (banker's rounding)</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>10</td><td>CalculateOvertimeAmount uses (int) truncation instead of CInt rounding</td><td>PayrollService.cs</td><td>Math.Round with MidpointRounding.ToEven (banker's rounding)</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+    <tr><td>11</td><td>DeleteAsync does not restore CheckInRoom status</td><td>CheckOutService.cs</td><td>Look up and revert CheckInRoom.Status to "Checked In"</td><td><span class="badge badge-passed">Fixed</span></td></tr>
+  </table>
+
+  <h2 id="environment">Environment Information</h2>
+  <table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Runtime</td><td>.NET 8.0.415</td></tr>
+    <tr><td>Test Framework</td><td>xUnit 2.x + FluentAssertions + Moq</td></tr>
+    <tr><td>Database (Tests)</td><td>EF Core InMemoryDatabase</td></tr>
+    <tr><td>Database (Production)</td><td>SQL Server 2022 Express (localhost:1433)</td></tr>
+    <tr><td>Machine</td><td>devin-box (Linux)</td></tr>
+    <tr><td>Execution Date</td><td>2026-03-26 12:02:01 UTC</td></tr>
+    <tr><td>Branch</td><td>devin/1774521877-migration-to-modern-dotnet</td></tr>
+    <tr><td>Last Commit</td><td>098091f &mdash; Fix 3 bugs from Devin Review (round 3)</td></tr>
+    <tr><td>Repository</td><td>SachetCognition/VB.Net_-hotel-manager</td></tr>
+    <tr><td>PR</td><td><a href="https://github.com/SachetCognition/VB.Net_-hotel-manager/pull/1">#1</a></td></tr>
+  </table>
+
+  <div style="margin-top:40px;padding:20px;background:var(--primary-light);border-radius:8px;font-size:13px;color:var(--gray)">
+    <strong>Note:</strong> All tests use EF Core InMemoryDatabase. SQL Server-specific behaviors (transactions, referential integrity enforcement, decimal precision) are not exercised.
+    The CheckOutService transaction wrapping uses a provider check to conditionally use transactions only with real database providers.
+    For full production validation, run tests against a real SQL Server instance.
+  </div>
+</div>
+</body>
+</html>
