@@ -34,7 +34,7 @@ Public Class frmStock
         txtLiquor.Text = ""
         btnDelete.Enabled = False
         btnUpdate_record.Enabled = False
-        If (lblUserType.Text = "User") Then
+        If Not UserSession.IsAdmin() Then
             btnSave.Enabled = False
         Else
             btnSave.Enabled = False
@@ -49,7 +49,7 @@ Public Class frmStock
         txtBeer.Text = ""
         btnDelete1.Enabled = False
         btnUpdate1.Enabled = False
-        If (lblUserType.Text = "User") Then
+        If Not UserSession.IsAdmin() Then
             btnSave1.Enabled = False
         Else
             btnSave1.Enabled = False
@@ -70,6 +70,7 @@ Public Class frmStock
     End Sub
 
     Private Sub btnSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSave.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             If Len(Trim(cmbLiquorName.Text)) = 0 Then
                 MessageBox.Show("Please select liquor name", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -194,6 +195,7 @@ Public Class frmStock
         End Try
     End Sub
     Public Sub DeleteRecord()
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             Dim RowsAffected As Integer = 0
             con = New OleDbConnection(cs)
@@ -237,7 +239,7 @@ Public Class frmStock
             txtVolume.Text = dr.Cells(3).Value.ToString()
             txtTotalVolume.Text = dr.Cells(4).Value.ToString()
             TextBox2.Text = dr.Cells(4).Value.ToString()
-            If (lblUserType.Text = "User") Then
+            If Not UserSession.IsAdmin() Then
                 btnDelete.Enabled = False
                 btnUpdate_record.Enabled = False
             Else
@@ -262,6 +264,7 @@ Public Class frmStock
     End Sub
 
     Private Sub btnUpdate_record_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnUpdate_record.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             If Len(Trim(cmbLiquorName.Text)) = 0 Then
                 MessageBox.Show("Please select liquor name", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -345,6 +348,7 @@ Public Class frmStock
         End Try
     End Sub
     Public Sub DeleteRecord1()
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             Dim RowsAffected As Integer = 0
             con = New OleDbConnection(cs)
@@ -367,6 +371,7 @@ Public Class frmStock
     End Sub
 
     Private Sub btnSave1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSave1.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             If Len(Trim(cmbBeerName.Text)) = 0 Then
                 MessageBox.Show("Please select beer name", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -408,6 +413,7 @@ Public Class frmStock
     End Sub
 
     Private Sub btnUpdate1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnUpdate1.Click
+        If Not UserSession.RequireAdmin() Then Exit Sub
         Try
             If Len(Trim(cmbBeerName.Text)) = 0 Then
                 MessageBox.Show("Please select Beer name", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -503,7 +509,7 @@ Public Class frmStock
             txtStockID1.Text = dr.Cells(0).Value.ToString()
             cmbBeerName.Text = dr.Cells(1).Value.ToString()
             txtNoOfBottles1.Text = dr.Cells(2).Value.ToString()
-            If (lblUserType.Text = "User") Then
+            If Not UserSession.IsAdmin() Then
                 btnDelete1.Enabled = False
                 btnUpdate1.Enabled = False
             Else
